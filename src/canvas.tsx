@@ -191,13 +191,12 @@ const DistributionComponent = ({ width, height }: CanvasProps) => {
                 <br/> 
             </div>
             <div>
-            
-            <Grid container columnSpacing={1} justifyContent="center">
+                <Grid container columnSpacing={1} justifyContent="center">
                     <Grid item>
                         <TextField id="outlined-basic" label="Samples" variant="outlined" defaultValue={nSamples}/>
                     </Grid>
-                    <Grid item>
-                        <Button variant="contained" color="primary">Sample</Button>
+                    <Grid item alignItems="stretch" style={{ display: "flex" }}>
+                        <Button variant="outlined" color="primary">Sample</Button>
                     </Grid>
                 </Grid>
             </div>

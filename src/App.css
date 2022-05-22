@@ -32,6 +32,7 @@
 }
 
 body {
+    padding-top: 1vh;
     padding-bottom: 20vh;
     background-color: #0A1929;
 }

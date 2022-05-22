@@ -12,17 +12,24 @@ function getCanvasSize(scale) {
     };
   }
 
-function App() {
-    const windowDimensions= getCanvasSize(0.4);
-    const darkTheme = createTheme({
-        palette: {
-          mode: 'dark',
-        },
-        h2: {
-            fontStyle: 'bold',
-        },
-      });
 
+// theme for the app - dark of course
+const darkTheme = createTheme({
+    palette: {
+      mode: 'dark',
+    },
+    h2: {
+        fontStyle: 'bold',
+    },
+  });
+
+function App() {
+    // TODO: add dynamic resizing
+
+    // add padding to the window for the canvas
+    const windowDimensions= getCanvasSize(0.4);
+
+    // add responsive font sizes
     const theme = responsiveFontSizes(darkTheme);
 
     return (

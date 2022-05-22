@@ -153,6 +153,7 @@ const DistributionComponent = ({ width, height }: CanvasProps) => {
             </div>
             <div>
                 <Grid container>
+                    {/* add listner to these text fields and update the xMin and xMax values on change */}
                     <Grid item xs={true} style={{ display: "flex", justifyContent: "left" }}>
                         <TextField id="outlined-basic" label="Lower Bound" variant="outlined" defaultValue={xMin}/>
                     </Grid>
@@ -192,6 +193,7 @@ const DistributionComponent = ({ width, height }: CanvasProps) => {
             </div>
             <div>
                 <Grid container columnSpacing={1} justifyContent="center">
+                    {/* add listener for the textfield and button here to do a sample (probably leave this to the end) */}
                     <Grid item>
                         <TextField id="outlined-basic" label="Samples" variant="outlined" defaultValue={nSamples}/>
                     </Grid>

@@ -14,6 +14,18 @@ import Button from '@mui/material/Button';
 interface CanvasProps {
     width: number;
     height: number;
+
+    xCoordinates: number[];
+    yCoordinates: number[];
+
+    mean: number;
+    median: number;
+    std: number;
+
+    xMin: number;
+    xMax: number;
+
+    nSample: number;
 }
 
 type Coordinate = {
@@ -24,7 +36,7 @@ type Coordinate = {
 const DistributionComponent = ({ width, height }: CanvasProps) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [isPainting, setIsPainting] = useState(false);
-    const [mousePosition, setMousePosition] = useState<Coordinate | undefined>(undefined);
+    let [mousePosition, setMousePosition] = useState<Coordinate | undefined>(undefined);
 
     const [xCoordinates, storeXCoordinates] = useState([]);
     const [yCoordinates, storeYCoordinates] = useState([]);
@@ -71,15 +83,24 @@ const DistributionComponent = ({ width, height }: CanvasProps) => {
     const paint = useCallback(
         (event: MouseEvent) => {
             if (isPainting) {
-                const newMousePosition = getCoordinates(event);
-                storeYCoordinates([...yCoordinates, newMousePosition.x]);
-                storeXCoordinates([...xCoordinates, newMousePosition.y]);
-                // console.log(yCoordinates);
+                let newMousePosition = getCoordinates(event);
                 
+                // going backwards is illegal 
+                if (newMousePosition.x < mousePosition.x) {
+                    newMousePosition.x = mousePosition.x;
+                }
+                
+                // invert height
+                yCoordinates.push(height - newMousePosition.y)
+                xCoordinates.push(newMousePosition.x)
+
+                console.log(newMousePosition.x)
+
                 if (mousePosition && newMousePosition) {
                     drawLine(mousePosition, newMousePosition);
-                    setMousePosition(newMousePosition);
+                    mousePosition = newMousePosition
                 }
+
             }
         },
         [isPainting, mousePosition]
@@ -155,10 +176,27 @@ const DistributionComponent = ({ width, height }: CanvasProps) => {
                 <Grid container>
                     {/* add listner to these text fields and update the xMin and xMax values on change */}
                     <Grid item xs={true} style={{ display: "flex", justifyContent: "left" }}>
-                        <TextField id="outlined-basic" label="Lower Bound" variant="outlined" defaultValue={xMin}/>
+                        <TextField id="outlined-basic" 
+                            label="Lower Bound" 
+                            variant="outlined" 
+                            type={'number'}
+                            defaultValue={xMin} 
+                            onChange={(event) =>
+                                setXMin(parseInt(event.target.value))
+                            }
+                        />
                     </Grid>
-                    <Grid item xs={true} style={{ display: "flex", justifyContent: "right" }}>
-                        <TextField id="outlined-basic" label="Upper Bound" variant="outlined" defaultValue={xMax}/>
+                    <Grid item xs={true} style={{ display: "flex", justifyContent: "right"}}>
+                        <TextField id="outlined-basic" 
+                            label="Upper Bound" 
+                            variant="outlined" 
+                            type={'number'}
+                            inputProps={{ style: {textAlign: 'right'} }} 
+                            defaultValue={xMax} 
+                            onChange={(event) =>
+                                setXMax(parseInt(event.target.value))
+                            }
+                        />
                     </Grid>
                 </Grid>
             </div>
@@ -195,7 +233,15 @@ const DistributionComponent = ({ width, height }: CanvasProps) => {
                 <Grid container columnSpacing={1} justifyContent="center">
                     {/* add listener for the textfield and button here to do a sample (probably leave this to the end) */}
                     <Grid item>
-                        <TextField id="outlined-basic" label="Samples" variant="outlined" defaultValue={nSamples}/>
+                        <TextField id="outlined-basic" 
+                        label="Samples" 
+                        variant="outlined" 
+                        type={'number'}
+                        defaultValue={nSamples}
+                        onChange={(event) =>
+                            setNSamples(parseInt(event.target.value))
+                        }
+                    />
                     </Grid>
                     <Grid item alignItems="stretch" style={{ display: "flex" }}>
                         <Button variant="outlined" color="primary">Sample</Button>

@@ -1,5 +1,5 @@
 import './App.css';
-import DistributionComponent from './canvas.tsx';
+import DistributionComponent from './components/canvas.tsx';
 import { ThemeProvider, createTheme, responsiveFontSizes} from '@mui/material/styles';
 import { Typography } from '@mui/material';
 
@@ -7,11 +7,10 @@ function getCanvasSize(scale) {
     const { innerWidth: width, innerHeight: height } = window;
     const scaledWidth = width-(scale*width);
     return {
-      width:scaledWidth,
-      height: scaledWidth*(9/16)
+      width: Math.round(scaledWidth),
+      height: Math.round(scaledWidth*(9/16))
     };
   }
-
 
 // theme for the app - dark of course
 const darkTheme = createTheme({

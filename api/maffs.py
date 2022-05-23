@@ -14,6 +14,7 @@ def auc(matrix):
         area += (matrix[i+1] + matrix[i]) / 2 / (len(matrix) - 1)
     return area
 
+# ??? WHY IS THIS WORKING ???
 def get_mean(matrix, x, min_x, max_x):
     mean = 0
     for i in range(len(matrix) - 1):
@@ -23,6 +24,7 @@ def get_mean(matrix, x, min_x, max_x):
 def get_median(cdf, min_x, max_x):
     return (np.argmin(np.abs(cdf - 0.5)) + 0.5) / len(cdf) * (max_x - min_x) + min_x
 
+# ??? WHY IS THIS WORKING ???
 def get_std(matrix, x, min_x, max_x):
     std = 0
     mean = get_mean(matrix, x, min_x, max_x)

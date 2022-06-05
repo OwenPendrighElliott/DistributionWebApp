@@ -38,7 +38,7 @@ def get_cdf(y_vector):
 def get_mean(y_vector, x_vector, min_x, max_x):
     mean = 0
     for i in range(len(y_vector) - 1):
-        mean += (x_vector[i+1] + x_vector[i]) * (y_vector[i+1] + y_vector[i]) / 4 * (max_x - min_x) / max_x / (len(y_vector) - 1)
+        mean += (x_vector[i+1] + x_vector[i]) * (y_vector[i+1] + y_vector[i]) / 4 / (x_vector[i+1] - x_vector[i])
     return mean
 
 # Not working

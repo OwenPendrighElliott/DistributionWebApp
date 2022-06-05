@@ -30,6 +30,10 @@ def deduplicate_vectors(x_vector, y_vector):
         i += 1
     return x_vector[::-1], y_vector[::-1]
 
+def shift_x_vector(x_vector, x_min, x_max):
+    x_vector_min, x_vector_max = np.min(x_vector), np.max(x_vector)
+    return (x_vector - x_vector_min) / (x_vector_max - x_vector_min) * (x_max - x_min) + x_min
+
 # place holder function for example
 @app.route('/api/calculate_statistics', methods=['POST'])
 def calculate_statistics():
@@ -46,6 +50,7 @@ def calculate_statistics():
     print(x_coords, "\n")
 
     x_vector, y_vector = deduplicate_vectors(np.array(x_coords), np.array(y_coords))
+    x_vector = shift_x_vector(x_vector, x_min, x_max)
     stats = get_stats(y_vector, get_cdf(y_vector), x_vector, x_min, x_max)
     n_digit_round = set_round_digits(x_min, x_max)
 

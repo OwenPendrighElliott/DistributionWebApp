@@ -183,9 +183,10 @@ const DistributionCanvas = ({ width, height }: CanvasProps) => {
                 yCoordinates.push(height - newMousePosition.y)
                 xCoordinates.push(newMousePosition.x)
                 // console.log(xCoordinates)
-                if (xCoordinates.length % 10 === 0) {
-                    callAPI();
-                }
+                // if (xCoordinates.length % 10 === 0) {
+                //     callAPI();
+                // }
+                callAPI();
                 if (mousePosition && newMousePosition) {
                     drawLine(mousePosition, newMousePosition);
                     mousePosition = newMousePosition

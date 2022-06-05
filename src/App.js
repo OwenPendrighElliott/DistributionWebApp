@@ -7,10 +7,10 @@ function getCanvasSize(scale) {
     const { innerWidth: width, innerHeight: height } = window;
     const scaledWidth = width-(scale*width);
     return {
-      width: Math.round(scaledWidth),
-      height: Math.round(scaledWidth*(9/16))
+        width: Math.round(scaledWidth),
+        height: Math.round(scaledWidth*(9/16))
     };
-  }
+}
 
 // theme for the app - dark of course
 const darkTheme = createTheme({

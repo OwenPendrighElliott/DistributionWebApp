@@ -7,6 +7,6 @@ cors = CORS(app)
 
 
 # place holder function for example
-@app.route('/api/time')
+@app.route('/api/calculate_statistics')
 def get_current_time():
-    return {'time': time.time()}
+    return {'mean': 1.0, 'std': 2.0, 'median': 3.0}

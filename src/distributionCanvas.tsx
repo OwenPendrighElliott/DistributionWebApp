@@ -24,16 +24,99 @@ interface CanvasProps {
 
     xMin: number;
     xMax: number;
-
-    nSample: number;
 }
+
+interface TableProps {
+    width: number;
+
+    mean: number;
+    median: number;
+    std: number;
+}
+
+interface SamplerProps {
+    width: number;
+
+    xCoordinates: number[];
+    yCoordinates: number[];
+    xMin: number;
+    xMax: number;
+    mean: number;
+    median: number;
+    std: number;
+}
+
 
 type Coordinate = {
     x: number;
     y: number;
 };
 
-const DistributionComponent = ({ width, height }: CanvasProps) => {
+function DistributionResultsTable({mean, median, std, width}: TableProps) {
+
+    return (
+        <div>
+            <div>
+                <br/> 
+                <Typography variant='h4'>Distribution Statistics</Typography>
+            </div>
+            <div className="tablediv">
+                <TableContainer sx={{maxWidth: width}} component={Paper}>
+                    <Table sx={{ minWidth: 650}} aria-label="results table">
+                        <TableHead>
+                            <TableRow>
+                                <TableCell align="center">Mean</TableCell>
+                                <TableCell align="center">Median</TableCell>
+                                <TableCell align="center">Std.</TableCell> 
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            <TableRow>
+                                <TableCell align="center">{mean}</TableCell>
+                                <TableCell align="center">{median}</TableCell>
+                                <TableCell align="center">{std}</TableCell>
+                            </TableRow>
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            </div>
+        </div>
+    );
+}
+
+function Sampler({xCoordinates, yCoordinates, width, xMin, xMax, mean, median, std}: SamplerProps) {
+    const [nSamples, setNSamples] = useState(10);
+    return (
+        <div>
+            <div>
+                <br/> 
+                <Typography variant='h4'>Sampler</Typography>
+                <br/> 
+            </div>
+            <div>
+                <Grid container columnSpacing={1} justifyContent="center">
+                    {/* add listener for the textfield and button here to do a sample (probably leave this to the end) */}
+                    <Grid item>
+                        <TextField id="outlined-basic" 
+                        label="Samples" 
+                        variant="outlined" 
+                        type={'number'}
+                        defaultValue={nSamples}
+                        onChange={(event) =>
+                            setNSamples(parseInt(event.target.value))
+                        }
+                    />
+                    </Grid>
+                    <Grid item alignItems="stretch" style={{ display: "flex" }}>
+                        <Button variant="outlined" color="primary">Sample</Button>
+                    </Grid>
+                </Grid>
+            </div>
+        </div>
+    );
+}
+
+const DistributionCanvas = ({ width, height }: CanvasProps) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [isPainting, setIsPainting] = useState(false);
     let [mousePosition, setMousePosition] = useState<Coordinate | undefined>(undefined);
@@ -41,14 +124,14 @@ const DistributionComponent = ({ width, height }: CanvasProps) => {
     const [xCoordinates, storeXCoordinates] = useState([]);
     const [yCoordinates, storeYCoordinates] = useState([]);
 
-    const [mean, setMean] = useState(0);
-    const [median, setMedian] = useState(0);
-    const [std, setStd] = useState(0);
+    // const [mean, setMean] = useState(0);
+    // const [median, setMedian] = useState(0);
+    // const [std, setStd] = useState(0);
+
+    const [distributionStats, setDistributionStats] = useState({mean: 0, median: 0, std: 0});
 
     const [xMin, setXMin] = useState(0);
     const [xMax, setXMax] = useState(100);
-
-    const [nSamples, setNSamples] = useState(10);
 
     function resetCanvas() {
         const canvas: HTMLCanvasElement = canvasRef.current;
@@ -94,8 +177,6 @@ const DistributionComponent = ({ width, height }: CanvasProps) => {
                 yCoordinates.push(height - newMousePosition.y)
                 xCoordinates.push(newMousePosition.x)
 
-                console.log(newMousePosition.x)
-
                 if (mousePosition && newMousePosition) {
                     drawLine(mousePosition, newMousePosition);
                     mousePosition = newMousePosition
@@ -123,6 +204,9 @@ const DistributionComponent = ({ width, height }: CanvasProps) => {
 
         // do the api call here to get the distribution stats
         // update the distribution stats using the result 
+        fetch('/api/calculate_statistics').then((res) => res.json())
+        .then((json) => {setDistributionStats({mean: json.mean, median: json.median, std: json.std})});
+
     }, []);
 
     useEffect(() => {
@@ -200,61 +284,27 @@ const DistributionComponent = ({ width, height }: CanvasProps) => {
                     </Grid>
                 </Grid>
             </div>
-            <div>
-                <br/> 
-                <Typography variant='h4'>Distribution Statistics</Typography>
-            </div>
-            <div className="tablediv">
-                <TableContainer sx={{maxWidth: width}} component={Paper}>
-                    <Table sx={{ minWidth: 650}} aria-label="results table">
-                        <TableHead>
-                            <TableRow>
-                                <TableCell align="center">Mean</TableCell>
-                                <TableCell align="center">Median</TableCell>
-                                <TableCell align="center">Std.</TableCell> 
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            <TableRow>
-                                <TableCell align="center">{mean}</TableCell>
-                                <TableCell align="center">{median}</TableCell>
-                                <TableCell align="center">{std}</TableCell>
-                            </TableRow>
-                        </TableBody>
-                    </Table>
-                </TableContainer>
-            </div>
-            <div>
-                <br/> 
-                <Typography variant='h4'>Sampler</Typography>
-                <br/> 
-            </div>
-            <div>
-                <Grid container columnSpacing={1} justifyContent="center">
-                    {/* add listener for the textfield and button here to do a sample (probably leave this to the end) */}
-                    <Grid item>
-                        <TextField id="outlined-basic" 
-                        label="Samples" 
-                        variant="outlined" 
-                        type={'number'}
-                        defaultValue={nSamples}
-                        onChange={(event) =>
-                            setNSamples(parseInt(event.target.value))
-                        }
-                    />
-                    </Grid>
-                    <Grid item alignItems="stretch" style={{ display: "flex" }}>
-                        <Button variant="outlined" color="primary">Sample</Button>
-                    </Grid>
-                </Grid>
-            </div>
+
+            <DistributionResultsTable mean={distributionStats.mean} 
+                                      median={distributionStats.median} 
+                                      std={distributionStats.std} 
+                                      width={width}/>
+
+            <Sampler xCoordinates={xCoordinates} 
+                     yCoordinates={yCoordinates} 
+                     xMin={xMin} 
+                     xMax={xMax}
+                     width={width}
+                     mean={distributionStats.mean}
+                     std={distributionStats.std}
+                     median={distributionStats.median}/>
         </div> 
     );
 };
 
-DistributionComponent.defaultProps = {
+DistributionCanvas.defaultProps = {
     width: window.innerWidth,
     height: window.innerHeight,
 };
 
-export default DistributionComponent;
+export default DistributionCanvas;

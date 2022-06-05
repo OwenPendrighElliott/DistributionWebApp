@@ -1,5 +1,5 @@
 import './App.css';
-import DistributionComponent from './components/canvas.tsx';
+import DistributionCanvas from './distributionCanvas.tsx';
 import { ThemeProvider, createTheme, responsiveFontSizes} from '@mui/material/styles';
 import { Typography } from '@mui/material';
 
@@ -40,7 +40,7 @@ function App() {
                 </Typography>
                 <br/>
                 <div className="CanvasArea">
-                    <DistributionComponent width={windowDimensions.width} height={windowDimensions.height}></DistributionComponent>
+                    <DistributionCanvas width={windowDimensions.width} height={windowDimensions.height}></DistributionCanvas>
                 </div>
             </header>
         </ThemeProvider >

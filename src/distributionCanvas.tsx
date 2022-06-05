@@ -18,9 +18,9 @@ interface CanvasProps {
     xCoordinates: number[];
     yCoordinates: number[];
 
-    mean: number;
-    median: number;
-    std: number;
+    mean: string;
+    median: string;
+    std: string;
 
     xMin: number;
     xMax: number;
@@ -29,9 +29,9 @@ interface CanvasProps {
 interface TableProps {
     width: number;
 
-    mean: number;
-    median: number;
-    std: number;
+    mean: string;
+    median: string;
+    std: string;
 }
 
 interface SamplerProps {
@@ -41,9 +41,9 @@ interface SamplerProps {
     yCoordinates: number[];
     xMin: number;
     xMax: number;
-    mean: number;
-    median: number;
-    std: number;
+    mean: string;
+    median: string;
+    std: string;
 }
 
 
@@ -121,14 +121,17 @@ const DistributionCanvas = ({ width, height }: CanvasProps) => {
     const [isPainting, setIsPainting] = useState(false);
     let [mousePosition, setMousePosition] = useState<Coordinate | undefined>(undefined);
 
-    const [xCoordinates, storeXCoordinates] = useState([]);
-    const [yCoordinates, storeYCoordinates] = useState([]);
+    // const [xCoordinates, storeXCoordinates] = useState([]);
+    // const [yCoordinates, storeYCoordinates] = useState([]);
+
+    let xCoordinates = [];
+    let yCoordinates = [];
 
     // const [mean, setMean] = useState(0);
     // const [median, setMedian] = useState(0);
     // const [std, setStd] = useState(0);
 
-    const [distributionStats, setDistributionStats] = useState({mean: 0, median: 0, std: 0});
+    const [distributionStats, setDistributionStats] = useState({mean: "0", median: "0", std: "0"});
 
     const [xMin, setXMin] = useState(0);
     const [xMax, setXMax] = useState(100);
@@ -138,8 +141,11 @@ const DistributionCanvas = ({ width, height }: CanvasProps) => {
         const context = canvas.getContext('2d');
         context.clearRect(0, 0, width, height);
         context.beginPath();
-        storeYCoordinates([]);
-        storeXCoordinates([]);
+        // storeYCoordinates([]);
+        // storeXCoordinates([]);
+
+        xCoordinates = [];
+        yCoordinates = [];
     }
 
     const startPaint = useCallback((event: MouseEvent) => {
@@ -176,12 +182,14 @@ const DistributionCanvas = ({ width, height }: CanvasProps) => {
                 // invert height
                 yCoordinates.push(height - newMousePosition.y)
                 xCoordinates.push(newMousePosition.x)
-
+                // console.log(xCoordinates)
+                if (xCoordinates.length % 10 === 0) {
+                    callAPI();
+                }
                 if (mousePosition && newMousePosition) {
                     drawLine(mousePosition, newMousePosition);
                     mousePosition = newMousePosition
                 }
-
             }
         },
         [isPainting, mousePosition]
@@ -198,15 +206,30 @@ const DistributionCanvas = ({ width, height }: CanvasProps) => {
         };
     }, [paint]);
 
+    function callAPI() {
+        // do the api call here to get the distribution stats
+        // update the distribution stats using the result 
+        // console.log(xCoordinates)
+        let requestOptions = {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(
+                    {
+                    "yCoords": yCoordinates,
+                    "xCoords": xCoordinates,
+                    'xMin': xMin,
+                    'xMax': xMax
+                }
+            )
+        };
+        fetch('/api/calculate_statistics', requestOptions)
+        .then((res) => res.json())
+        .then((json) => {setDistributionStats({mean: json.mean, median: json.median, std: json.std})});
+    }
+
     const exitPaint = useCallback(() => {
         setIsPainting(false);
         setMousePosition(undefined);
-
-        // do the api call here to get the distribution stats
-        // update the distribution stats using the result 
-        fetch('/api/calculate_statistics').then((res) => res.json())
-        .then((json) => {setDistributionStats({mean: json.mean, median: json.median, std: json.std})});
-
     }, []);
 
     useEffect(() => {

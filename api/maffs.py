@@ -13,7 +13,7 @@ def auc(y_vector: np.ndarray) -> float:
     Args:
         y_vector: The y vector to calculate the area under.
     Returns:
-        np.ndarray: The area under the curve of the given y vector.
+        float: The area under the curve of the given y vector.
 
     Examples:
         >>> y_vec = np.array([1, 2, 3, 4, 5])
@@ -24,10 +24,34 @@ def auc(y_vector: np.ndarray) -> float:
         area += (y_vector[i+1] + y_vector[i]) / 2 / (len(y_vector) - 1)
     return area
 
-def normalise_input_y_vector(y_vector):
+def normalise_input_y_vector(y_vector: np.ndarray) -> np.ndarray:
+    '''
+    Normalises a vector by the area under its curve.
+
+    Args:
+        y_vector: The y vector to normalise.
+    Returns:
+        np.ndarray: The normalised y vector.
+
+    Examples:
+        >>> y_vec = np.array([1, 2, 3, 4, 5])
+        >>> y_vec_norm = normalise_input_y_vector(y_vec)
+    '''
     return y_vector / auc(y_vector)
 
-def get_cdf(y_vector):
+def get_cdf(y_vector: np.ndarray) -> np.ndarray:
+    '''
+    Get the CDF from a y vector
+
+    Args:
+        y_vector: The y vector to get the CDF of.
+    Returns:
+        np.ndarray: The resulting CDF.
+
+    Examples:
+        >>> y_vec = np.array([1, 2, 3, 4, 5])
+        >>> cdf = get_cdf(y_vec)
+    '''
     list_area = np.zeros(len(y_vector))
     cum_area = 0
     for i in range(len(y_vector) - 1):
@@ -57,7 +81,27 @@ def plot(x_vector, y_vector):
     plt.plot(x_vector, y_vector)
     plt.show()
 
-def get_stats(y_vector, cdf, x_vector, min_x, max_x):
+def get_stats(
+              y_vector: np.ndarray, 
+              cdf: np.ndarray, 
+              x_vector: np.ndarray, 
+              min_x: float, 
+              max_x: float
+              ) -> dict:
+    '''
+    Given a y vector, an x vector and a CDF use a provided x vector range to 
+    extract the mean, median and standard deviation of the distribution that they represent.
+
+    Args:
+        y_vector: The y vector to get the stats of.
+        cdf: The CDF of the y vector.
+        x_vector: The x vector of the y vector.
+        min_x: The minimum x value of the x vector.
+        max_x: The maximum x value of the x vector.
+    Returns:
+        tuple: The mean, median and standard deviation of the distribution that the y vector represents.
+
+    '''
     return {
             'mean': get_mean(y_vector, x_vector, min_x, max_x), 
             'median': get_median(cdf, min_x, max_x), 

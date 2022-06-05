@@ -15,7 +15,7 @@ function getCanvasSize(scale) {
 // theme for the app - dark of course
 const darkTheme = createTheme({
     palette: {
-      mode: 'dark',
+        mode: 'dark',
     },
     h2: {
         fontStyle: 'bold',

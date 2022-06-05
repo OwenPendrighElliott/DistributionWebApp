@@ -41,7 +41,7 @@ def auc(y_vector: np.ndarray) -&gt; float:
     Args:
         y_vector: The y vector to calculate the area under.
     Returns:
-        np.ndarray: The area under the curve of the given y vector.
+        float: The area under the curve of the given y vector.
 
     Examples:
         &gt;&gt;&gt; y_vec = np.array([1, 2, 3, 4, 5])
@@ -52,10 +52,34 @@ def auc(y_vector: np.ndarray) -&gt; float:
         area += (y_vector[i+1] + y_vector[i]) / 2 / (len(y_vector) - 1)
     return area
 
-def normalise_input_y_vector(y_vector):
+def normalise_input_y_vector(y_vector: np.ndarray) -&gt; np.ndarray:
+    &#39;&#39;&#39;
+    Normalises a vector by the area under its curve.
+
+    Args:
+        y_vector: The y vector to normalise.
+    Returns:
+        np.ndarray: The normalised y vector.
+
+    Examples:
+        &gt;&gt;&gt; y_vec = np.array([1, 2, 3, 4, 5])
+        &gt;&gt;&gt; y_vec_norm = normalise_input_y_vector(y_vec)
+    &#39;&#39;&#39;
     return y_vector / auc(y_vector)
 
-def get_cdf(y_vector):
+def get_cdf(y_vector: np.ndarray) -&gt; np.ndarray:
+    &#39;&#39;&#39;
+    Get the CDF from a y vector
+
+    Args:
+        y_vector: The y vector to get the CDF of.
+    Returns:
+        np.ndarray: The resulting CDF.
+
+    Examples:
+        &gt;&gt;&gt; y_vec = np.array([1, 2, 3, 4, 5])
+        &gt;&gt;&gt; cdf = get_cdf(y_vec)
+    &#39;&#39;&#39;
     list_area = np.zeros(len(y_vector))
     cum_area = 0
     for i in range(len(y_vector) - 1):
@@ -63,41 +87,66 @@ def get_cdf(y_vector):
         list_area[i] = cum_area
     return ([0] + list_area) / np.max(list_area)
 
+# Not correct
 def get_mean(y_vector, x_vector, min_x, max_x):
     mean = 0
     for i in range(len(y_vector) - 1):
-        mean += (x_vector[i+1] + x_vector[i]) * (y_vector[i+1] + y_vector[i]) / 4 * (max_x - min_x) / max_x / (len(y_vector) - 1)
+        mean += (x_vector[i+1] + x_vector[i]) * (y_vector[i+1] + y_vector[i]) / 4 / (x_vector[i+1] - x_vector[i])
     return mean
 
-# Not working
-def get_median(cdf, min_x, max_x):
-    return (np.argmin(np.abs(cdf - 0.5))) / len(cdf) * (max_x - min_x) + min_x
+# Not correct
+def get_median(cdf, x_vector):
+    return x_vector[np.argmin(np.abs(cdf - 0.5))]
 
-# def get_std(matrix, x, min_x, max_x):
-#     std = 0
-#     mean = get_mean(matrix, x, min_x, max_x)
-#     for i in range(len(matrix) - 1):
-#         std += ((((x[i+1] + x[i]) / 2 - mean) ** 2) * (matrix[i+1] + matrix[i]) / (2 ** (max_x + 1)) * 1/0.12445531191556146 / (len(matrix) - 1) * (max_x - min_x) / max_x) ** 0.5
-#     return std
+# Not correct
+def get_std(matrix, x, min_x, max_x):
+    std = 0
+    mean = get_mean(matrix, x, min_x, max_x)
+    for i in range(len(matrix) - 1):
+        std += ((((x[i+1] + x[i]) / 2 - mean) ** 2) * (matrix[i+1] + matrix[i]) / (2 ** (max_x + 1)) * 1/0.12445531191556146 / (len(matrix) - 1) * (max_x - min_x) / max_x) ** 0.5
+    return std
 
 def plot(x_vector, y_vector):
     import matplotlib.pyplot as plt
     plt.plot(x_vector, y_vector)
     plt.show()
 
-def get_stats(y_vector, cdf, x_vector, min_x, max_x):
+def get_stats(
+              y_vector: np.ndarray, 
+              cdf: np.ndarray, 
+              x_vector: np.ndarray, 
+              min_x: float, 
+              max_x: float
+              ) -&gt; dict:
+    &#39;&#39;&#39;
+    Given a y vector, an x vector and a CDF use a provided x vector range to 
+    extract the mean, median and standard deviation of the distribution that they represent.
+
+    Args:
+        y_vector: The y vector to get the stats of.
+        cdf: The CDF of the y vector.
+        x_vector: The x vector of the y vector.
+        min_x: The minimum x value of the x vector.
+        max_x: The maximum x value of the x vector.
+    Returns:
+        tuple: The mean, median and standard deviation of the distribution that the y vector represents.
+
+    &#39;&#39;&#39;
     return {
             &#39;mean&#39;: get_mean(y_vector, x_vector, min_x, max_x), 
-            &#39;median&#39;: get_median(cdf, min_x, max_x), 
+            &#39;median&#39;: get_median(cdf, x_vector), 
             &#39;std&#39;: 3#get_std(matrix, x, min_x, max_x)
            }
 
 def main():
+    min_x, max_x = 0, 100
     y = normalise_input_y_vector(initialise_test_matrix(10000))
-    min_x, max_x = 0, 90
     x = np.linspace(min_x, max_x, len(y))
+    print(x)
     print(get_stats(y, get_cdf(y), x, min_x, max_x))
-    plot(x, y)
+    # print(x)
+    # print(y)
+    # plot(x, y)
 
 if __name__ == &#34;__main__&#34;:
     main()</code></pre>
@@ -122,7 +171,7 @@ if __name__ == &#34;__main__&#34;:
 </dl>
 <h2 id="returns">Returns</h2>
 <dl>
-<dt><code>np.ndarray</code></dt>
+<dt><code>float</code></dt>
 <dd>The area under the curve of the given y vector.</dd>
 </dl>
 <h2 id="examples">Examples</h2>
@@ -140,7 +189,7 @@ if __name__ == &#34;__main__&#34;:
     Args:
         y_vector: The y vector to calculate the area under.
     Returns:
-        np.ndarray: The area under the curve of the given y vector.
+        float: The area under the curve of the given y vector.
 
     Examples:
         &gt;&gt;&gt; y_vec = np.array([1, 2, 3, 4, 5])
@@ -153,15 +202,41 @@ if __name__ == &#34;__main__&#34;:
 </details>
 </dd>
 <dt id="maffs.get_cdf"><code class="name flex">
-<span>def <span class="ident">get_cdf</span></span>(<span>y_vector)</span>
+<span>def <span class="ident">get_cdf</span></span>(<span>y_vector: numpy.ndarray) ‑> numpy.ndarray</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Get the CDF from a y vector</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>y_vector</code></strong></dt>
+<dd>The y vector to get the CDF of.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>np.ndarray</code></dt>
+<dd>The resulting CDF.</dd>
+</dl>
+<h2 id="examples">Examples</h2>
+<pre><code class="language-python-repl">&gt;&gt;&gt; y_vec = np.array([1, 2, 3, 4, 5])
+&gt;&gt;&gt; cdf = get_cdf(y_vec)
+</code></pre></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def get_cdf(y_vector):
+<pre><code class="python">def get_cdf(y_vector: np.ndarray) -&gt; np.ndarray:
+    &#39;&#39;&#39;
+    Get the CDF from a y vector
+
+    Args:
+        y_vector: The y vector to get the CDF of.
+    Returns:
+        np.ndarray: The resulting CDF.
+
+    Examples:
+        &gt;&gt;&gt; y_vec = np.array([1, 2, 3, 4, 5])
+        &gt;&gt;&gt; cdf = get_cdf(y_vec)
+    &#39;&#39;&#39;
     list_area = np.zeros(len(y_vector))
     cum_area = 0
     for i in range(len(y_vector) - 1):
@@ -182,12 +257,12 @@ if __name__ == &#34;__main__&#34;:
 <pre><code class="python">def get_mean(y_vector, x_vector, min_x, max_x):
     mean = 0
     for i in range(len(y_vector) - 1):
-        mean += (x_vector[i+1] + x_vector[i]) * (y_vector[i+1] + y_vector[i]) / 4 * (max_x - min_x) / max_x / (len(y_vector) - 1)
+        mean += (x_vector[i+1] + x_vector[i]) * (y_vector[i+1] + y_vector[i]) / 4 / (x_vector[i+1] - x_vector[i])
     return mean</code></pre>
 </details>
 </dd>
 <dt id="maffs.get_median"><code class="name flex">
-<span>def <span class="ident">get_median</span></span>(<span>cdf, min_x, max_x)</span>
+<span>def <span class="ident">get_median</span></span>(<span>cdf, x_vector)</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -195,12 +270,68 @@ if __name__ == &#34;__main__&#34;:
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def get_median(cdf, min_x, max_x):
-    return (np.argmin(np.abs(cdf - 0.5))) / len(cdf) * (max_x - min_x) + min_x</code></pre>
+<pre><code class="python">def get_median(cdf, x_vector):
+    return x_vector[np.argmin(np.abs(cdf - 0.5))]</code></pre>
 </details>
 </dd>
 <dt id="maffs.get_stats"><code class="name flex">
-<span>def <span class="ident">get_stats</span></span>(<span>y_vector, cdf, x_vector, min_x, max_x)</span>
+<span>def <span class="ident">get_stats</span></span>(<span>y_vector: numpy.ndarray, cdf: numpy.ndarray, x_vector: numpy.ndarray, min_x: float, max_x: float) ‑> dict</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Given a y vector, an x vector and a CDF use a provided x vector range to
+extract the mean, median and standard deviation of the distribution that they represent.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>y_vector</code></strong></dt>
+<dd>The y vector to get the stats of.</dd>
+<dt><strong><code>cdf</code></strong></dt>
+<dd>The CDF of the y vector.</dd>
+<dt><strong><code>x_vector</code></strong></dt>
+<dd>The x vector of the y vector.</dd>
+<dt><strong><code>min_x</code></strong></dt>
+<dd>The minimum x value of the x vector.</dd>
+<dt><strong><code>max_x</code></strong></dt>
+<dd>The maximum x value of the x vector.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>tuple</code></dt>
+<dd>The mean, median and standard deviation of the distribution that the y vector represents.</dd>
+</dl></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def get_stats(
+              y_vector: np.ndarray, 
+              cdf: np.ndarray, 
+              x_vector: np.ndarray, 
+              min_x: float, 
+              max_x: float
+              ) -&gt; dict:
+    &#39;&#39;&#39;
+    Given a y vector, an x vector and a CDF use a provided x vector range to 
+    extract the mean, median and standard deviation of the distribution that they represent.
+
+    Args:
+        y_vector: The y vector to get the stats of.
+        cdf: The CDF of the y vector.
+        x_vector: The x vector of the y vector.
+        min_x: The minimum x value of the x vector.
+        max_x: The maximum x value of the x vector.
+    Returns:
+        tuple: The mean, median and standard deviation of the distribution that the y vector represents.
+
+    &#39;&#39;&#39;
+    return {
+            &#39;mean&#39;: get_mean(y_vector, x_vector, min_x, max_x), 
+            &#39;median&#39;: get_median(cdf, x_vector), 
+            &#39;std&#39;: 3#get_std(matrix, x, min_x, max_x)
+           }</code></pre>
+</details>
+</dd>
+<dt id="maffs.get_std"><code class="name flex">
+<span>def <span class="ident">get_std</span></span>(<span>matrix, x, min_x, max_x)</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -208,12 +339,12 @@ if __name__ == &#34;__main__&#34;:
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def get_stats(y_vector, cdf, x_vector, min_x, max_x):
-    return {
-            &#39;mean&#39;: get_mean(y_vector, x_vector, min_x, max_x), 
-            &#39;median&#39;: get_median(cdf, min_x, max_x), 
-            &#39;std&#39;: 3#get_std(matrix, x, min_x, max_x)
-           }</code></pre>
+<pre><code class="python">def get_std(matrix, x, min_x, max_x):
+    std = 0
+    mean = get_mean(matrix, x, min_x, max_x)
+    for i in range(len(matrix) - 1):
+        std += ((((x[i+1] + x[i]) / 2 - mean) ** 2) * (matrix[i+1] + matrix[i]) / (2 ** (max_x + 1)) * 1/0.12445531191556146 / (len(matrix) - 1) * (max_x - min_x) / max_x) ** 0.5
+    return std</code></pre>
 </details>
 </dd>
 <dt id="maffs.initialise_test_matrix"><code class="name flex">
@@ -242,23 +373,52 @@ if __name__ == &#34;__main__&#34;:
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def main():
+    min_x, max_x = 0, 100
     y = normalise_input_y_vector(initialise_test_matrix(10000))
-    min_x, max_x = 0, 90
     x = np.linspace(min_x, max_x, len(y))
+    print(x)
     print(get_stats(y, get_cdf(y), x, min_x, max_x))
-    plot(x, y)</code></pre>
+    # print(x)
+    # print(y)
+    # plot(x, y)</code></pre>
 </details>
 </dd>
 <dt id="maffs.normalise_input_y_vector"><code class="name flex">
-<span>def <span class="ident">normalise_input_y_vector</span></span>(<span>y_vector)</span>
+<span>def <span class="ident">normalise_input_y_vector</span></span>(<span>y_vector: numpy.ndarray) ‑> numpy.ndarray</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Normalises a vector by the area under its curve.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>y_vector</code></strong></dt>
+<dd>The y vector to normalise.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>np.ndarray</code></dt>
+<dd>The normalised y vector.</dd>
+</dl>
+<h2 id="examples">Examples</h2>
+<pre><code class="language-python-repl">&gt;&gt;&gt; y_vec = np.array([1, 2, 3, 4, 5])
+&gt;&gt;&gt; y_vec_norm = normalise_input_y_vector(y_vec)
+</code></pre></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def normalise_input_y_vector(y_vector):
+<pre><code class="python">def normalise_input_y_vector(y_vector: np.ndarray) -&gt; np.ndarray:
+    &#39;&#39;&#39;
+    Normalises a vector by the area under its curve.
+
+    Args:
+        y_vector: The y vector to normalise.
+    Returns:
+        np.ndarray: The normalised y vector.
+
+    Examples:
+        &gt;&gt;&gt; y_vec = np.array([1, 2, 3, 4, 5])
+        &gt;&gt;&gt; y_vec_norm = normalise_input_y_vector(y_vec)
+    &#39;&#39;&#39;
     return y_vector / auc(y_vector)</code></pre>
 </details>
 </dd>
@@ -295,6 +455,7 @@ if __name__ == &#34;__main__&#34;:
 <li><code><a title="maffs.get_mean" href="#maffs.get_mean">get_mean</a></code></li>
 <li><code><a title="maffs.get_median" href="#maffs.get_median">get_median</a></code></li>
 <li><code><a title="maffs.get_stats" href="#maffs.get_stats">get_stats</a></code></li>
+<li><code><a title="maffs.get_std" href="#maffs.get_std">get_std</a></code></li>
 <li><code><a title="maffs.initialise_test_matrix" href="#maffs.initialise_test_matrix">initialise_test_matrix</a></code></li>
 <li><code><a title="maffs.main" href="#maffs.main">main</a></code></li>
 <li><code><a title="maffs.normalise_input_y_vector" href="#maffs.normalise_input_y_vector">normalise_input_y_vector</a></code></li>

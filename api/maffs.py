@@ -59,22 +59,24 @@ def get_cdf(y_vector: np.ndarray) -> np.ndarray:
         list_area[i] = cum_area
     return ([0] + list_area) / np.max(list_area)
 
+# Not correct
 def get_mean(y_vector, x_vector, min_x, max_x):
     mean = 0
     for i in range(len(y_vector) - 1):
         mean += (x_vector[i+1] + x_vector[i]) * (y_vector[i+1] + y_vector[i]) / 4 / (x_vector[i+1] - x_vector[i])
     return mean
 
-# Not working
-def get_median(cdf, min_x, max_x):
-    return (np.argmin(np.abs(cdf - 0.5))) / len(cdf) * (max_x - min_x) + min_x
+# Not correct
+def get_median(cdf, x_vector):
+    return x_vector[np.argmin(np.abs(cdf - 0.5))]
 
-# def get_std(matrix, x, min_x, max_x):
-#     std = 0
-#     mean = get_mean(matrix, x, min_x, max_x)
-#     for i in range(len(matrix) - 1):
-#         std += ((((x[i+1] + x[i]) / 2 - mean) ** 2) * (matrix[i+1] + matrix[i]) / (2 ** (max_x + 1)) * 1/0.12445531191556146 / (len(matrix) - 1) * (max_x - min_x) / max_x) ** 0.5
-#     return std
+# Not correct
+def get_std(matrix, x, min_x, max_x):
+    std = 0
+    mean = get_mean(matrix, x, min_x, max_x)
+    for i in range(len(matrix) - 1):
+        std += ((((x[i+1] + x[i]) / 2 - mean) ** 2) * (matrix[i+1] + matrix[i]) / (2 ** (max_x + 1)) * 1/0.12445531191556146 / (len(matrix) - 1) * (max_x - min_x) / max_x) ** 0.5
+    return std
 
 def plot(x_vector, y_vector):
     import matplotlib.pyplot as plt
@@ -104,16 +106,19 @@ def get_stats(
     '''
     return {
             'mean': get_mean(y_vector, x_vector, min_x, max_x), 
-            'median': get_median(cdf, min_x, max_x), 
+            'median': get_median(cdf, x_vector), 
             'std': 3#get_std(matrix, x, min_x, max_x)
            }
 
 def main():
+    min_x, max_x = 0, 100
     y = normalise_input_y_vector(initialise_test_matrix(10000))
-    min_x, max_x = 0, 90
     x = np.linspace(min_x, max_x, len(y))
+    print(x)
     print(get_stats(y, get_cdf(y), x, min_x, max_x))
-    plot(x, y)
+    # print(x)
+    # print(y)
+    # plot(x, y)
 
 if __name__ == "__main__":
     main()

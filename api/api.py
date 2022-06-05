@@ -3,6 +3,7 @@ from flask import Flask
 from flask_cors import CORS
 from flask import request
 import random
+from maffs import get_stats, get_cdf
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -22,9 +23,14 @@ def calculate_statistics():
     print("X coords:")
     print(x_coords, "\n")
 
-    n1 = round(random.random(),2)
-    n2 = round(random.random(),2)
-    n3 = round(random.random(),2)
+    # n1 = round(random.random(),2)
+    # n2 = round(random.random(),2)
+    # n3 = round(random.random(),2)
 
-    return {'mean': f"{n1: .2f}", 'median': f"{n2: .2f}", 'std': f"{n3: .2f}"}
+    n_digit_round = 2
+
+    stats = get_stats(y_coords, get_cdf(y_coords), x_coords, x_min, x_max)
+
+    return {'mean': f"{stats['mean']: .2f}", 'median': f"{stats['median']: .2f}", 'std': f"{stats['std']: .2f}"}
+    # return {'mean': f"{n1: .2f}", 'median': f"{n2: .2f}", 'std': f"{n3: .2f}"}
 

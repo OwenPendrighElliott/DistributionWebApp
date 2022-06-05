@@ -15,7 +15,7 @@ def auc(y_vector):
 def normalise_input_y_vector(y_vector):
     return y_vector / auc(y_vector)
 
-def cdf(y_vector):
+def get_cdf(y_vector):
     list_area = np.zeros(len(y_vector))
     cum_area = 0
     for i in range(len(y_vector) - 1):
@@ -56,7 +56,7 @@ def main():
     y = normalise_input_y_vector(initialise_test_matrix(10000))
     min_x, max_x = 0, 90
     x = np.linspace(min_x, max_x, len(y))
-    print(get_stats(y, cdf(y), x, min_x, max_x))
+    print(get_stats(y, get_cdf(y), x, min_x, max_x))
     plot(x, y)
 
 if __name__ == "__main__":

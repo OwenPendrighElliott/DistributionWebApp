@@ -43,8 +43,12 @@ def normalise_input_y_vector(y_vector: np.ndarray) -> np.ndarray:
         >>> y_vec = np.array([1, 2, 3, 4, 5])
         >>> y_vec_norm = normalise_input_y_vector(y_vec)
     '''
+    print(auc(y_vector))
     y_vector_zero = y_vector - np.min(y_vector)
-    return (y_vector_zero) / auc(y_vector_zero)
+    print(auc(y_vector_zero))
+    scaled_y_vector = y_vector_zero / auc(y_vector_zero)
+    print(auc(scaled_y_vector))
+    return scaled_y_vector
 
 def interp_x_y_vectors(x_vector, y_vector):
     '''

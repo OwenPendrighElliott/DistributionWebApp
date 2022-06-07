@@ -52,4 +52,4 @@ def sample_distribution():
     x_max = data['xMax']
     n_samples = data['nSamples']
 
-    return {"samples": get_samples(x_coords, y_coords, x_min, x_max, n_samples)}
+    return {"samples": list(get_samples(x_coords, y_coords, x_min, x_max, n_samples))}

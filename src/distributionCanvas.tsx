@@ -6,7 +6,15 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { Typography } from '@mui/material';
+import Box from '@mui/material/Box';
+
+import ListItem from '@mui/material/ListItem';
+import List from '@mui/material/List';
+import ListItemText from '@mui/material/ListItemText';
+// import { FixedSizeList } from 'react-window';
+
+import Typography from '@mui/material/Typography';
+
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
@@ -46,6 +54,10 @@ interface SamplerProps {
     std: string;
 }
 
+type SampleListElement = {
+    index: number;
+    sample: number;
+};
 
 type Coordinate = {
     x: number;
@@ -84,101 +96,15 @@ function DistributionResultsTable({mean, median, std, width}: TableProps) {
     );
 }
 
-// function Sampler({xCoordinates, yCoordinates, width, xMin, xMax, mean, median, std}: SamplerProps) {
-//     const [nSamples, setNSamples] = useState(10);
-//     return (
-//         <div>
-//             <div>
-//                 <br/> 
-//                 <Typography variant='h4'>Sampler</Typography>
-//                 <br/> 
-//             </div>
-//             <div>
-//                 <Grid container columnSpacing={1} justifyContent="center">
-//                     {/* add listener for the textfield and button here to do a sample (probably leave this to the end) */}
-//                     <Grid item>
-//                         <TextField id="outlined-basic" 
-//                         label="Samples" 
-//                         variant="outlined" 
-//                         type={'number'}
-//                         defaultValue={nSamples}
-//                         onChange={(event) =>
-//                             setNSamples(parseInt(event.target.value))
-//                         }
-//                     />
-//                     </Grid>
-//                     <Grid item alignItems="stretch" style={{ display: "flex" }}>
-//                         <Button variant="outlined" color="primary">Sample</Button>
-//                     </Grid>
-//                 </Grid>
-//             </div>
-//         </div>
-//     );
-// }
-
-// const Sampler = ({xCoordinates, yCoordinates, width, xMin, xMax, mean, median, std}: SamplerProps) => {
-//     const [nSamples, setNSamples] = useState(10);
-//     const [samplePoints, setSamplePoints] = useState([]);
-
-//     function callSampleAPI() {
-//         console.log("Calling sampling API");
-//         let requestOptions = {
-//             method: 'POST',
-//             headers: { 'Content-Type': 'application/json' },
-//             body: JSON.stringify(
-//                 {
-//                 "yCoords": yCoordinates,
-//                 "xCoords": xCoordinates,
-//                 'xMin': xMin,
-//                 'xMax': xMax,
-//                 'nSamples': nSamples
-//                 }
-//             )
-//         };
-//         fetch('/api/sample_distribution', requestOptions)
-//         .then((res) => res.json())
-//         .then((json) => {setSamplePoints(json.samples)});
-
-//         console.log(yCoordinates);
-//     }
-
-//     return (
-//         <div>
-//             <div>
-//                 <br/> 
-//                 <Typography variant='h4'>Sampler</Typography>
-//                 <br/> 
-//             </div>
-//             <div>
-//                 <Grid container columnSpacing={1} justifyContent="center">
-//                     {/* add listener for the textfield and button here to do a sample (probably leave this to the end) */}
-//                     <Grid item>
-//                         <TextField id="outlined-basic" 
-//                         label="Samples" 
-//                         variant="outlined" 
-//                         type={'number'}
-//                         defaultValue={nSamples}
-//                         onChange={(event) =>
-//                             setNSamples(parseInt(event.target.value))
-//                         }
-//                     />
-//                     </Grid>
-//                     <Grid item alignItems="stretch" style={{ display: "flex" }}>
-//                         <Button variant="outlined" 
-//                                 color="primary"
-//                                 onClick={() => callSampleAPI()}>
-//                             Sample
-//                         </Button>
-//                     </Grid>
-//                 </Grid>
-//             </div>
-//             {samplePoints.map((sample) => (
-//                 <Typography>{sample}</Typography>
-//             ))}
-//         </div>
-//     );
-// }
-
+function renderRow(props: SampleListElement) {
+    const { index, sample } = props;
+    return (
+        <ListItem  key={index} component="div" disablePadding>
+            <ListItemText primary={sample} />
+        </ListItem>
+    );
+}
+  
 const DistributionCanvas = ({ width, height }: CanvasProps) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [isPainting, setIsPainting] = useState(false);
@@ -189,10 +115,6 @@ const DistributionCanvas = ({ width, height }: CanvasProps) => {
 
     // let xCoordinates = [];
     // let yCoordinates = [];
-
-    // const [mean, setMean] = useState(0);
-    // const [median, setMedian] = useState(0);
-    // const [std, setStd] = useState(0);
 
     const [distributionStats, setDistributionStats] = useState({mean: "0", median: "0", std: "0"});
 
@@ -209,7 +131,6 @@ const DistributionCanvas = ({ width, height }: CanvasProps) => {
         context.beginPath();
         storeYCoordinates([]);
         storeXCoordinates([]);
-
         // xCoordinates = [];
         // yCoordinates = [];
     }
@@ -420,7 +341,6 @@ const DistributionCanvas = ({ width, height }: CanvasProps) => {
             </div>
             <div>
                 <Grid container columnSpacing={1} justifyContent="center">
-                    {/* add listener for the textfield and button here to do a sample (probably leave this to the end) */}
                     <Grid item>
                         <TextField id="outlined-basic" 
                         label="Samples" 
@@ -441,9 +361,22 @@ const DistributionCanvas = ({ width, height }: CanvasProps) => {
                     </Grid>
                 </Grid>
             </div>
-            {samplePoints.map((sample) => (
-                <Typography>{sample}</Typography>
-            ))}
+            <Grid
+                container
+                spacing={0}
+                direction="column"
+                alignItems="center"
+                style={{ minHeight: '100vh' }}
+                >
+                <Grid item xs={3}>
+                <List>
+                    {samplePoints.map((sample, index) => (
+                        renderRow({index: index, sample: sample})
+                    ))}
+                </List>
+                </Grid>       
+            </Grid> 
+            
         </div> 
     );
 };

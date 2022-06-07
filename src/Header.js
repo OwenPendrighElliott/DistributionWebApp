@@ -1,48 +1,8 @@
-// import AppBar from '@mui/material/AppBar';
-// import Toolbar from '@mui/material/Toolbar';
-// import Menu from '@mui/material/Menu';
-// import MenuItem from '@mui/material/MenuItem';
-
-// import { AppBar, Toolbar } from '@mui/material';
-// import { Menu, MenuItem } from '@mui/material';
-// import { Box } from '@mui/material';
-// import { Typography } from '@mui/material';
-// import React from "react";
-// import AdbIcon from '@mui/icons-material/Adb';
-
-// const pages = ['Github', 'James Hot Domain Name Ideas', 'Mason the Stone Mason'];
-
-// export default function Header() {
-//   const displayDesktop = () => {
-//     return <Toolbar>
-//                 <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
-                
-//                 p d f . s a d
-//                 <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-//                     <Menu>
-//                         {pages.map((page) => (
-//                         <MenuItem>
-//                             <Typography textAlign="center">{page}</Typography>
-//                         </MenuItem>
-//                         ))}
-//                     </Menu>
-//                 </Box>
-//           </Toolbar>;
-//   };
-  
-//   return (
-//     <header>
-//       <AppBar>{displayDesktop()}</AppBar>
-//     </header>
-//   );
-// }
-
 import * as React from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
 import Link from '@mui/material/Link';
 import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';

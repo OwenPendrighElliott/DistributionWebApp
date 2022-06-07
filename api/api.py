@@ -35,8 +35,8 @@ def calculate_statistics():
 
     x_vector, y_vector = prep_input_vectors(x_coords, y_coords, x_min, x_max)
 
-    #print(x_vector, "\n")
-    print(y_vector, "\n")
+    # print(x_vector, "\n")
+    # print(y_vector, "\n")
 
     stats = get_stats(x_vector, y_vector)
     n_digit_round = set_round_digits(x_min, x_max)

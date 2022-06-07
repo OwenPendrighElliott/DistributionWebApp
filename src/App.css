@@ -3,7 +3,7 @@
 }
 
 .App-header {
-  background-color: #0A1929;
+  background-color: #2f3136;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -11,13 +11,18 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
+  padding-top: 4vh;
+  padding-bottom: 20vh;
 }
 
 .App-link {
   color: #61dafb;
 } 
 
-* canvas{ border: 5px solid #0d80d8; }
+* canvas{ 
+    /* border: 1px solid #121315;  */
+    background-color: #40444b;
+}
 
 .tablediv {
     display: flex;
@@ -29,10 +34,4 @@
 }
 ::-moz-selection {
     background: #afafaf; /* Gecko Browsers */
-}
-
-body {
-    padding-top: 1vh;
-    padding-bottom: 20vh;
-    background-color: #0A1929;
 }

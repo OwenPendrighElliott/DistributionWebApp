@@ -262,7 +262,7 @@ const DistributionCanvas = ({ width, height }: CanvasProps) => {
         const canvas: HTMLCanvasElement = canvasRef.current;
         const context = canvas.getContext('2d');
         if (context) {
-            context.strokeStyle = '#a6e22e';
+            context.strokeStyle = '#89cff0';
             context.lineJoin = 'round';
             context.lineWidth = 5;
 

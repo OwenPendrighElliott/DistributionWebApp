@@ -1,5 +1,6 @@
 import './App.css';
 import DistributionCanvas from './distributionCanvas.tsx';
+import Header from './Header.js';
 import { ThemeProvider, createTheme, responsiveFontSizes} from '@mui/material/styles';
 import { Typography } from '@mui/material';
 
@@ -17,9 +18,11 @@ const darkTheme = createTheme({
     palette: {
         mode: 'dark',
     },
-    h2: {
-        fontStyle: 'bold',
-    },
+    typography: {
+        fontFamily: [
+          'Source Code Pro',
+        ].join(','),
+      },
   });
 
 function App() {
@@ -35,12 +38,17 @@ function App() {
         <div className="App">
         <ThemeProvider  theme={theme}>
             <header className="App-header">
-                <Typography variant='h2' align='center'>
-                    Draw Your Distribution 
-                </Typography>
+                {/* <Typography variant='h2' align='center'>
+                    p d f . s a d
+                </Typography> */}
+                <Header>
+                    pdf.sad
+                </Header>
                 <br/>
                 <div className="CanvasArea">
-                    <DistributionCanvas width={windowDimensions.width} height={windowDimensions.height}></DistributionCanvas>
+                    <DistributionCanvas width={windowDimensions.width} 
+                                        height={windowDimensions.height}>
+                    </DistributionCanvas>
                 </div>
             </header>
         </ThemeProvider >

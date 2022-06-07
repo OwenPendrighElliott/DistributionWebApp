@@ -42,7 +42,7 @@ const ResponsiveAppBar = () => {
       <Container maxWidth="xl">
         <Toolbar>
           <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
-            p d f . s a d
+            d r a w d i s t . a p p
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
               <Button

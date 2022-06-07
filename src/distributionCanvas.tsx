@@ -84,48 +84,111 @@ function DistributionResultsTable({mean, median, std, width}: TableProps) {
     );
 }
 
-function Sampler({xCoordinates, yCoordinates, width, xMin, xMax, mean, median, std}: SamplerProps) {
-    const [nSamples, setNSamples] = useState(10);
-    return (
-        <div>
-            <div>
-                <br/> 
-                <Typography variant='h4'>Sampler</Typography>
-                <br/> 
-            </div>
-            <div>
-                <Grid container columnSpacing={1} justifyContent="center">
-                    {/* add listener for the textfield and button here to do a sample (probably leave this to the end) */}
-                    <Grid item>
-                        <TextField id="outlined-basic" 
-                        label="Samples" 
-                        variant="outlined" 
-                        type={'number'}
-                        defaultValue={nSamples}
-                        onChange={(event) =>
-                            setNSamples(parseInt(event.target.value))
-                        }
-                    />
-                    </Grid>
-                    <Grid item alignItems="stretch" style={{ display: "flex" }}>
-                        <Button variant="outlined" color="primary">Sample</Button>
-                    </Grid>
-                </Grid>
-            </div>
-        </div>
-    );
-}
+// function Sampler({xCoordinates, yCoordinates, width, xMin, xMax, mean, median, std}: SamplerProps) {
+//     const [nSamples, setNSamples] = useState(10);
+//     return (
+//         <div>
+//             <div>
+//                 <br/> 
+//                 <Typography variant='h4'>Sampler</Typography>
+//                 <br/> 
+//             </div>
+//             <div>
+//                 <Grid container columnSpacing={1} justifyContent="center">
+//                     {/* add listener for the textfield and button here to do a sample (probably leave this to the end) */}
+//                     <Grid item>
+//                         <TextField id="outlined-basic" 
+//                         label="Samples" 
+//                         variant="outlined" 
+//                         type={'number'}
+//                         defaultValue={nSamples}
+//                         onChange={(event) =>
+//                             setNSamples(parseInt(event.target.value))
+//                         }
+//                     />
+//                     </Grid>
+//                     <Grid item alignItems="stretch" style={{ display: "flex" }}>
+//                         <Button variant="outlined" color="primary">Sample</Button>
+//                     </Grid>
+//                 </Grid>
+//             </div>
+//         </div>
+//     );
+// }
+
+// const Sampler = ({xCoordinates, yCoordinates, width, xMin, xMax, mean, median, std}: SamplerProps) => {
+//     const [nSamples, setNSamples] = useState(10);
+//     const [samplePoints, setSamplePoints] = useState([]);
+
+//     function callSampleAPI() {
+//         console.log("Calling sampling API");
+//         let requestOptions = {
+//             method: 'POST',
+//             headers: { 'Content-Type': 'application/json' },
+//             body: JSON.stringify(
+//                 {
+//                 "yCoords": yCoordinates,
+//                 "xCoords": xCoordinates,
+//                 'xMin': xMin,
+//                 'xMax': xMax,
+//                 'nSamples': nSamples
+//                 }
+//             )
+//         };
+//         fetch('/api/sample_distribution', requestOptions)
+//         .then((res) => res.json())
+//         .then((json) => {setSamplePoints(json.samples)});
+
+//         console.log(yCoordinates);
+//     }
+
+//     return (
+//         <div>
+//             <div>
+//                 <br/> 
+//                 <Typography variant='h4'>Sampler</Typography>
+//                 <br/> 
+//             </div>
+//             <div>
+//                 <Grid container columnSpacing={1} justifyContent="center">
+//                     {/* add listener for the textfield and button here to do a sample (probably leave this to the end) */}
+//                     <Grid item>
+//                         <TextField id="outlined-basic" 
+//                         label="Samples" 
+//                         variant="outlined" 
+//                         type={'number'}
+//                         defaultValue={nSamples}
+//                         onChange={(event) =>
+//                             setNSamples(parseInt(event.target.value))
+//                         }
+//                     />
+//                     </Grid>
+//                     <Grid item alignItems="stretch" style={{ display: "flex" }}>
+//                         <Button variant="outlined" 
+//                                 color="primary"
+//                                 onClick={() => callSampleAPI()}>
+//                             Sample
+//                         </Button>
+//                     </Grid>
+//                 </Grid>
+//             </div>
+//             {samplePoints.map((sample) => (
+//                 <Typography>{sample}</Typography>
+//             ))}
+//         </div>
+//     );
+// }
 
 const DistributionCanvas = ({ width, height }: CanvasProps) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [isPainting, setIsPainting] = useState(false);
     let [mousePosition, setMousePosition] = useState<Coordinate | undefined>(undefined);
 
-    // const [xCoordinates, storeXCoordinates] = useState([]);
-    // const [yCoordinates, storeYCoordinates] = useState([]);
+    const [xCoordinates, storeXCoordinates] = useState([]);
+    const [yCoordinates, storeYCoordinates] = useState([]);
 
-    let xCoordinates = [];
-    let yCoordinates = [];
+    // let xCoordinates = [];
+    // let yCoordinates = [];
 
     // const [mean, setMean] = useState(0);
     // const [median, setMedian] = useState(0);
@@ -136,16 +199,19 @@ const DistributionCanvas = ({ width, height }: CanvasProps) => {
     const [xMin, setXMin] = useState(0);
     const [xMax, setXMax] = useState(100);
 
+    const [nSamples, setNSamples] = useState(10);
+    const [samplePoints, setSamplePoints] = useState([]);
+
     function resetCanvas() {
         const canvas: HTMLCanvasElement = canvasRef.current;
         const context = canvas.getContext('2d');
         context.clearRect(0, 0, width, height);
         context.beginPath();
-        // storeYCoordinates([]);
-        // storeXCoordinates([]);
+        storeYCoordinates([]);
+        storeXCoordinates([]);
 
-        xCoordinates = [];
-        yCoordinates = [];
+        // xCoordinates = [];
+        // yCoordinates = [];
     }
 
     const startPaint = useCallback((event: MouseEvent) => {
@@ -184,9 +250,9 @@ const DistributionCanvas = ({ width, height }: CanvasProps) => {
                 xCoordinates.push(newMousePosition.x)
                 // console.log(xCoordinates)
                 // if (xCoordinates.length % 10 === 0) {
-                //     callAPI();
+                //     callStatsAPI();
                 // }
-                callAPI();
+                callStatsAPI();
                 if (mousePosition && newMousePosition) {
                     drawLine(mousePosition, newMousePosition);
                     mousePosition = newMousePosition
@@ -207,7 +273,7 @@ const DistributionCanvas = ({ width, height }: CanvasProps) => {
         };
     }, [paint]);
 
-    function callAPI() {
+    function callStatsAPI() {
         // do the api call here to get the distribution stats
         // update the distribution stats using the result 
         // console.log(xCoordinates)
@@ -226,6 +292,31 @@ const DistributionCanvas = ({ width, height }: CanvasProps) => {
         fetch('/api/calculate_statistics', requestOptions)
         .then((res) => res.json())
         .then((json) => {setDistributionStats({mean: json.mean, median: json.median, std: json.std})});
+        
+        console.log(yCoordinates);
+    }
+
+    function callSampleAPI() {
+        console.log(yCoordinates);
+        console.log("Calling sampling API");
+        let requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(
+                {
+                "yCoords": yCoordinates,
+                "xCoords": xCoordinates,
+                'xMin': xMin,
+                'xMax': xMax,
+                'nSamples': nSamples
+                }
+            )
+        };
+        fetch('/api/sample_distribution', requestOptions)
+        .then((res) => res.json())
+        .then((json) => {setSamplePoints(json.samples)});
+
+        console.log(yCoordinates);
     }
 
     const exitPaint = useCallback(() => {
@@ -314,14 +405,45 @@ const DistributionCanvas = ({ width, height }: CanvasProps) => {
                                       std={distributionStats.std} 
                                       width={width}/>
 
-            <Sampler xCoordinates={xCoordinates} 
+            {/* <Sampler xCoordinates={xCoordinates} 
                      yCoordinates={yCoordinates} 
                      xMin={xMin} 
                      xMax={xMax}
                      width={width}
                      mean={distributionStats.mean}
                      std={distributionStats.std}
-                     median={distributionStats.median}/>
+                     median={distributionStats.median}/> */}
+            <div>
+                <br/> 
+                <Typography variant='h4'>Sampler</Typography>
+                <br/> 
+            </div>
+            <div>
+                <Grid container columnSpacing={1} justifyContent="center">
+                    {/* add listener for the textfield and button here to do a sample (probably leave this to the end) */}
+                    <Grid item>
+                        <TextField id="outlined-basic" 
+                        label="Samples" 
+                        variant="outlined" 
+                        type={'number'}
+                        defaultValue={nSamples}
+                        onChange={(event) =>
+                            setNSamples(parseInt(event.target.value))
+                        }
+                    />
+                    </Grid>
+                    <Grid item alignItems="stretch" style={{ display: "flex" }}>
+                        <Button variant="outlined" 
+                                color="primary"
+                                onClick={() => callSampleAPI()}>
+                            Sample
+                        </Button>
+                    </Grid>
+                </Grid>
+            </div>
+            {samplePoints.map((sample) => (
+                <Typography>{sample}</Typography>
+            ))}
         </div> 
     );
 };

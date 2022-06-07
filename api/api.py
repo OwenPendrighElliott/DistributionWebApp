@@ -43,3 +43,15 @@ def calculate_statistics():
 
     return {'mean': f"{stats['mean']: .{n_digit_round}f}", 'median': f"{stats['median']: .{n_digit_round}f}", 'std': f"{stats['std']: .{n_digit_round}f}"}
 
+@app.route('/api/sample_distribution', methods=['POST'])
+def sample_distribution():
+    data = request.get_json()
+    y_coords = data['yCoords']
+    x_coords = data['xCoords']
+    x_min = data['xMin']
+    x_max = data['xMax']
+    n_samples = data['nSamples']
+
+
+
+    return {"samples": y_coords}

@@ -140,5 +140,5 @@ def get_samples(x_coords, y_coords, x_min, x_max, n_samples):
     x_vector, y_vector = prep_input_vectors(x_coords, y_coords, x_min, x_max)
     cdf = get_cdf(y_vector)
     unif_samples = np.random.uniform(0, 1, n_samples)
-    samples = np.interp(unif_samples, x_vector, cdf)
+    samples = np.interp(unif_samples, cdf, x_vector)
     return samples

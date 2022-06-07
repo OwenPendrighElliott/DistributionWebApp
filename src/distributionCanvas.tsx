@@ -65,7 +65,6 @@ type Coordinate = {
 };
 
 function DistributionResultsTable({mean, median, std, width}: TableProps) {
-
     return (
         <div>
             <div>
@@ -218,8 +217,6 @@ const DistributionCanvas = ({ width, height }: CanvasProps) => {
     }
 
     function callSampleAPI() {
-        console.log(yCoordinates);
-        console.log("Calling sampling API");
         let requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -236,8 +233,6 @@ const DistributionCanvas = ({ width, height }: CanvasProps) => {
         fetch('/api/sample_distribution', requestOptions)
         .then((res) => res.json())
         .then((json) => {setSamplePoints(json.samples)});
-
-        console.log(yCoordinates);
     }
 
     const exitPaint = useCallback(() => {
@@ -325,15 +320,6 @@ const DistributionCanvas = ({ width, height }: CanvasProps) => {
                                       median={distributionStats.median} 
                                       std={distributionStats.std} 
                                       width={width}/>
-
-            {/* <Sampler xCoordinates={xCoordinates} 
-                     yCoordinates={yCoordinates} 
-                     xMin={xMin} 
-                     xMax={xMax}
-                     width={width}
-                     mean={distributionStats.mean}
-                     std={distributionStats.std}
-                     median={distributionStats.median}/> */}
             <div>
                 <br/> 
                 <Typography variant='h4'>Sampler</Typography>

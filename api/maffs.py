@@ -58,8 +58,8 @@ def get_cdf(y_vector: np.ndarray) -> np.ndarray:
     cum_area = 0
     for i in range(count_y - 1):
         cum_area += (y_vector[i+1] + y_vector[i]) / 2 / (count_y - 1)
-        list_area[i] = cum_area
-    return ([0] + list_area) / np.max(list_area)
+        list_area[i+1] = cum_area
+    return (list_area) / np.max(list_area)
 
 def interp_x_y_vectors(x_vector, y_vector):
     '''
@@ -140,5 +140,11 @@ def get_samples(x_coords, y_coords, x_min, x_max, n_samples):
     x_vector, y_vector = prep_input_vectors(x_coords, y_coords, x_min, x_max)
     cdf = get_cdf(y_vector)
     unif_samples = np.random.uniform(0, 1, n_samples)
+    print(cdf.min(), cdf.max())
+    
+    print(x_vector.min(), x_vector.max())
+    print(unif_samples)
+    print(cdf)
     samples = np.interp(unif_samples, cdf, x_vector)
+    print(samples)
     return samples

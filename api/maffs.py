@@ -1,4 +1,5 @@
 import numpy as np
+from utils import prep_input_vectors
 
 def initialise_test_matrix():
     #return [1, 1.1, 1.2, 1.6, 2.3, 2.9, 3.9, 7, 7.8, 8.2, 8.3, 8.2, 7.8, 7, 3.9, 2.9, 2.3, 1.6, 1.2, 1.1, 1]
@@ -41,7 +42,7 @@ def normalise_input_y_vector(y_vector: np.ndarray) -> np.ndarray:
 
 def get_cdf(y_vector: np.ndarray) -> np.ndarray:
     '''
-    Get the CDF from a y vector
+    Get the CDF from a y vector (assumes interpolated x)
 
     Args:
         y_vector: The y vector to get the CDF of.
@@ -50,7 +51,7 @@ def get_cdf(y_vector: np.ndarray) -> np.ndarray:
 
     Examples:
         >>> y_vec = np.array([1, 2, 3, 4, 5])
-        >>> cdf = get_cdf(y_vec)
+        >>> cdf = get_cdf(y_vector)
     '''
     count_y = len(y_vector)
     list_area = np.zeros(count_y)
@@ -95,11 +96,6 @@ def get_std(x_vector, y_vector, mean, x_range):
         std += ((((x_vector[i+1] + x_vector[i]) / 2 - mean) ** 2) * (y_vector[i+1] + y_vector[i]) / 2 * (x_vector[i+1] - x_vector[i]) / x_range) ** 0.5
     return std
 
-def plot(x_vector, y_vector):
-    import matplotlib.pyplot as plt
-    plt.plot(x_vector, y_vector)
-    plt.show()
-
 def get_stats(
               x_vector: np.ndarray,
               y_vector: np.ndarray,
@@ -126,3 +122,23 @@ def get_stats(
             'median': median,
             'std': std
            }
+
+def get_samples(x_coords, y_coords, x_min, x_max, n_samples):
+    '''
+    Given a set of x and y coordinates, a minimum and maximum x value and a number of samples,
+    this function returns a set of samples from the distribution represented by the x and y coordinates.
+
+    Args:
+        x_coords: The x coordinates of the distribution.
+        y_coords: The y coordinates of the distribution.
+        x_min: The minimum x value of the distribution.
+        x_max: The maximum x value of the distribution.
+        n_samples: The number of samples to generate.
+    Returns:
+        np.ndarray: The x and y coordinates of the samples.
+    '''
+    x_vector, y_vector = prep_input_vectors(x_coords, y_coords, x_min, x_max)
+    cdf = get_cdf(y_vector)
+    unif_samples = np.random.uniform(0, 1, n_samples)
+    samples = [x_vector[np.argmin(np.abs(cdf - unif_samples[i]))] for i in range(n_samples)]
+    return samples

@@ -2,7 +2,7 @@ import time
 from flask import Flask
 from flask_cors import CORS
 from flask import request
-from maffs import get_stats
+from maffs import get_stats, get_samples
 from utils import prep_input_vectors
 import numpy as np
 
@@ -52,6 +52,4 @@ def sample_distribution():
     x_max = data['xMax']
     n_samples = data['nSamples']
 
-
-
-    return {"samples": y_coords}
+    return {"samples": get_samples(x_coords, y_coords, x_min, x_max, n_samples)}

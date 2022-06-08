@@ -65,7 +65,6 @@ type Coordinate = {
 };
 
 function copyArrayToClipboard(array: number[]) {
-    console.log(array.join(','));
     navigator.clipboard.writeText(array.join(','));
 }
 
@@ -216,9 +215,7 @@ const DistributionCanvas = ({ width, height }: CanvasProps) => {
         };
         fetch('/api/calculate_statistics', requestOptions)
         .then((res) => res.json())
-        .then((json) => {setDistributionStats({mean: json.mean, median: json.median, std: json.std})});
-        
-        console.log(yCoordinates);
+        .then((json) => {setDistributionStats({mean: json.mean, median: json.median, std: json.std})});        
     }
 
     function callSampleAPI() {

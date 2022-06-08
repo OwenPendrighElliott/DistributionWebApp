@@ -19,6 +19,9 @@ import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 
+import Tooltip from '@mui/material/Tooltip';
+import ClickAwayListener from '@mui/material/ClickAwayListener';
+
 interface CanvasProps {
     width: number;
     height: number;
@@ -126,6 +129,8 @@ const DistributionCanvas = ({ width, height }: CanvasProps) => {
 
     const [nSamples, setNSamples] = useState(10);
     const [samplePoints, setSamplePoints] = useState([]);
+
+    const [open, setOpen] = React.useState(false);
 
     function resetCanvas() {
         const canvas: HTMLCanvasElement = canvasRef.current;
@@ -284,6 +289,14 @@ const DistributionCanvas = ({ width, height }: CanvasProps) => {
         }
     };
 
+    const handleTooltipClose = () => {
+        setOpen(false);
+    };
+
+    const handleTooltipOpen = () => {
+        setOpen(true);
+    };
+
     return (
         <div>
             <div>
@@ -341,11 +354,24 @@ const DistributionCanvas = ({ width, height }: CanvasProps) => {
                     />
                     </Grid>
                     <Grid item alignItems="stretch" style={{ display: "flex" }}>
-                        <Button variant="outlined" 
-                                color="primary"
-                                onClick={() => callSampleAPI()}>
-                            Sample
-                        </Button>
+                        <Tooltip
+                            PopperProps={{
+                            disablePortal: true,
+                            }}
+                            onClose={handleTooltipClose}
+                            open={open}
+                            disableFocusListener
+                            disableHoverListener
+                            disableTouchListener
+                            title="Copied to clipboard!"
+                            onMouseLeave={() => handleTooltipClose()}
+                        >
+                            <Button variant="outlined" 
+                                    color="primary"
+                                    onClick={() => {callSampleAPI(); handleTooltipOpen()}}>
+                                Sample
+                            </Button>
+                        </Tooltip>
                     </Grid>
                 </Grid>
             </div>
@@ -364,7 +390,6 @@ const DistributionCanvas = ({ width, height }: CanvasProps) => {
                 </List>
                 </Grid>       
             </Grid> 
-            
         </div> 
     );
 };

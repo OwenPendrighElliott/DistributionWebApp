@@ -64,6 +64,11 @@ type Coordinate = {
     y: number;
 };
 
+function copyArrayToClipboard(array: number[]) {
+    console.log(array.join(','));
+    navigator.clipboard.writeText(array.join(','));
+}
+
 function DistributionResultsTable({mean, median, std, width}: TableProps) {
     return (
         <div>
@@ -232,7 +237,7 @@ const DistributionCanvas = ({ width, height }: CanvasProps) => {
         };
         fetch('/api/sample_distribution', requestOptions)
         .then((res) => res.json())
-        .then((json) => {setSamplePoints(json.samples)});
+        .then((json) => {setSamplePoints(json.samples); copyArrayToClipboard(json.samples)});
     }
 
     const exitPaint = useCallback(() => {

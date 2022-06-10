@@ -9,9 +9,10 @@ import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 
 import ListItem from '@mui/material/ListItem';
-import List from '@mui/material/List';
+// import List from '@mui/material/List';
 import ListItemText from '@mui/material/ListItemText';
-// import { FixedSizeList } from 'react-window';
+import ListItemButton from '@mui/material/ListItemButton';
+import { FixedSizeList, VariableSizeList } from 'react-window';
 
 import Typography from '@mui/material/Typography';
 
@@ -21,6 +22,8 @@ import Button from '@mui/material/Button';
 
 import Tooltip from '@mui/material/Tooltip';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
+import { display } from '@mui/system';
+import styledEngine from '@mui/styled-engine';
 
 interface CanvasProps {
     width: number;
@@ -80,7 +83,7 @@ function DistributionResultsTable({mean, median, std, width}: TableProps) {
             </div>
             <div className="tablediv">
                 <TableContainer sx={{maxWidth: width}} component={Paper}>
-                    <Table sx={{ minWidth: 650}} aria-label="results table">
+                    <Table aria-label="results table">
                         <TableHead>
                             <TableRow>
                                 <TableCell align="center">Mean</TableCell>
@@ -375,7 +378,7 @@ const DistributionCanvas = ({ width, height }: CanvasProps) => {
                     </Grid>
                 </Grid>
             </div>
-            <Grid
+            {/* <Grid
                 container
                 spacing={0}
                 direction="column"
@@ -389,7 +392,70 @@ const DistributionCanvas = ({ width, height }: CanvasProps) => {
                     ))}
                 </List>
                 </Grid>       
-            </Grid> 
+            </Grid>  */}
+
+            <Grid
+                container
+                spacing={0}
+                direction="column"
+                alignItems="center"
+                // style={{ minHeight: '100vh'}}
+                sx={{ bgcolor: 'background.paper'}}
+                >
+                <Grid item xs={3}>
+                    <FixedSizeList 
+                        innerElementType="ul"
+                        itemData={samplePoints}
+                        itemCount={samplePoints.length}
+                        itemSize={20}
+                        height={400}
+                        width={360}
+                        overscanCount={10}
+                    >
+                        {({data, index, style }) => {
+                        return (
+                            <ListItem style={style} key={index} component="div" disablePadding>
+                                {/* <ListItemButton> */}
+                                <ListItemText primary={data[index]} />
+                                {/* </ListItemButton> */}
+                            </ListItem>
+                        );
+                        }}
+                    </FixedSizeList>
+                </Grid>       
+            </Grid>
+
+            {/* <Box
+                sx={{ width: '100%', 
+                      height: 400, 
+                      maxWidth: 360, 
+                      bgcolor: 'background.paper',
+                    //   display: 'flex',
+                    //   justifyContent: 'center'
+                    }}
+                // sx={{ width: '100%', height: 400, bgcolor: 'background.paper'}}
+                // display="flex"
+                // flexDirection="column"
+                // alignItems="center"
+            >   
+                <FixedSizeList 
+                    innerElementType="ul"
+                    itemData={samplePoints}
+                    itemCount={samplePoints.length}
+                    itemSize={20}
+                    height={400}
+                    width={360}
+                    overscanCount={5}
+                >
+                    {({data, index, style }) => {
+                    return (
+                        <ListItem style={style} key={index} component="div" disablePadding>
+                            <ListItemText primary={data[index]} />
+                        </ListItem>
+                    );
+                    }}
+                </FixedSizeList>
+            </Box> */}
         </div> 
     );
 };

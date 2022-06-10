@@ -4,6 +4,14 @@ import Header from './Header.js';
 import { ThemeProvider, createTheme, responsiveFontSizes} from '@mui/material/styles';
 import { Typography } from '@mui/material';
 
+
+import Box from '@mui/material/Box';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemText from '@mui/material/ListItemText';
+import { VariableSizeList } from 'react-window';
+
+
 function getCanvasSize(scale) {
     const { innerWidth: width, innerHeight: height } = window;
     const scaledWidth = width-(scale*width);
@@ -25,6 +33,38 @@ const darkTheme = createTheme({
       },
   });
 
+
+// TESTING IDEA
+// function renderRow(props) {
+//   const { index, style, values} = props;
+
+//   console.log(style)
+//   return (
+//     <ListItem style={style} key={index} component="div" disablePadding>
+//       <ListItemText primary={`Item ${index + 1}`} />
+//     </ListItem>
+//   );
+// }
+
+// function VirtualizedList() {
+//   const values = [1,2,3,4,5,4,3,2,1];
+//   return (
+//     <Box
+//       sx={{ width: '100%', height: 400, maxWidth: 360, bgcolor: 'background.paper' }}
+//     >
+//       <VariableSizeList
+//         height={400}
+//         width={360}
+//         itemSize={46}
+//         itemCount={200}
+//         overscanCount={5}
+//       >
+//         {renderRow}
+//       </VariableSizeList>
+//     </Box>
+//   );
+// }
+
 function App() {
     // TODO: add dynamic resizing
 
@@ -38,9 +78,7 @@ function App() {
         <div className="App">
         <ThemeProvider  theme={theme}>
             <header className="App-header">
-                {/* <Typography variant='h2' align='center'>
-                    p d f . s a d
-                </Typography> */}
+                {/* <VirtualizedList></VirtualizedList> */}
                 <Header>
                     pdf.sad
                 </Header>

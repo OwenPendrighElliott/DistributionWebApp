@@ -2,22 +2,16 @@ import './App.css';
 import DistributionCanvas from './distributionCanvas.tsx';
 import Header from './Header.js';
 import { ThemeProvider, createTheme, responsiveFontSizes} from '@mui/material/styles';
-import { Typography } from '@mui/material';
-
-
-import Box from '@mui/material/Box';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemText from '@mui/material/ListItemText';
-import { VariableSizeList } from 'react-window';
-
+import React, { useEffect } from "react";
 
 function getCanvasSize(scale) {
     const { innerWidth: width, innerHeight: height } = window;
     const scaledWidth = width-(scale*width);
+
+    const aspectRatio = 9/20
     return {
         width: Math.round(scaledWidth),
-        height: Math.round(scaledWidth*(9/16))
+        height: Math.round(scaledWidth*aspectRatio)
     };
 }
 
@@ -28,55 +22,32 @@ const darkTheme = createTheme({
     },
     typography: {
         fontFamily: [
-          'Source Code Pro',
+            'Source Code Pro',
         ].join(','),
-      },
-  });
-
-
-// TESTING IDEA
-// function renderRow(props) {
-//   const { index, style, values} = props;
-
-//   console.log(style)
-//   return (
-//     <ListItem style={style} key={index} component="div" disablePadding>
-//       <ListItemText primary={`Item ${index + 1}`} />
-//     </ListItem>
-//   );
-// }
-
-// function VirtualizedList() {
-//   const values = [1,2,3,4,5,4,3,2,1];
-//   return (
-//     <Box
-//       sx={{ width: '100%', height: 400, maxWidth: 360, bgcolor: 'background.paper' }}
-//     >
-//       <VariableSizeList
-//         height={400}
-//         width={360}
-//         itemSize={46}
-//         itemCount={200}
-//         overscanCount={5}
-//       >
-//         {renderRow}
-//       </VariableSizeList>
-//     </Box>
-//   );
-// }
+        },
+    });
 
 function App() {
-    // TODO: add dynamic resizing
-
     // add padding to the window for the canvas
-    const windowDimensions= getCanvasSize(0.3);
+    // const windowDimensions = getCanvasSize(0.2);
+
+    const [windowDimensions, setWindowDimensions] = React.useState(getCanvasSize(0.2));
 
     // add responsive font sizes
     const theme = responsiveFontSizes(darkTheme);
 
+
+    const resizeHanlder = () => {
+        setWindowDimensions(getCanvasSize(0.2));
+      };
+    
+      useEffect(() => {
+        window.onresize = resizeHanlder;    
+      }, []);
+
     return (
         <div className="App">
-        <ThemeProvider  theme={theme}>
+        <ThemeProvider theme={theme}>
             <header className="App-header">
                 {/* <VirtualizedList></VirtualizedList> */}
                 <Header>

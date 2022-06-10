@@ -6,13 +6,10 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import Box from '@mui/material/Box';
 
 import ListItem from '@mui/material/ListItem';
-// import List from '@mui/material/List';
 import ListItemText from '@mui/material/ListItemText';
-import ListItemButton from '@mui/material/ListItemButton';
-import { FixedSizeList, VariableSizeList } from 'react-window';
+import { FixedSizeList } from 'react-window';
 
 import Typography from '@mui/material/Typography';
 
@@ -21,9 +18,6 @@ import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 
 import Tooltip from '@mui/material/Tooltip';
-import ClickAwayListener from '@mui/material/ClickAwayListener';
-import { display } from '@mui/system';
-import styledEngine from '@mui/styled-engine';
 
 interface CanvasProps {
     width: number;
@@ -107,15 +101,6 @@ function DistributionResultsTable({mean, median, std, width}: TableProps) {
     );
 }
 
-function renderRow(props: SampleListElement) {
-    const { index, sample } = props;
-    return (
-        <ListItem  key={index} component="div" disablePadding>
-            <ListItemText primary={sample} />
-        </ListItem>
-    );
-}
-  
 const DistributionCanvas = ({ width, height }: CanvasProps) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [isPainting, setIsPainting] = useState(false);
@@ -129,7 +114,7 @@ const DistributionCanvas = ({ width, height }: CanvasProps) => {
     const [xMin, setXMin] = useState(0);
     const [xMax, setXMax] = useState(100);
 
-    const [nSamples, setNSamples] = useState(10);
+    const [nSamples, setNSamples] = useState(100);
     const [samplePoints, setSamplePoints] = useState([]);
 
     const [open, setOpen] = React.useState(false);
@@ -383,22 +368,6 @@ const DistributionCanvas = ({ width, height }: CanvasProps) => {
                     </Grid>
                 </Grid>
             </div>
-            {/* <Grid
-                container
-                spacing={0}
-                direction="column"
-                alignItems="center"
-                style={{ minHeight: '100vh' }}
-                >
-                <Grid item xs={3}>
-                <List>
-                    {samplePoints.map((sample, index) => (
-                        renderRow({index: index, sample: sample})
-                    ))}
-                </List>
-                </Grid>       
-            </Grid>  */}
-
             <Grid
                 container
                 spacing={0}

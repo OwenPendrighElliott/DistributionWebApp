@@ -70,8 +70,10 @@ type Coordinate = {
     y: number;
 };
 
+
+
 function copyArrayToClipboard(array: number[]) {
-    navigator.clipboard.writeText(array.join(','));
+    navigator.clipboard.writeText(array.join('\n'));
 }
 
 function DistributionResultsTable({mean, median, std, width}: TableProps) {

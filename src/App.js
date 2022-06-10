@@ -69,7 +69,7 @@ function App() {
     // TODO: add dynamic resizing
 
     // add padding to the window for the canvas
-    const windowDimensions= getCanvasSize(0.4);
+    const windowDimensions= getCanvasSize(0.3);
 
     // add responsive font sizes
     const theme = responsiveFontSizes(darkTheme);

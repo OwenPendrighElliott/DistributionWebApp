@@ -124,9 +124,6 @@ const DistributionCanvas = ({ width, height }: CanvasProps) => {
     const [xCoordinates, storeXCoordinates] = useState([]);
     const [yCoordinates, storeYCoordinates] = useState([]);
 
-    // let xCoordinates = [];
-    // let yCoordinates = [];
-
     const [distributionStats, setDistributionStats] = useState({mean: "0", median: "0", std: "0"});
 
     const [xMin, setXMin] = useState(0);
@@ -142,10 +139,10 @@ const DistributionCanvas = ({ width, height }: CanvasProps) => {
         const context = canvas.getContext('2d');
         context.clearRect(0, 0, width, height);
         context.beginPath();
+
+        // reset x and y coordinates 
         storeYCoordinates([]);
         storeXCoordinates([]);
-        // xCoordinates = [];
-        // yCoordinates = [];
     }
 
     const startPaint = useCallback((event: MouseEvent) => {
@@ -182,10 +179,9 @@ const DistributionCanvas = ({ width, height }: CanvasProps) => {
                 // invert height
                 yCoordinates.push(height - newMousePosition.y)
                 xCoordinates.push(newMousePosition.x)
-                // console.log(xCoordinates)
-                // if (xCoordinates.length % 10 === 0) {
-                //     callStatsAPI();
-                // }
+                
+                // .push is synchronous so call the stats API 
+                // which acceses the vars
                 callStatsAPI();
                 if (mousePosition && newMousePosition) {
                     drawLine(mousePosition, newMousePosition);
@@ -229,6 +225,8 @@ const DistributionCanvas = ({ width, height }: CanvasProps) => {
     }
 
     function callSampleAPI() {
+        // Sampling api call, generates n samples from
+        // the distribution
         let requestOptions = {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -242,6 +240,11 @@ const DistributionCanvas = ({ width, height }: CanvasProps) => {
                 }
             )
         };
+
+        // copy to clipboard using the json result directly 
+        // this is because setSamplePoints is asynchronous
+        // and the state may not be up to date if we access
+        // the samplePoints var in this function
         fetch('/api/sample_distribution', requestOptions)
         .then((res) => res.json())
         .then((json) => {setSamplePoints(json.samples); copyArrayToClipboard(json.samples)});
@@ -401,25 +404,34 @@ const DistributionCanvas = ({ width, height }: CanvasProps) => {
                 spacing={0}
                 direction="column"
                 alignItems="center"
+                justifyContent="center"
                 // style={{ minHeight: '100vh'}}
-                sx={{ bgcolor: 'background.paper'}}
+                sx={{ paddingLeft: "25%" }}
+                width="50%"
                 >
-                <Grid item xs={3}>
+                <Grid item 
+                      xs={1}
+                      sx={{ width: '200%', 
+                            paddingLeft:"50%",
+                            height: 400, 
+                            maxWidth: 360, 
+                            // bgcolor: 'background.paper' 
+                        }}
+                >
                     <FixedSizeList 
-                        innerElementType="ul"
+                        // innerElementType="ListItem"
                         itemData={samplePoints}
                         itemCount={samplePoints.length}
                         itemSize={20}
                         height={400}
-                        width={360}
-                        overscanCount={10}
+                        width='100%'
+                        overscanCount={5}
+                        
                     >
                         {({data, index, style }) => {
                         return (
                             <ListItem style={style} key={index} component="div" disablePadding>
-                                {/* <ListItemButton> */}
                                 <ListItemText primary={data[index]} />
-                                {/* </ListItemButton> */}
                             </ListItem>
                         );
                         }}

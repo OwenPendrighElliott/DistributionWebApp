@@ -334,7 +334,7 @@ const DistributionCanvas = ({ width, height }: CanvasProps) => {
                 <br/> 
             </div>
             <div>
-                <Grid container columnSpacing={1} justifyContent="center">
+                <Grid container columnSpacing={1} justifyContent="left">
                     <Grid item>
                         <TextField id="outlined-basic" 
                         label="Samples" 
@@ -368,34 +368,29 @@ const DistributionCanvas = ({ width, height }: CanvasProps) => {
                     </Grid>
                 </Grid>
             </div>
-            <Grid
+            {/* <Grid
                 container
                 spacing={0}
                 direction="column"
                 alignItems="center"
                 justifyContent="center"
-                // style={{ minHeight: '100vh'}}
                 sx={{ paddingLeft: "25%" }}
                 width="50%"
                 >
                 <Grid item 
                       xs={1}
                       sx={{ width: '200%', 
-                            paddingLeft:"50%",
                             height: 400, 
-                            maxWidth: 360, 
-                            // bgcolor: 'background.paper' 
+                            bgcolor: 'background.paper',
                         }}
                 >
                     <FixedSizeList 
-                        // innerElementType="ListItem"
                         itemData={samplePoints}
                         itemCount={samplePoints.length}
                         itemSize={20}
                         height={400}
                         width='100%'
-                        overscanCount={5}
-                        
+                        overscanCount={25}          
                     >
                         {({data, index, style }) => {
                         return (
@@ -406,39 +401,23 @@ const DistributionCanvas = ({ width, height }: CanvasProps) => {
                         }}
                     </FixedSizeList>
                 </Grid>       
-            </Grid>
-
-            {/* <Box
-                sx={{ width: '100%', 
-                      height: 400, 
-                      maxWidth: 360, 
-                      bgcolor: 'background.paper',
-                    //   display: 'flex',
-                    //   justifyContent: 'center'
-                    }}
-                // sx={{ width: '100%', height: 400, bgcolor: 'background.paper'}}
-                // display="flex"
-                // flexDirection="column"
-                // alignItems="center"
-            >   
-                <FixedSizeList 
-                    innerElementType="ul"
-                    itemData={samplePoints}
-                    itemCount={samplePoints.length}
-                    itemSize={20}
-                    height={400}
-                    width={360}
-                    overscanCount={5}
-                >
-                    {({data, index, style }) => {
-                    return (
-                        <ListItem style={style} key={index} component="div" disablePadding>
-                            <ListItemText primary={data[index]} />
-                        </ListItem>
-                    );
-                    }}
-                </FixedSizeList>
-            </Box> */}
+            </Grid> */}
+            <FixedSizeList 
+                itemData={samplePoints}
+                itemCount={samplePoints.length}
+                itemSize={20}
+                height={400}
+                width='100%'
+                overscanCount={25}          
+            >
+                {({data, index, style }) => {
+                return (
+                    <ListItem style={style} key={index} component="div" disablePadding>
+                        <ListItemText primary={data[index]} />
+                    </ListItem>
+                );
+                }}
+            </FixedSizeList>
         </div> 
     );
 };

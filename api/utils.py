@@ -1,5 +1,8 @@
 import numpy as np
+from numba import jit
+import time
 
+# @jit(nopython=True, cache=True)
 def deduplicate_vectors(x_vector, y_vector):
     x_vector, y_vector = x_vector[::-1], y_vector[::-1]
     i = 0
@@ -83,3 +86,12 @@ def plot(x_vector, y_vector):
     plt.plot(x_vector, y_vector)
     plt.show()
 
+
+def timer(func):  
+    def wrapper(*args, **kwargs):
+        start = time.perf_counter()
+        result = func(*args, **kwargs)
+        end = time.perf_counter()
+        print(f'{func.__name__} took {end - start} seconds.')
+        return result
+    return wrapper

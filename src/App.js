@@ -8,7 +8,7 @@ function getCanvasSize(scale) {
     const { innerWidth: width, innerHeight: height } = window;
     const scaledWidth = width-(scale*width);
 
-    const aspectRatio = 9/20
+    const aspectRatio = 9/24;
     return {
         width: Math.round(scaledWidth),
         height: Math.round(scaledWidth*aspectRatio)
@@ -28,17 +28,19 @@ const darkTheme = createTheme({
     });
 
 function App() {
+
+    const paddingProp = 0.1;
     // add padding to the window for the canvas
     // const windowDimensions = getCanvasSize(0.2);
 
-    const [windowDimensions, setWindowDimensions] = React.useState(getCanvasSize(0.2));
+    const [windowDimensions, setWindowDimensions] = React.useState(getCanvasSize(paddingProp));
 
     // add responsive font sizes
     const theme = responsiveFontSizes(darkTheme);
 
 
     const resizeHanlder = () => {
-        setWindowDimensions(getCanvasSize(0.2));
+        setWindowDimensions(getCanvasSize(paddingProp));
       };
     
       useEffect(() => {

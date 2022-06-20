@@ -30,17 +30,7 @@ def calculate_statistics():
     x_min = data['xMin']
     x_max = data['xMax']
 
-    # print("Y coords:")
-    # print(y_coords, "\n")
-    # print("X coords:")
-    # print(x_coords, "\n")
-
     x_vector, y_vector = prep_input_vectors(x_coords, y_coords, x_min, x_max)
-
-    # print("copy_x_vector:\n")
-    # print([x_vector[i] for i in range(len(x_vector))], "\n")
-    # print("copy_y_vector:\n")
-    # print([y_vector[i] for i in range(len(y_vector))], "\n")
 
     stats = get_stats(x_vector, y_vector)
     n_digit_round = set_round_digits(x_min, x_max)

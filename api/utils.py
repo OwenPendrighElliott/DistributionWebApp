@@ -73,8 +73,10 @@ def shift_x_vector(x_vector, x_min, x_max):
 def prep_input_vectors(x_coords, y_coords, x_min, x_max):
     x_vector, y_vector = np.array(x_coords), np.array(y_coords)
     x_vector, y_vector = deduplicate_vectors(x_vector, y_vector)
-    y_vector = normalise_input_y_vector(y_vector)
+    # interpolate
     x_vector, y_vector = interp_x_y_vectors(x_vector, y_vector)
+    # normalise
+    y_vector = normalise_input_y_vector(y_vector)
     x_vector = shift_x_vector(x_vector, x_min, x_max)
     return x_vector, y_vector
 

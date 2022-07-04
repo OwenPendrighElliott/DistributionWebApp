@@ -2,9 +2,11 @@ import './App.css';
 import Header from './components/Header.js';
 import DistributionCanvas from './components/distributionCanvas.js';
 import StatsTable from './components/statsTable.js';
+import Sampler from './components/sampler.js';
 
 import { ThemeProvider, createTheme, responsiveFontSizes} from '@mui/material/styles';
 import React, { useEffect } from "react";
+import RangeSelector from './components/rangeSelector';
 
 function getCanvasSize(scale) {
     const { innerWidth: width, innerHeight: height } = window;
@@ -54,15 +56,19 @@ function App() {
         <ThemeProvider theme={theme}>
             
             <header className="App-header">
-                <Header></Header>
+                <Header>drawdist.app</Header>
                 <div className="CanvasArea">
                     <DistributionCanvas width={windowDimensions.width} 
                                         height={windowDimensions.height}>
                     </DistributionCanvas>
                 </div>
+                <div align="left">
+                    <RangeSelector width={windowDimensions.width}></RangeSelector>
 
-                <StatsTable></StatsTable>
+                    <StatsTable></StatsTable>
 
+                    <Sampler></Sampler>
+                </div>
             </header>
         </ThemeProvider >
         </div> 

@@ -16,7 +16,8 @@ const StatsTable = ({width, mean, median, std}) => {
                 <Typography variant='h4'>Distribution Statistics</Typography>
             </div>
             <div className="tablediv">
-                <TableContainer sx={{maxWidth: width}} component={Paper}>
+                {/* <TableContainer sx={{maxWidth: width}} component={Paper}> */}
+                <TableContainer sx={{minWidth: 300, maxWidth: width/2, alignItems: "left"}} component={Paper}>
                     <Table aria-label="results table">
                         <TableHead>
                             <TableRow>

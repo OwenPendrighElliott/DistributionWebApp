@@ -64,8 +64,6 @@ type Coordinate = {
     y: number;
 };
 
-
-
 function copyArrayToClipboard(array: number[]) {
     navigator.clipboard.writeText(array.join('\n'));
 }

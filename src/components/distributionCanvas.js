@@ -1,99 +1,144 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import { Typography } from '@mui/material';
-import TextField from '@mui/material/TextField';
-import Grid from '@mui/material/Grid';
-import Button from '@mui/material/Button';
-import { render } from '@testing-library/react';
 
-class DistributionCanvas extends React.Component {
-    constructor (props) {
-        super(props);
+const DistributionCanvas = ({ width, height }) => {
+    const canvasRef = useRef(null);
+    const [isPainting, setIsPainting] = useState(false);
+    let [mousePosition, setMousePosition] = useState();
+
+    const [xCoordinates, storeXCoordinates] = useState([]);
+    const [yCoordinates, storeYCoordinates] = useState([]);
+
+    const [distributionStats, setDistributionStats] = useState({mean: "0", median: "0", std: "0"});
+
+    const [xMin, setXMin] = useState(0);
+    const [xMax, setXMax] = useState(100);
+
+    function resetCanvas() {
         
-        this.width = props.width;
-        this.height = props.height;
-
-        this.canvasRef = useRef<HTMLCanvasElement>(null);
-        this.isPainting = false;
-        this.mousePosition = { x: null, y: null };
-
-        this.xCoordinates = [];
-        this.yCoordinates = [];
-    }
-
-    resetCanvas() {
-        const canvas = this.canvasRef.current;
+        const canvas = canvasRef.current;
         const context = canvas.getContext('2d');
-        context.clearRect(0, 0, this.width, this.height);
+        context.clearRect(0, 0, width, height);
         context.beginPath();
-        this.xCoordinates = [];
-        this.yCoordinates = [];
+        
+
+        // reset x and y coordinates 
+        storeYCoordinates([]);
+        storeXCoordinates([]);
     }
 
-    getCoordinates = (event) => {
-        if (!this.canvasRef.current) {
-            return;
-        }
-
-        const canvas = this.canvasRef.current;
-        return { x: event.pageX - canvas.offsetLeft, y: event.pageY - canvas.offsetTop };
-    }
-
-    startPaint = useCallback((event) => {
-        const coordinates = this.getCoordinates(event);
+    const startPaint = useCallback((event) => {
+        const coordinates = getCoordinates(event);
         if (coordinates) {
             // clear entire canvas for a new drawing (users can only draw one line at a time)
-            this.resetCanvas();
-            this.mousePosition = coordinates;
-            this.isPainting = true;
+            resetCanvas();
+            setMousePosition(coordinates);
+            setIsPainting(true);
         }
-    }, [])
-
-    exitPaint = useCallback(() => {
-        this.mousePosition = { x: null, y: null };
-        this.isPainting = true;
-        // do the api call here to get the distribution stats
-        // update the distribution stats using the result 
     }, []);
 
-    paint = useCallback(
+    useEffect(() => {
+        if (!canvasRef.current) {
+            return;
+        }
+        const canvas = canvasRef.current;
+        canvas.addEventListener('mousedown', startPaint);
+        return () => {
+            canvas.removeEventListener('mousedown', startPaint);
+        };
+    }, [startPaint]);
+
+    const paint = useCallback(
         (event) => {
-            if (this.isPainting) {
-                let newMousePosition = this.getCoordinates(event);
+            if (isPainting) {
+                let newMousePosition = getCoordinates(event);
                 
                 // going backwards is illegal 
-                if (newMousePosition.x < this.mousePosition.x) {
-                    newMousePosition.x = this.mousePosition.x;
+                if (newMousePosition.x < mousePosition.x) {
+                    newMousePosition.x = mousePosition.x;
                 }
                 
                 // invert height
-                this.yCoordinates.push(this.height - newMousePosition.y)
-                this.xCoordinates.push(newMousePosition.x)
-
-                if (this.mousePosition && newMousePosition) {
-                    this.drawLine(this.mousePosition, newMousePosition);
-                    this.mousePosition = newMousePosition
+                yCoordinates.push(height - newMousePosition.y)
+                xCoordinates.push(newMousePosition.x)
+                
+                // .push is synchronous so call the stats API 
+                // which acceses the vars
+                callStatsAPI();
+                if (mousePosition && newMousePosition) {
+                    drawLine(mousePosition, newMousePosition);
+                    mousePosition = newMousePosition
                 }
-
             }
         },
-        [this.isPainting, this.mousePosition]
+        [isPainting, mousePosition]
     );
-    
-    drawLine = (originalMousePosition, newMousePosition) => {
-        if (!this.canvasRef.current) {
+
+    useEffect(() => {
+        if (!canvasRef.current) {
             return;
         }
-        const canvas = this.canvasRef.current;
+        const canvas = canvasRef.current;
+        canvas.addEventListener('mousemove', paint);
+        return () => {
+            canvas.removeEventListener('mousemove', paint);
+        };
+    }, [paint]);
+
+    function callStatsAPI() {
+        // do the api call here to get the distribution stats
+        // update the distribution stats using the result 
+        // console.log(xCoordinates)
+        let requestOptions = {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(
+                    {
+                    "yCoords": yCoordinates,
+                    "xCoords": xCoordinates,
+                    'xMin': xMin,
+                    'xMax': xMax
+                }
+            )
+        };
+        fetch('/api/calculate_statistics', requestOptions)
+        .then((res) => res.json())
+        .then((json) => {setDistributionStats({mean: json.mean, median: json.median, std: json.std})});        
+    }
+    const exitPaint = useCallback(() => {
+        setIsPainting(false);
+        setMousePosition(undefined);
+    }, []);
+
+    useEffect(() => {
+        if (!canvasRef.current) {
+            return;
+        }
+        const canvas = canvasRef.current;
+        canvas.addEventListener('mouseup', exitPaint);
+        canvas.addEventListener('mouseleave', exitPaint);
+        return () => {
+            canvas.removeEventListener('mouseup', exitPaint);
+            canvas.removeEventListener('mouseleave', exitPaint);
+        };
+    }, [exitPaint]);
+
+    const getCoordinates = (event) => {
+        if (!canvasRef.current) {
+            return;
+        }
+
+        const canvas = canvasRef.current;
+        return { x: event.pageX - canvas.offsetLeft, y: event.pageY - canvas.offsetTop };
+    };
+
+    const drawLine = (originalMousePosition, newMousePosition) => {
+        if (!canvasRef.current) {
+            return;
+        }
+        const canvas = canvasRef.current;
         const context = canvas.getContext('2d');
         if (context) {
-            context.strokeStyle = '#a6e22e';
+            context.strokeStyle = '#89cff0';
             context.lineJoin = 'round';
             context.lineWidth = 5;
 
@@ -105,15 +150,18 @@ class DistributionCanvas extends React.Component {
             context.stroke();
         }
     };
-    
-    render() {
-        return (
+    return (
         <div>
-            <canvas ref={this.canvasRef} height={this.height} width={this.width}/>
+            <div>
+                <canvas ref={canvasRef} height={height} width={width}/>
+            </div>
         </div> 
-        )
-    }
+    );
 };
 
+DistributionCanvas.defaultProps = {
+    width: window.innerWidth,
+    height: window.innerHeight,
+};
 
 export default DistributionCanvas;

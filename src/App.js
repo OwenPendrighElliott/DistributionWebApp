@@ -1,6 +1,8 @@
 import './App.css';
-import DistributionCanvas from './distributionCanvas.tsx';
-import Header from './Header.js';
+import Header from './components/Header.js';
+import DistributionCanvas from './components/distributionCanvas.js';
+import StatsTable from './components/statsTable.js';
+
 import { ThemeProvider, createTheme, responsiveFontSizes} from '@mui/material/styles';
 import React, { useEffect } from "react";
 
@@ -50,17 +52,17 @@ function App() {
     return (
         <div className="App">
         <ThemeProvider theme={theme}>
+            
             <header className="App-header">
-                {/* <VirtualizedList></VirtualizedList> */}
-                <Header>
-                    pdf.sad
-                </Header>
-                <br/>
+                <Header></Header>
                 <div className="CanvasArea">
                     <DistributionCanvas width={windowDimensions.width} 
                                         height={windowDimensions.height}>
                     </DistributionCanvas>
                 </div>
+
+                <StatsTable></StatsTable>
+
             </header>
         </ThemeProvider >
         </div> 

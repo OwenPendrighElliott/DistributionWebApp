@@ -1,12 +1,14 @@
-body {
+html, body {
     background-color: #2f3136;
-
+    background-image: linear-gradient(#1a1b1e, #384053);
     margin: 0;
+    height: 100%;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
         'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
         sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    box-sizing: border-box;
 }
 
 code {
@@ -14,6 +16,8 @@ code {
 }
 
 .Kofi {
+    padding-top: 5vh;
     display: flex;
     justify-content: center;
 }
+

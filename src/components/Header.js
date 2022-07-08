@@ -9,9 +9,10 @@ import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import AdbIcon from '@mui/icons-material/Adb';
+import CoffeeIcon from '@mui/icons-material/Coffee';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import { Typography } from '@mui/material';
+
 
 const pages = [];
 const settings = [["Owen's Github", 'https://github.com/OwenPendrighElliott'], 
@@ -36,12 +37,13 @@ const ResponsiveAppBar = () => {
         <Container maxWidth="xl">
             <Toolbar>
                 <div>d r a w d i s t . a p p</div>
-                <Box sx={{ flexGrow: 0, marginLeft: "auto"}}>
+                <Box sx={{ flexGrow: 0, marginLeft: "auto"}}>                
                     <Tooltip title="Other Interesting Things">
                         <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                             <MoreIcon/>
                         </IconButton>
                     </Tooltip>
+                    
                     <Menu
                     sx={{ mt: '45px' }}
                     id="menu-appbar"

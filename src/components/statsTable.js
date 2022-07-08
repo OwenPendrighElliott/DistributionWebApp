@@ -21,7 +21,6 @@ const StatsTable = ({width}) => {
     return (
         <div>
             <div>
-                <br/> 
                 <Typography variant='h4'>Distribution Statistics</Typography>
             </div>
             <div className="tablediv">

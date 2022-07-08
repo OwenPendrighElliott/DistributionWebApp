@@ -62,12 +62,10 @@ const Sampler = () => {
 
     return (<div> 
                 <div>
-                    <br/> 
                     <Typography variant='h4'>Sampler</Typography>
-                    <br/> 
                 </div>
-                <div>
-                    <Grid container columnSpacing={1} justifyContent="left">
+                <div class="SamplerInput">
+                    <Grid container columnSpacing={1} justifyContent="center">
                         <Grid item>
                             <TextField id="outlined-basic" 
                             label="Samples" 
@@ -101,22 +99,24 @@ const Sampler = () => {
                         </Grid>
                     </Grid>
                 </div>
-                <FixedSizeList 
-                    itemData={samplePoints}
-                    itemCount={samplePoints.length}
-                    itemSize={20}
-                    height={400}
-                    width='100%'
-                    overscanCount={25}          
-                >
-                    {({data, index, style }) => {
-                    return (
-                        <ListItem style={style} key={index} component="div" disablePadding>
-                            <ListItemText primary={data[index]} />
-                        </ListItem>
-                    );
-                    }}
-                </FixedSizeList>
+                {samplePoints.length > 0 &&
+                    <FixedSizeList 
+                        itemData={samplePoints}
+                        itemCount={samplePoints.length}
+                        itemSize={20}
+                        height={400}
+                        width='100%'
+                        overscanCount={25}          
+                    >
+                        {({data, index, style }) => {
+                        return (
+                            <ListItem style={style} key={index} component="div" disablePadding>
+                                <ListItemText primary={data[index]} />
+                            </ListItem>
+                        );
+                        }}
+                    </FixedSizeList>
+                }
             </div> 
             )
 }

@@ -19,10 +19,15 @@
   font-size: calc(10px + 2vmin);
   color: white;
   /* padding-top: 4vh; */
-  /* padding-bottom: 20px; */
+  /* padding-bottom: 4vh; */
 }
 
-
+* h4 {
+    display: flex;
+    justify-content: center;
+    padding-top: 3vh;
+    padding-bottom: 2vh;
+}
 .App-link {
   color: #61dafb;
 } 

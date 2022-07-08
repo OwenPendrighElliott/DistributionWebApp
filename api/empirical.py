@@ -1,6 +1,5 @@
 import numpy as np
 from utils import prep_input_vectors
-# from numba import jit
 
 
 def get_cdf(y_vector: np.ndarray) -> np.ndarray:
@@ -54,9 +53,6 @@ def get_stats(
     Returns:
         tuple: The mean, median and standard deviation of the distribution that the x and y vectors represent.
     '''
-    x_max = np.max(x_vector)
-    x_min = np.min(x_vector)
-    x_range = x_max - x_min
     cdf = get_cdf(y_vector)
     mean = get_mean(x_vector, y_vector)
     median = get_median(x_vector, cdf)

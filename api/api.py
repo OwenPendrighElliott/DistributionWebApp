@@ -1,16 +1,13 @@
-import time
 from flask import Flask
 from flask_cors import CORS
 from flask import request
-from maffs import get_stats, get_samples
+from empirical import get_stats, get_samples
 from utils import prep_input_vectors
 import numpy as np
-from numba import jit
 
 app = Flask(__name__)
 cors = CORS(app)
 
-# @jit(nopython=True, cache=True)
 def set_round_digits(x_min, x_max):
     n_digit_max = np.floor(np.log10(x_max - x_min)) + 1
     if n_digit_max == 0:

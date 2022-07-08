@@ -53,3 +53,7 @@ function getSamples(xCoords, yCoords, xMin, xMax, nSamples) {
     samples = ev.linear(unifSamples, cdf, xVector);
     return samples;
 }
+
+let x = [0, 1, 2, 3]
+let y = [0, 1, 1, 0]
+console.log(getMean(x, y))

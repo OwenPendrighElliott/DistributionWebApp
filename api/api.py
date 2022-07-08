@@ -11,7 +11,7 @@ cors = CORS(app)
 def set_round_digits(x_min, x_max):
     n_digit_max = np.floor(np.log10(x_max - x_min)) + 1
     if n_digit_max == 0:
-        n_digit_round = 5 # This could be improved
+        n_digit_round = 5
     elif n_digit_max < 5:
         n_digit_round = 5 - n_digit_max
     else:

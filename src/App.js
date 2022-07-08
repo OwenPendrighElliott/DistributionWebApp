@@ -64,13 +64,13 @@ function App() {
                     <DistributionCanvas width={windowDimensions.width} 
                                         height={windowDimensions.height}>
                     </DistributionCanvas>
-                    {/* <div align="left"> */}
+                    <div align="left">
                         <RangeSelector width={windowDimensions.width}></RangeSelector>
 
                         <StatsTable></StatsTable>
 
                         <Sampler></Sampler>
-                    {/* </div> */}
+                    </div>
                 </DistributionContextProvider>
 
             </header>

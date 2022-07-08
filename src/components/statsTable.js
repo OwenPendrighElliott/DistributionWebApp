@@ -17,6 +17,7 @@ const StatsTable = ({width}) => {
     const mean = distributionStats.mean
     const median = distributionStats.median
     const std = distributionStats.std
+    
     return (
         <div>
             <div>

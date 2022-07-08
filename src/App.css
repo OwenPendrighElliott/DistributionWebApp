@@ -7,9 +7,11 @@
 }
 
 .App-header {
-  background-color: #2f3136;
-  background-image: linear-gradient(135deg, #2f3136, #89cff032);
-  min-height: 100vh;
+  
+  
+  /* min-height: 100vh; */
+
+  /* height: 100vh; */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -17,8 +19,9 @@
   font-size: calc(10px + 2vmin);
   color: white;
   /* padding-top: 4vh; */
-  padding-bottom: 20vh;
+  /* padding-bottom: 20px; */
 }
+
 
 .App-link {
   color: #61dafb;
@@ -36,6 +39,7 @@
 .tablediv {
     display: flex;
     justify-content: center;
+    
 }
 
 ::selection {

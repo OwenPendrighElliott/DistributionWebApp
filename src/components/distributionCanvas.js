@@ -6,14 +6,6 @@ const DistributionCanvas = ({ width, height }) => {
     const [isPainting, setIsPainting] = useState(false);
     let [mousePosition, setMousePosition] = useState();
 
-    // const [xCoordinates, storeXCoordinates] = useState([]);
-    // const [yCoordinates, storeYCoordinates] = useState([]);
-
-    // const [distributionStats, setDistributionStats] = useState({mean: "0", median: "0", std: "0"});
-
-    // const [xMin, setXMin] = useState(0);
-    // const [xMax, setXMax] = useState(100);
-
     const { xCoordinates, storeXCoordinates, 
             yCoordinates, storeYCoordinates,
             setDistributionStats,

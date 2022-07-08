@@ -23,8 +23,7 @@ const Sampler = () => {
 
     const [samplePoints, setSamplePoints] = useState([])
     const [open, setOpen] = React.useState(false);
-    // const [nSamples, setNSamples] = useState(100);
-    
+
     const { xCoordinates, yCoordinates, xMin, xMax, nSamples, setNSamples } = useContext(DistributionContext)
 
     function callSampleAPI() {

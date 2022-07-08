@@ -6,9 +6,6 @@ import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 
 const RangeSelector = (width) => {
-    // const [xMin, setXMin] = useState(0);
-    // const [xMax, setXMax] = useState(100);
-
     const {xMin, setXMin, xMax, setXMax} = useContext(DistributionContext)
 
     return (

@@ -20,7 +20,9 @@ function getCDF(yVector) {
 function getMean(xVector, yVector) {
     let mean = 0;
     let countY = yVector.length;
-    for (let i = 0; i < countY; i++) {
+    // TODO: James check this - I think it was just an off by 1 error (I made it countY-1 because you access [i+1])
+    // JS does not throw an error when you go out of bounds (how good) and instead returns undefined
+    for (let i = 0; i < countY-1; i++) { 
         mean = mean + (xVector[i+1] + xVector[i]) / 2 * (yVector[i+1] + yVector[i]) / 2 / (countY - 1);
     }
     return mean; 
@@ -54,6 +56,6 @@ function getSamples(xCoords, yCoords, xMin, xMax, nSamples) {
     return samples;
 }
 
-let x = [0, 1, 2, 3]
-let y = [0, 1, 1, 0]
+let x = [0,1,2,3,4,5,6,7,8,9,10,11,12]
+let y = [0,1,1,2,2,4,6.7,4,2,2,1,1,0]
 console.log(getMean(x, y))

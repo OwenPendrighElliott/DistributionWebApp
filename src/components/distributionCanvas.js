@@ -1,17 +1,23 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState, useContext } from 'react';
+import DistributionContext from "../contexts/distributionContext";
 
 const DistributionCanvas = ({ width, height }) => {
     const canvasRef = useRef(null);
     const [isPainting, setIsPainting] = useState(false);
     let [mousePosition, setMousePosition] = useState();
 
-    const [xCoordinates, storeXCoordinates] = useState([]);
-    const [yCoordinates, storeYCoordinates] = useState([]);
+    // const [xCoordinates, storeXCoordinates] = useState([]);
+    // const [yCoordinates, storeYCoordinates] = useState([]);
 
-    const [distributionStats, setDistributionStats] = useState({mean: "0", median: "0", std: "0"});
+    // const [distributionStats, setDistributionStats] = useState({mean: "0", median: "0", std: "0"});
 
-    const [xMin, setXMin] = useState(0);
-    const [xMax, setXMax] = useState(100);
+    // const [xMin, setXMin] = useState(0);
+    // const [xMax, setXMax] = useState(100);
+
+    const { xCoordinates, storeXCoordinates, 
+            yCoordinates, storeYCoordinates,
+            setDistributionStats,
+            xMin, xMax} = useContext(DistributionContext)
 
     function resetCanvas() {
         
@@ -151,10 +157,8 @@ const DistributionCanvas = ({ width, height }) => {
         }
     };
     return (
-        <div>
-            <div>
-                <canvas ref={canvasRef} height={height} width={width}/>
-            </div>
+        <div className="CanvasArea">
+            <canvas ref={canvasRef} height={height} width={width}/>
         </div> 
     );
 };

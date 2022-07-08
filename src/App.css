@@ -25,9 +25,9 @@
 } 
 
 * canvas{ 
-    border: 5px solid #121315; 
+    /* border: 5px solid #121315;  */
     /* border: 5px solid transparent;
-    border-image: linear-gradient(45deg, #afafaf, #89cff0);
+    border-image: linear-gradient(45deg, red, yellow);
     border-image-slice: 1; */
     /* height: 120px; */
     background-color: #40444b;

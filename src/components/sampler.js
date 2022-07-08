@@ -3,6 +3,10 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import { FixedSizeList } from 'react-window';
 
+import { useContext } from "react";
+import DistributionContext from "../contexts/distributionContext";
+
+
 import Typography from '@mui/material/Typography';
 
 import TextField from '@mui/material/TextField';
@@ -15,11 +19,13 @@ function copyArrayToClipboard(array) {
     navigator.clipboard.writeText(array.join('\n'));
 }
 
-const Sampler = ({ yCoordinates, xCoordinates, xMin, xMax}) => {
+const Sampler = () => {
 
     const [samplePoints, setSamplePoints] = useState([])
     const [open, setOpen] = React.useState(false);
-    const [nSamples, setNSamples] = useState(100);
+    // const [nSamples, setNSamples] = useState(100);
+    
+    const { xCoordinates, yCoordinates, xMin, xMax, nSamples, setNSamples } = useContext(DistributionContext)
 
     function callSampleAPI() {
         // Sampling api call, generates n samples from

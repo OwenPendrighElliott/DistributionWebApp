@@ -8,6 +8,8 @@ import { ThemeProvider, createTheme, responsiveFontSizes} from '@mui/material/st
 import React, { useEffect } from "react";
 import RangeSelector from './components/rangeSelector';
 
+import { DistributionContextProvider } from './contexts/distributionContext'
+
 function getCanvasSize(scale) {
     const { innerWidth: width, innerHeight: height } = window;
     const scaledWidth = width-(scale*width);
@@ -50,25 +52,27 @@ function App() {
       useEffect(() => {
         window.onresize = resizeHanlder;    
       }, []);
-
+    
     return (
         <div className="App">
         <ThemeProvider theme={theme}>
             
             <header className="App-header">
                 <Header>drawdist.app</Header>
-                <div className="CanvasArea">
+
+                <DistributionContextProvider>
                     <DistributionCanvas width={windowDimensions.width} 
                                         height={windowDimensions.height}>
                     </DistributionCanvas>
-                </div>
-                <div align="left">
-                    <RangeSelector width={windowDimensions.width}></RangeSelector>
+                    {/* <div align="left"> */}
+                        <RangeSelector width={windowDimensions.width}></RangeSelector>
 
-                    <StatsTable></StatsTable>
+                        <StatsTable></StatsTable>
 
-                    <Sampler></Sampler>
-                </div>
+                        <Sampler></Sampler>
+                    {/* </div> */}
+                </DistributionContextProvider>
+
             </header>
         </ThemeProvider >
         </div> 

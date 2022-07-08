@@ -1,5 +1,6 @@
+import { useContext } from "react";
+
 import Paper from '@mui/material/Paper';
-import React from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -8,7 +9,14 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
 
-const StatsTable = ({width, mean, median, std}) => {
+import DistributionContext from "../contexts/distributionContext";
+
+const StatsTable = ({width}) => {
+
+    const { distributionStats } = useContext(DistributionContext)
+    const mean = distributionStats.mean
+    const median = distributionStats.median
+    const std = distributionStats.std
     return (
         <div>
             <div>

@@ -1,7 +1,13 @@
 import React, { useCallback, useEffect, useRef, useState, useContext } from 'react';
+
+import Button from '@mui/material/Button';
+
 import DistributionContext from "../contexts/distributionContext";
 
 const DistributionCanvas = ({ width, height }) => {
+
+    const [isImage, setIsImage] = useState(false);
+
     const canvasRef = useRef(null);
     const [isPainting, setIsPainting] = useState(false);
     let [mousePosition, setMousePosition] = useState();
@@ -11,14 +17,11 @@ const DistributionCanvas = ({ width, height }) => {
             setDistributionStats,
             xMin, xMax} = useContext(DistributionContext)
 
-    function resetCanvas() {
-        
+    function resetCanvas() {  
         const canvas = canvasRef.current;
         const context = canvas.getContext('2d');
         context.clearRect(0, 0, width, height);
         context.beginPath();
-        
-
         // reset x and y coordinates 
         storeYCoordinates([]);
         storeXCoordinates([]);
@@ -33,6 +36,25 @@ const DistributionCanvas = ({ width, height }) => {
             setIsPainting(true);
         }
     }, []);
+
+    // useEffect(() => {
+    //     if (!isImage) {
+    //         return;
+    //     }
+    //     if (!canvasRef.current) {
+    //         return;
+    //     }
+    //     const canvas = canvasRef.current;
+    //     const context = canvas.getContext('2d');
+
+    //     var background = new Image();
+    //     background.src = "https://i.insider.com/59e5d4a1b0c292755836e079";
+
+    //     // Make sure the image is loaded first otherwise nothing will draw.
+    //     background.onload = function(){
+    //         context.drawImage(background, 0, 0, width, height);   
+    //     }
+    // }, [isImage])
 
     useEffect(() => {
         if (!canvasRef.current) {
@@ -149,9 +171,16 @@ const DistributionCanvas = ({ width, height }) => {
         }
     };
     return (
-        <div className="CanvasArea">
-            <canvas ref={canvasRef} height={height} width={width}/>
-        </div> 
+        <div>
+            {/* <Button variant="outlined" 
+                    color="primary"
+                    onClick={() => {setIsImage(!isImage)}}>
+                    Upload Image
+            </Button> */}
+            <div class="CanvasArea">
+                <canvas ref={canvasRef} height={height} width={width}/>
+            </div> 
+        </div>
     );
 };
 

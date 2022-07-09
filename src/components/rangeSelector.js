@@ -5,36 +5,18 @@ import DistributionContext from "../contexts/distributionContext";
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 
-import ValidationTextField from './maxIntTextField';
+import { MinValidationTextField, MaxValidationTextField } from './validIntTextFields';
 
 const RangeSelector = (width) => {
-    const {xMin, setXMin, xMax, setXMax} = useContext(DistributionContext)
+    const {xMin, xMax} = useContext(DistributionContext)
 
     return (
         <Grid container sx={{ maxWidth: width }}>
             <Grid item xs={true} style={{ display: "flex", justifyContent: "left" }}>
-                {/* <TextField id="outlined-basic" 
-                           label="Lower Bound" 
-                           variant="outlined" 
-                           type={'number'}
-                           defaultValue={xMin} 
-                           onChange={(event) =>
-                               setXMin(parseInt(event.target.value))
-                           }
-                /> */}
-                <ValidationTextField  label={"Lower Bound"} defaultValue={xMin} maxInt={xMax}></ValidationTextField>
+                <MaxValidationTextField  label={"Lower Bound"} defaultValue={xMin} maxInt={xMax}></MaxValidationTextField>
             </Grid>
             <Grid item xs={true} style={{ display: "flex", justifyContent: "right"}}>
-                <TextField id="outlined-basic" 
-                           label="Upper Bound" 
-                           variant="outlined" 
-                           type={'number'}
-                           inputProps={{ style: {textAlign: 'right'} }} 
-                           defaultValue={xMax} 
-                           onChange={(event) =>
-                               setXMax(parseInt(event.target.value))
-                           }
-                />
+                <MinValidationTextField  label={"Upper Bound"} defaultValue={xMax} minInt={xMin}></MinValidationTextField>
             </Grid>
         </Grid>
     )

@@ -10,31 +10,36 @@ function auc(yVector) {
     return area;
 }
 
-// TODO
 function deduplicateVectors(xVector, yVector) {
-    x_vector, y_vector = x_vector[::-1], y_vector[::-1]
-    i = 0
-    while i < len(x_vector) - 1:
-        j = i + 1
-        while j < len(x_vector) and x_vector[i] == x_vector[j]:
-            x_vector = np.delete(x_vector, j)
-            y_vector = np.delete(y_vector, j)
-        i += 1
-    return x_vector[::-1], y_vector[::-1]
+    xVector.reverse();
+    yVector.reverse();
+    let i = 0;
+    while (i < xVector.length - 1) {
+        let j = i + 1;
+        while (j < xVector.length && xVector[i] == xVector[j]) {
+            xVector.splice(j, 1);
+            yVector.splice(j, 1);
+        }
+        i = i + 1;
+    }
+    return {
+            x : xVector.reverse(),
+            y : yVector.reverse()
+           };
 }
 
 function interpXYVectors(xVector, yVector) {
-    newXVector = nj.add([[...Array(nj.highestElement(xVector) - nj.lowestElement(xVector) + 1).keys()]], nj.lowestElement(xVector));
-    newYVector = linterp(newXVector, xVector, yVector)
+    let newXVector = nj.add([[...Array(nj.highestElement(xVector) - nj.lowestElement(xVector) + 1).keys()]], nj.lowestElement(xVector));
+    let newYVector = linterp(newXVector[0], xVector, yVector);
     return {
-            x : new_x_vector,
-            y : new_y_vector
+            x : newXVector,
+            y : newYVector
            };
 }
 
 function normaliseInputYVector(yVector) {
-    yVectorZero = nj.subtract([yVector], nj.lowestElement(yVector));
-    scaledYVector = nj.divide(yVectorZero, auc(yVectorZero))[0];
+    let yVectorZero = nj.subtract([yVector], nj.lowestElement(yVector));
+    let scaledYVector = nj.divide(yVectorZero, auc(yVectorZero[0]))[0];
     return scaledYVector;
 }
 
@@ -45,18 +50,33 @@ function normaliseShiftXVector(xVector, xMin, xMax) {
 }
 
 function prepInputVectors(xCoords, yCoords, xMin, xMax) {
-    let xVector = [x_coords]
-    let yVector = [y_coords]
-    xVector = deduplicateVectors(xVector, yVector).x
-    yVector = deduplicateVectors(xVector, yVector).y
+    let xVector = xCoords;
+    let yVector = yCoords;
+    let dedupResult = deduplicateVectors(xVector, yVector);
+    xVector = dedupResult.x;
+    yVector = dedupResult.y;
     // interpolate
-    xVector = interpXYVectors(xVector, yVector).x
-    yVector = interpXYVectors(xVector, yVector).y
+    let interpResult = interpXYVectors(xVector, yVector);
+    xVector = interpResult.x;
+    yVector = interpResult.y;
     // normalise
     yVector = normaliseInputYVector(yVector)
     xVector = normaliseShiftXVector(xVector, xMin, xMax)
     return {
-            x: xVector,
-            y: yVector
+            x : xVector,
+            y : yVector
            };
 }
+
+// TODO: js-ify
+// function setRoundDigits(xMin, xMax):
+//     n_digit_max = np.floor(np.log10(x_max - x_min)) + 1
+//     if n_digit_max == 0:
+//         n_digit_round = 5
+//     elif n_digit_max < 5:
+//         n_digit_round = 5 - n_digit_max
+//     else:
+//         n_digit_round = 0
+//     return int(n_digit_round)
+
+export {prepInputVectors}

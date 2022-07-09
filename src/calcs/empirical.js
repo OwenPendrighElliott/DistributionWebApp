@@ -2,9 +2,8 @@ const { median } = require("jsnumpy");
 var nj = require("jsnumpy")
 var linterp = require("everpolate").linear
 
+// https://gist.github.com/janosh/099bd8061f15e3fbfcc19be0e6b670b9
 const argFact = (compareFn) => (array) => array.map((el, idx) => [el, idx]).reduce(compareFn)[1];
-
-const argMax = argFact((min, el) => (el[0] > min[0] ? el : min));
 const argMin = argFact((max, el) => (el[0] < max[0] ? el : max));
 
 function getCDF(yVector) {
@@ -58,8 +57,4 @@ function getSamples(xCoords, yCoords, xMin, xMax, nSamples) {
     return samples;
 }
 
-let x = [0,1,2,3,4,5,6,7,8,9,10,11,12]
-let y = [0,1,1,2,2,4,6.7,4,2,2,1,1,0]
-
-console.log(getMean(x, y))
-getSamples(x, y, 0, 10, 3)
+export {getStats, getSamples}

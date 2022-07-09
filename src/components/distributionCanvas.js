@@ -37,24 +37,28 @@ const DistributionCanvas = ({ width, height }) => {
         }
     }, []);
 
-    // useEffect(() => {
-    //     if (!isImage) {
-    //         return;
-    //     }
-    //     if (!canvasRef.current) {
-    //         return;
-    //     }
-    //     const canvas = canvasRef.current;
-    //     const context = canvas.getContext('2d');
+    useEffect(() => {
+        resetCanvas();
+    }, [isImage])
 
-    //     var background = new Image();
-    //     background.src = "https://i.insider.com/59e5d4a1b0c292755836e079";
+    useEffect(() => {
+        if (!isImage) {
+            return;
+        }
+        if (!canvasRef.current) {
+            return;
+        }
+        const canvas = canvasRef.current;
+        const context = canvas.getContext('2d');
 
-    //     // Make sure the image is loaded first otherwise nothing will draw.
-    //     background.onload = function(){
-    //         context.drawImage(background, 0, 0, width, height);   
-    //     }
-    // }, [isImage])
+        var background = new Image();
+        background.src = "https://i.insider.com/59e5d4a1b0c292755836e079";
+
+        // Make sure the image is loaded first otherwise nothing will draw.
+        background.onload = function(){
+            context.drawImage(background, 0, 0, width, height);   
+        }
+    })
 
     useEffect(() => {
         if (!canvasRef.current) {
@@ -107,7 +111,6 @@ const DistributionCanvas = ({ width, height }) => {
     function callStatsAPI() {
         // do the api call here to get the distribution stats
         // update the distribution stats using the result 
-        // console.log(xCoordinates)
         let requestOptions = {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -172,11 +175,13 @@ const DistributionCanvas = ({ width, height }) => {
     };
     return (
         <div>
-            {/* <Button variant="outlined" 
-                    color="primary"
-                    onClick={() => {setIsImage(!isImage)}}>
-                    Upload Image
-            </Button> */}
+            <div class="Canvas Image Button">
+                <Button variant="outlined" 
+                        color="primary"
+                        onClick={() => {setIsImage(!isImage)}}>
+                        Upload Image
+                </Button>
+            </div> 
             <div class="CanvasArea">
                 <canvas ref={canvasRef} height={height} width={width}/>
             </div> 

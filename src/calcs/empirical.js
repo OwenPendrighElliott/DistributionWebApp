@@ -1,3 +1,5 @@
+import { prepInputVectors } from "./utils"
+
 const { median } = require("jsnumpy");
 var nj = require("jsnumpy")
 var linterp = require("everpolate").linear
@@ -36,7 +38,13 @@ function getStdDev(xVector, yVector) {
     return (getMean(nj.power(2, xVector), yVector) - getMean(xVector, yVector) ** 2) ** 0.5;
 }
 
-function getStats(xVector, yVector) {
+function getStats(xCoords, yCoords, xMin, xMax) {
+    // let xVector = prepInputVectors(xCoords, yCoords, xMin, xMax).x;
+    // let yVector = prepInputVectors(xCoords, yCoords, xMin, xMax).y;
+
+    let xVector = xCoords;
+    let yVector = yCoords;
+
     let cdf    = getCDF(yVector);
     let mean   = getMean(xVector, yVector);
     let median = getMedian(xVector, cdf);
@@ -49,8 +57,8 @@ function getStats(xVector, yVector) {
 }
 
 function getSamples(xCoords, yCoords, xMin, xMax, nSamples) {
-    let xVector = prep_input_vectors(xCoords, yCoords, xMin, xMax).x
-    let yVector = prep_input_vectors(xCoords, yCoords, xMin, xMax).y;
+    let xVector = prepInputVectors(xCoords, yCoords, xMin, xMax).x;
+    let yVector = prepInputVectors(xCoords, yCoords, xMin, xMax).y;
     let cdf = getCDF(yVector);
     let unifSamples = Array.from({length: nSamples}, () => Math.random());
     let samples = linterp(unifSamples, cdf, xVector);

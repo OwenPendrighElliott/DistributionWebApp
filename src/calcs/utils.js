@@ -79,4 +79,4 @@ function prepInputVectors(xCoords, yCoords, xMin, xMax) {
 //         n_digit_round = 0
 //     return int(n_digit_round)
 
-export {prepInputVectors}
+export { prepInputVectors }

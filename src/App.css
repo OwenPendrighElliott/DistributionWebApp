@@ -1,5 +1,7 @@
 .App {
   text-align: left;
+
+  
 }
 
 .CanvasArea {
@@ -9,17 +11,17 @@
 .App-header {
   
   
-  /* min-height: 100vh; */
+    /* min-height: 100vh; */
 
-  /* height: 100vh; */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-  /* padding-top: 4vh; */
-  /* padding-bottom: 4vh; */
+    /* height: 100vh; */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(10px + 2vmin);
+    color: white;
+    /* padding-top: 4vh; */
+    /* padding-bottom: 4vh; */
 }
 
 * h4 {
@@ -32,7 +34,7 @@
   color: #61dafb;
 } 
 
-* canvas{ 
+* canvas { 
     /* border: 5px solid #121315;  */
     /* border: 5px solid transparent;
     border-image: linear-gradient(45deg, red, yellow);
@@ -41,10 +43,18 @@
     background-color: #40444b;
 }
 
+.SamplerErrorMsg {
+    padding-top: 3vh;
+}
+
+.CanvasButtons {
+    padding-top: 0.5vh;
+    padding-bottom: 0.5vh;
+}
+
 .tablediv {
     display: flex;
-    justify-content: center;
-    
+    justify-content: center;   
 }
 
 ::selection {

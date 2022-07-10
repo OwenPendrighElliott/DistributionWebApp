@@ -18,6 +18,8 @@ import Tooltip from '@mui/material/Tooltip';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 
+import Fade from '@mui/material/Fade';
+
 import { getSamples } from "../calcs/empirical"
 
 function copyArrayToClipboard(array) {
@@ -92,13 +94,15 @@ const Sampler = () => {
                             </Tooltip>
                         </Grid>
                     </Grid>
-                {isSampled && samplePoints.length == 0 &&
-                <Snackbar open={open} autoHideDuration={4000} onClose={handleErrorMsgClose}>
-                    <Alert onClose={handleErrorMsgClose} severity="error" sx={{ width: '100%' }}>
+                
+                <div className='SamplerErrorMsg'>
+                <Fade in={isSampled && samplePoints.length == 0} out={samplePoints.length > 0}>
+                    <Alert severity="error" sx={{ width: '100%' }}>
                         Please draw a distribution first!
                     </Alert>
-                </Snackbar>
-                }
+                </Fade>
+                </div>
+
                 </div>
                 {samplePoints.length > 0 &&
                     <FixedSizeList 

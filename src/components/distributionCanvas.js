@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState, useContext } from 'react';
 
 import Button from '@mui/material/Button';
+import Grid from '@mui/material/Grid'
 
 import DistributionContext from "../contexts/distributionContext";
 
@@ -108,8 +109,15 @@ const DistributionCanvas = ({ width, height }) => {
     }, [paint]);
 
     function callStatsAPI() {
-        let result = getStats(xCoordinates, yCoordinates, xMin, xMax);
-        setDistributionStats(result);
+
+        console.log(xMin);
+        try {
+            let result = getStats(xCoordinates, yCoordinates, xMin, xMax);
+            setDistributionStats(result);
+        }
+        catch (err) {
+            console.log(err);
+        }
     }
     const exitPaint = useCallback(() => {
         setIsPainting(false);
@@ -205,36 +213,42 @@ const DistributionCanvas = ({ width, height }) => {
         setBackground();
     }, [refImage, isImage])
 
+
+    useEffect(() => {
+        callStatsAPI();
+    }, [xMin, xMax])
+
     return (
         <div>
-            <div class="canvasImageButton">
-                <Button variant="outlined" 
-                        color="primary"
-                        component="label"
-                        >
-                        Upload Image
-                        <input
-                            type="file"
-                            hidden
-                            onChange={(event) => getFname(event)}
-                        />
-                </Button>
-            </div> 
-
-            <div class="resetButton">
-                <Button variant="outlined" 
-                        color="primary"
-                        component="label"
-                        onClick={() => {resetCanvas();}}
-                        >
-                        Reset
-                </Button>
-            </div> 
+            <div className='CanvasButtons'>
+                <Grid container sx={{ maxWidth: width }}>
+                    <Grid item xs={true} style={{ display: "flex", justifyContent: "left" }}>
+                        <Button variant="outlined" 
+                                color="primary"
+                                component="label"
+                                >
+                                Upload Image
+                                <input
+                                    type="file"
+                                    hidden
+                                    onChange={(event) => getFname(event)}
+                                />
+                        </Button>
+                    </Grid>
+                    <Grid item xs={true} style={{ display: "flex", justifyContent: "right"}}>
+                        <Button variant="outlined" 
+                                color="primary"
+                                component="label"
+                                onClick={() => {resetCanvas();}}
+                                >
+                                Reset
+                        </Button>
+                    </Grid>
+                </Grid>
+            </div>
 
             {/* TODO: Add a second canvas that sits behind this one and has the image (background of canvas with line shall be transparent) */}
-            <div class="CanvasArea">
-                <canvas ref={canvasRef} height={height} width={width}/>
-            </div> 
+            <canvas ref={canvasRef} height={height} width={width}/>
         </div>
     );
 };

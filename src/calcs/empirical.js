@@ -1,6 +1,5 @@
 import { prepInputVectors } from "./utils"
 
-const { median } = require("jsnumpy");
 var nj = require("jsnumpy")
 var linterp = require("everpolate").linear
 
@@ -39,16 +38,15 @@ function getStdDev(xVector, yVector) {
 }
 
 function getStats(xCoords, yCoords, xMin, xMax) {
-    // let xVector = prepInputVectors(xCoords, yCoords, xMin, xMax).x;
-    // let yVector = prepInputVectors(xCoords, yCoords, xMin, xMax).y;
-
-    let xVector = xCoords;
-    let yVector = yCoords;
+    let xVector = prepInputVectors(xCoords, yCoords, xMin, xMax).x;
+    let yVector = prepInputVectors(xCoords, yCoords, xMin, xMax).y;
 
     let cdf    = getCDF(yVector);
+    
     let mean   = getMean(xVector, yVector);
     let median = getMedian(xVector, cdf);
     let std    = getStdDev(xVector, yVector);
+
     return {
             mean   : mean,
             median : median,

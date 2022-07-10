@@ -44,8 +44,6 @@ function getStats(xCoords, yCoords, xMin, xMax) {
     // let xVector = xCoords;
     // let yVector = yCoords;
 
-    console.log(xVector);
-    console.log(yVector);
     let cdf    = getCDF(yVector);
     
     let mean   = getMean(xVector, yVector);
@@ -60,10 +58,14 @@ function getStats(xCoords, yCoords, xMin, xMax) {
 }
 
 function getSamples(xCoords, yCoords, xMin, xMax, nSamples) {
+    if (xCoords.length <=1 ) {
+        return [];
+    }
     let xVector = prepInputVectors(xCoords, yCoords, xMin, xMax).x;
     let yVector = prepInputVectors(xCoords, yCoords, xMin, xMax).y;
     let cdf = getCDF(yVector);
     let unifSamples = Array.from({length: nSamples}, () => Math.random());
+
     let samples = linterp(unifSamples, cdf, xVector);
     return samples;
 }

@@ -25,6 +25,7 @@ const DistributionCanvas = ({ width, height }) => {
         const context = canvas.getContext('2d');
         context.clearRect(0, 0, width, height);
         context.beginPath();
+        console.log(xCoordinates);
         // reset x and y coordinates 
         storeYCoordinates([]);
         storeXCoordinates([]);
@@ -43,8 +44,8 @@ const DistributionCanvas = ({ width, height }) => {
             setBackground();
 
             // reset x and y coordinates 
-            storeYCoordinates([]);
-            storeXCoordinates([]);
+            // storeYCoordinates([]);
+            // storeXCoordinates([]);
         }
     }, [isPainting]);
 
@@ -55,6 +56,8 @@ const DistributionCanvas = ({ width, height }) => {
             // resetCanvas();
             setMousePosition(coordinates);
             setIsPainting(true);
+            storeYCoordinates([]);
+            storeXCoordinates([]);
         }
     }, []);
 
@@ -105,29 +108,7 @@ const DistributionCanvas = ({ width, height }) => {
     }, [paint]);
 
     function callStatsAPI() {
-        // // do the api call here to get the distribution stats
-        // // update the distribution stats using the result 
-        // let requestOptions = {
-        //         method: 'POST',
-        //         headers: { 'Content-Type': 'application/json' },
-        //         body: JSON.stringify(
-        //             {
-        //             "yCoords": yCoordinates,
-        //             "xCoords": xCoordinates,
-        //             'xMin': xMin,
-        //             'xMax': xMax
-        //         }
-        //     )
-        // };
-        // fetch('/api/calculate_statistics', requestOptions)
-        // .then((res) => res.json())
-        // .then((json) => {setDistributionStats({mean: json.mean, median: json.median, std: json.std})}); 
-
-
-        // const data = {yCoords: yCoordinates,xCoords: xCoordinates,xMin: xMin,xMax: xMax};
-        // console.log(data);
         let result = getStats(xCoordinates, yCoordinates, xMin, xMax);
-        console.log(result);
         setDistributionStats(result);
     }
     const exitPaint = useCallback(() => {

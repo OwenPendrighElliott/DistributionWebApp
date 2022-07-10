@@ -15,6 +15,9 @@ import Button from '@mui/material/Button';
 
 import Tooltip from '@mui/material/Tooltip';
 
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
+
 import { getSamples } from "../calcs/empirical"
 
 function copyArrayToClipboard(array) {
@@ -23,38 +26,17 @@ function copyArrayToClipboard(array) {
 
 const Sampler = () => {
 
+    const [isSampled, setIsSampled] = useState(false)
+
     const [samplePoints, setSamplePoints] = useState([])
     const [open, setOpen] = React.useState(false);
 
     const { xCoordinates, yCoordinates, xMin, xMax, nSamples, setNSamples } = useContext(DistributionContext)
 
     function callSampleAPI() {
-        // Sampling api call, generates n samples from
-        // the distribution
-        // let requestOptions = {
-        //     method: 'POST',
-        //     headers: { 'Content-Type': 'application/json' },
-        //     body: JSON.stringify(
-        //         {
-        //         "yCoords": yCoordinates,
-        //         "xCoords": xCoordinates,
-        //         'xMin': xMin,
-        //         'xMax': xMax,
-        //         'nSamples': nSamples
-        //         }
-        //     )
-        // };
-    
-        // // copy to clipboard using the json result directly 
-        // // this is because setSamplePoints is asynchronous
-        // // and the state may not be up to date if we access
-        // // the samplePoints var in this function
-        // fetch('/api/sample_distribution', requestOptions)
-        // .then((res) => res.json())
-        // .then((json) => {setSamplePoints(json.samples); copyArrayToClipboard(json.samples)});
-
         let result = getSamples(xCoordinates, yCoordinates, xMin, xMax, nSamples);
         setSamplePoints(result);
+        copyArrayToClipboard(result);
     }
 
     const handleTooltipClose = () => {
@@ -64,6 +46,13 @@ const Sampler = () => {
     const handleTooltipOpen = () => {
         setOpen(true);
     };
+
+    const handleErrorMsgClose = (event, reason) => {
+        if (reason === 'clickaway') {
+          return;
+        }
+        setOpen(false);
+      };
 
     return (<div> 
                 <div>
@@ -97,12 +86,19 @@ const Sampler = () => {
                             >
                                 <Button variant="outlined" 
                                         color="primary"
-                                        onClick={() => {callSampleAPI(); handleTooltipOpen()}}>
+                                        onClick={() => {callSampleAPI(); handleTooltipOpen(); setIsSampled(true);}}>
                                     Sample
                                 </Button>
                             </Tooltip>
                         </Grid>
                     </Grid>
+                {isSampled && samplePoints.length == 0 &&
+                <Snackbar open={open} autoHideDuration={4000} onClose={handleErrorMsgClose}>
+                    <Alert onClose={handleErrorMsgClose} severity="error" sx={{ width: '100%' }}>
+                        Please draw a distribution first!
+                    </Alert>
+                </Snackbar>
+                }
                 </div>
                 {samplePoints.length > 0 &&
                     <FixedSizeList 

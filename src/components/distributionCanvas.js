@@ -240,6 +240,8 @@ const DistributionCanvas = ({ width, height }) => {
                         Reset
                 </Button>
             </div> 
+
+            {/* TODO: Add a second canvas that sits behind this one and has the image (background of canvas with line shall be transparent) */}
             <div class="CanvasArea">
                 <canvas ref={canvasRef} height={height} width={width}/>
             </div> 

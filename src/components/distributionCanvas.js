@@ -110,9 +110,8 @@ const DistributionCanvas = ({ width, height }) => {
 
     function callStatsAPI() {
 
-        console.log(xMin);
         try {
-            let result = getStats(xCoordinates, yCoordinates, xMin, xMax);
+            let result = getStats(xCoordinates, yCoordinates, Number(xMin), Number(xMax));
             setDistributionStats(result);
         }
         catch (err) {

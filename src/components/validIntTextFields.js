@@ -14,7 +14,7 @@ const MaxValidationTextField = ( {label, defaultValue, maxInt} ) => {
 
     useEffect(() => {
         // Set errorMessage only if the number is greater than the allowable max number
-        if (xMin >= maxInt) {
+        if (Number(xMin) >= Number(maxInt)) {
             setErrorMessage(
                 "Must be less than " + (maxInt-1)
             );
@@ -25,14 +25,14 @@ const MaxValidationTextField = ( {label, defaultValue, maxInt} ) => {
         // Set empty erroMessage only if number is less than max number
         // and errorMessage is not empty.
         // avoids setting empty errorMessage if the errorMessage is already empty
-        if (xMin < maxInt && errorMessage) {
+        if (Number(xMin) < Number(maxInt) && errorMessage) {
             setErrorMessage("");
         }
     }, [xMin, errorMessage]);
 
     return (
         <TextField
-        error={Number(xMin) >= maxInt}
+        error={Number(xMin) >= Number(maxInt)}
         id="outlined-error"
         label={label}
         type={'number'}
@@ -61,8 +61,7 @@ const MinValidationTextField = ( {label, defaultValue, minInt} ) => {
 
     useEffect(() => {
         // Set errorMessage only if number is less than the allowed minimum
-        console.log(xMax)
-        if (Number(xMax) <= minInt) {
+        if (Number(xMax) <= Number(minInt)) {
             setErrorMessage(
                 "Must be greater than " + minInt
             );
@@ -73,14 +72,14 @@ const MinValidationTextField = ( {label, defaultValue, minInt} ) => {
         // Set empty erroMessage only if number is greater than the minimum
         // and errorMessage is not empty.
         // avoids setting empty errorMessage if the errorMessage is already empty
-        if (Number(xMax) > minInt && errorMessage) {
+        if (Number(xMax) > Number(minInt) && errorMessage) {
             setErrorMessage("");
         }
     }, [xMax, errorMessage]);
 
     return (
         <TextField
-        error={Number(xMax) <= minInt}
+        error={Number(xMax) <= Number(minInt)}
         id="outlined-error"
         label={label}
         type={'number'}

@@ -36,7 +36,7 @@ const Sampler = () => {
     const { xCoordinates, yCoordinates, xMin, xMax, nSamples, setNSamples } = useContext(DistributionContext)
 
     function callSampleAPI() {
-        let result = getSamples(xCoordinates, yCoordinates, xMin, xMax, nSamples);
+        let result = getSamples(xCoordinates, yCoordinates, Number(xMin), Number(xMax), Number(nSamples));
         setSamplePoints(result);
         copyArrayToClipboard(result);
     }

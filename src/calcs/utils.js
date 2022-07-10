@@ -46,49 +46,29 @@ function normaliseInputYVector(yVector) {
 function normaliseShiftXVector(xVector, xMin, xMax) {
     let xVectorMin = nj.lowestElement(xVector);
     let xVectorMax = nj.highestElement(xVector);
-    return nj.add(nj.multiply(nj.divide(nj.subtract([xVector], xVectorMin), (xVectorMax - xVectorMin)), xMax - xMin), xMin)[0];
+    return nj.add(nj.multiply(nj.divide(nj.subtract([xVector], xVectorMin), (xVectorMax - xVectorMin)), xMax - xMin), xMin)[0][0];
 }
 
 function prepInputVectors(xCoords, yCoords, xMin, xMax) {
     let xVector = xCoords;
     let yVector = yCoords;
-    // console.log(xCoords);
     let dedupResult = deduplicateVectors(xVector, yVector);
     xVector = dedupResult.x;
     yVector = dedupResult.y;
-    // console.log(xCoords);
 
     if (xCoords.length>1) {
         // interpolate
         let interpResult = interpXYVectors(xVector, yVector);
         xVector = interpResult.x;
         yVector = interpResult.y;
-        // console.log(xCoords);
-        // normalise
-        yVector = normaliseInputYVector(yVector)
-        xVector = normaliseShiftXVector(xVector, xMin, xMax)
-        // console.log(xCoords);
     }
+    // normalise
+    yVector = normaliseInputYVector(yVector);
+    xVector = normaliseShiftXVector(xVector, xMin, xMax);
     return {
-            x : xVector[0],
+            x : xVector,
             y : yVector
            };
 }
 
-// TODO: js-ify
-// function setRoundDigits(xMin, xMax):
-//     n_digit_max = np.floor(np.log10(x_max - x_min)) + 1
-//     if n_digit_max == 0:
-//         n_digit_round = 5
-//     elif n_digit_max < 5:
-//         n_digit_round = 5 - n_digit_max
-//     else:
-//         n_digit_round = 0
-//     return int(n_digit_round)
-
-// let x = [1,2,3,4,5,6,7];
-// let y = [1,2,3,4,3,2,1];
-
-// prepInputVectors(x, y, 0, 100);
-
-export {prepInputVectors}
+export { prepInputVectors }

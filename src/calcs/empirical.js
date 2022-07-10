@@ -19,7 +19,6 @@ function getCDF(yVector) {
     return nj.divide([listArea], cumArea)[0];
 }
 
-// TODO: FIX
 function getMean(xVector, yVector) {
     let mean = 0;
     let countY = yVector.length;
@@ -34,15 +33,12 @@ function getMedian(xVector, cdf) {
 }
 
 function getStdDev(xVector, yVector) {
-    return (getMean(nj.power(2, xVector), yVector) - getMean(xVector, yVector) ** 2) ** 0.5;
+    return (getMean(nj.power(xVector, 2), yVector) - getMean(xVector, yVector) ** 2) ** 0.5;
 }
 
 function getStats(xCoords, yCoords, xMin, xMax) {
     let xVector = prepInputVectors(xCoords, yCoords, xMin, xMax).x;
     let yVector = prepInputVectors(xCoords, yCoords, xMin, xMax).y;
-
-    // let xVector = xCoords;
-    // let yVector = yCoords;
 
     let cdf    = getCDF(yVector);
     
@@ -70,4 +66,4 @@ function getSamples(xCoords, yCoords, xMin, xMax, nSamples) {
     return samples;
 }
 
-export {getStats, getSamples}
+export { getStats, getSamples }

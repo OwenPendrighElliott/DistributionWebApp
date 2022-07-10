@@ -15,6 +15,8 @@ import Button from '@mui/material/Button';
 
 import Tooltip from '@mui/material/Tooltip';
 
+import { getSamples } from "../calcs/empirical"
+
 function copyArrayToClipboard(array) {
     navigator.clipboard.writeText(array.join('\n'));
 }
@@ -29,27 +31,30 @@ const Sampler = () => {
     function callSampleAPI() {
         // Sampling api call, generates n samples from
         // the distribution
-        let requestOptions = {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(
-                {
-                "yCoords": yCoordinates,
-                "xCoords": xCoordinates,
-                'xMin': xMin,
-                'xMax': xMax,
-                'nSamples': nSamples
-                }
-            )
-        };
+        // let requestOptions = {
+        //     method: 'POST',
+        //     headers: { 'Content-Type': 'application/json' },
+        //     body: JSON.stringify(
+        //         {
+        //         "yCoords": yCoordinates,
+        //         "xCoords": xCoordinates,
+        //         'xMin': xMin,
+        //         'xMax': xMax,
+        //         'nSamples': nSamples
+        //         }
+        //     )
+        // };
     
-        // copy to clipboard using the json result directly 
-        // this is because setSamplePoints is asynchronous
-        // and the state may not be up to date if we access
-        // the samplePoints var in this function
-        fetch('/api/sample_distribution', requestOptions)
-        .then((res) => res.json())
-        .then((json) => {setSamplePoints(json.samples); copyArrayToClipboard(json.samples)});
+        // // copy to clipboard using the json result directly 
+        // // this is because setSamplePoints is asynchronous
+        // // and the state may not be up to date if we access
+        // // the samplePoints var in this function
+        // fetch('/api/sample_distribution', requestOptions)
+        // .then((res) => res.json())
+        // .then((json) => {setSamplePoints(json.samples); copyArrayToClipboard(json.samples)});
+
+        let result = getSamples(xCoordinates, yCoordinates, xMin, xMax, nSamples);
+        setSamplePoints(result);
     }
 
     const handleTooltipClose = () => {

@@ -52,22 +52,25 @@ function normaliseShiftXVector(xVector, xMin, xMax) {
 function prepInputVectors(xCoords, yCoords, xMin, xMax) {
     let xVector = xCoords;
     let yVector = yCoords;
-    console.log(xCoords);
+    // console.log(xCoords);
     let dedupResult = deduplicateVectors(xVector, yVector);
     xVector = dedupResult.x;
     yVector = dedupResult.y;
-    console.log(xCoords);
-    // interpolate
-    let interpResult = interpXYVectors(xVector, yVector);
-    xVector = interpResult.x;
-    yVector = interpResult.y;
-    console.log(xCoords);
-    // normalise
-    yVector = normaliseInputYVector(yVector)
-    xVector = normaliseShiftXVector(xVector, xMin, xMax)
-    console.log(xCoords);
+    // console.log(xCoords);
+
+    if (xCoords.length>1) {
+        // interpolate
+        let interpResult = interpXYVectors(xVector, yVector);
+        xVector = interpResult.x;
+        yVector = interpResult.y;
+        // console.log(xCoords);
+        // normalise
+        yVector = normaliseInputYVector(yVector)
+        xVector = normaliseShiftXVector(xVector, xMin, xMax)
+        // console.log(xCoords);
+    }
     return {
-            x : xVector,
+            x : xVector[0],
             y : yVector
            };
 }

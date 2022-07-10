@@ -41,6 +41,11 @@ function getStats(xCoords, yCoords, xMin, xMax) {
     let xVector = prepInputVectors(xCoords, yCoords, xMin, xMax).x;
     let yVector = prepInputVectors(xCoords, yCoords, xMin, xMax).y;
 
+    // let xVector = xCoords;
+    // let yVector = yCoords;
+
+    console.log(xVector);
+    console.log(yVector);
     let cdf    = getCDF(yVector);
     
     let mean   = getMean(xVector, yVector);

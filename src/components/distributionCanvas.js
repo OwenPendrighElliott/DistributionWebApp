@@ -7,6 +7,7 @@ import DistributionContext from "../contexts/distributionContext";
 const DistributionCanvas = ({ width, height }) => {
 
     const [isImage, setIsImage] = useState(false);
+    const [refImage, setRefImage] = useState();
 
     const canvasRef = useRef(null);
     const [isPainting, setIsPainting] = useState(false);
@@ -25,40 +26,35 @@ const DistributionCanvas = ({ width, height }) => {
         // reset x and y coordinates 
         storeYCoordinates([]);
         storeXCoordinates([]);
+        // reset reference images
+        setIsImage(false);
+        setRefImage(null);
     }
+
+    useEffect(() => {
+        if (isPainting) {
+            const canvas = canvasRef.current;
+            const context = canvas.getContext('2d');
+            context.clearRect(0, 0, width, height);
+            context.beginPath();
+            // set the background
+            setBackground();
+
+            // reset x and y coordinates 
+            storeYCoordinates([]);
+            storeXCoordinates([]);
+        }
+    }, [isPainting]);
 
     const startPaint = useCallback((event) => {
         const coordinates = getCoordinates(event);
         if (coordinates) {
             // clear entire canvas for a new drawing (users can only draw one line at a time)
-            resetCanvas();
+            // resetCanvas();
             setMousePosition(coordinates);
             setIsPainting(true);
         }
     }, []);
-
-    useEffect(() => {
-        resetCanvas();
-    }, [isImage])
-
-    useEffect(() => {
-        if (!isImage) {
-            return;
-        }
-        if (!canvasRef.current) {
-            return;
-        }
-        const canvas = canvasRef.current;
-        const context = canvas.getContext('2d');
-
-        var background = new Image();
-        background.src = "https://i.insider.com/59e5d4a1b0c292755836e079";
-
-        // Make sure the image is loaded first otherwise nothing will draw.
-        background.onload = function(){
-            context.drawImage(background, 0, 0, width, height);   
-        }
-    })
 
     useEffect(() => {
         if (!canvasRef.current) {
@@ -85,8 +81,6 @@ const DistributionCanvas = ({ width, height }) => {
                 yCoordinates.push(height - newMousePosition.y)
                 xCoordinates.push(newMousePosition.x)
                 
-                // .push is synchronous so call the stats API 
-                // which acceses the vars
                 callStatsAPI();
                 if (mousePosition && newMousePosition) {
                     drawLine(mousePosition, newMousePosition);
@@ -149,8 +143,9 @@ const DistributionCanvas = ({ width, height }) => {
         if (!canvasRef.current) {
             return;
         }
-
         const canvas = canvasRef.current;
+
+        // get coordinates
         return { x: event.pageX - canvas.offsetLeft, y: event.pageY - canvas.offsetTop };
     };
 
@@ -173,13 +168,76 @@ const DistributionCanvas = ({ width, height }) => {
             context.stroke();
         }
     };
+
+    const getFname = (event) => {
+        // get the file name from an input field and turn it into a blob that can be loaded into a canvas
+        var pathComponents = event.target.value.split('\\'),
+            fileName = pathComponents[pathComponents.length - 1];
+
+        var URL = window.webkitURL || window.URL;
+        var url = URL.createObjectURL(event.target.files[0]);
+        
+        setRefImage(url);
+        setIsImage(true);
+    };
+
+    const setBackground = () => {
+        // set the background image
+        if (!refImage) {
+            return;
+        }
+
+        const canvas = canvasRef.current;
+        const context = canvas.getContext('2d');
+
+        var background = new Image();
+
+        background.src = refImage;
+
+        // Make sure the image is loaded first otherwise nothing will draw.
+        background.onload = function() {
+            context.drawImage(background, 0, 0, width, height);   
+        }
+
+        console.log("Rendering image");
+    };
+    
+    useEffect(() => {
+        // set background if image is updated
+        if (!isImage) {
+            setRefImage(null);
+            return;
+        }
+
+        if (!canvasRef.current) {
+            return;
+        }
+        setBackground();
+    }, [refImage, isImage])
+
     return (
         <div>
-            <div class="Canvas Image Button">
+            <div class="canvasImageButton">
                 <Button variant="outlined" 
                         color="primary"
-                        onClick={() => {setIsImage(!isImage)}}>
+                        component="label"
+                        >
                         Upload Image
+                        <input
+                            type="file"
+                            hidden
+                            onChange={(event) => getFname(event)}
+                        />
+                </Button>
+            </div> 
+
+            <div class="resetButton">
+                <Button variant="outlined" 
+                        color="primary"
+                        component="label"
+                        onClick={() => {resetCanvas();}}
+                        >
+                        Reset
                 </Button>
             </div> 
             <div class="CanvasArea">

@@ -119,7 +119,7 @@ const DistributionCanvas = ({ width, height }) => {
         };
         fetch('/api/calculate_statistics', requestOptions)
         .then((res) => res.json())
-        .then((json) => {setDistributionStats({mean: json.mean, median: json.median, std: json.std})});        
+        .then((json) => {setDistributionStats({mean: json.mean, median: json.median, std: json.std})}); 
     }
     const exitPaint = useCallback(() => {
         setIsPainting(false);

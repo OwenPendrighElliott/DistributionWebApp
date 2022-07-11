@@ -73,24 +73,17 @@ const Sampler = () => {
     const { xCoordinates, yCoordinates, xMin, xMax, nSamples, setNSamples } = useContext(DistributionContext)
 
     function arrToBins(array) {
-    
         let nBins = 10;
-
         if (array.length > 100) {
             nBins = 20;
         } else {
             nBins = 10;
         };
-
-
         let min = Math.min(...array);
         let max = Math.max(...array);
         let inc = (max-min) / nBins;
-    
         let plotData = [["Range", "nSamples"]];
-    
         let prev = min;
-    
         for (let i = 0; i < nBins; i++) {
             let count = 0;
             for (let j = 0; j < array.length; j++){
@@ -110,7 +103,6 @@ const Sampler = () => {
             plotData.push([bucket, count]);
             prev = prev + inc;
         }
-    
         return plotData;
     }
 

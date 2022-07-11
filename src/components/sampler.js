@@ -6,7 +6,6 @@ import { FixedSizeList } from 'react-window';
 import { useContext } from "react";
 import DistributionContext from "../contexts/distributionContext";
 
-
 import Typography from '@mui/material/Typography';
 
 import TextField from '@mui/material/TextField';
@@ -19,6 +18,8 @@ import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 
 import Fade from '@mui/material/Fade';
+
+import { Chart } from "react-google-charts";
 
 import { getSamples } from "../calcs/empirical"
 
@@ -37,12 +38,51 @@ const Sampler = () => {
         chart: {
             title: "Sample Histogram",
         },
+        legend: { position: 'none' },
+        backgroundColor: { fill:'transparent' },
+        hAxis: {
+            title: "Bin",
+            titleTextStyle: {
+                italic: false, 
+                bold: true, 
+                color: "white"
+            },
+            textStyle: {color: "white"},
+            slantedText: true,
+        },
+
+        vAxis: {
+            title: "Count",
+            titleTextStyle: {
+                italic: false, 
+                bold: true, 
+                color: "white"
+            },
+            textStyle: {color: "white"},
+
+            gridlines: {
+                color: '40444b',
+            },
+            minorGridlines: {
+                color: '40444b',
+            }
+        },
+        
     };
 
     const { xCoordinates, yCoordinates, xMin, xMax, nSamples, setNSamples } = useContext(DistributionContext)
 
-    function arrToBins(array, nBins) {
+    function arrToBins(array) {
     
+        let nBins = 10;
+
+        if (array.length > 100) {
+            nBins = 20;
+        } else {
+            nBins = 10;
+        };
+
+
         let min = Math.min(...array);
         let max = Math.max(...array);
         let inc = (max-min) / nBins;
@@ -78,9 +118,6 @@ const Sampler = () => {
         let result = getSamples(xCoordinates, yCoordinates, Number(xMin), Number(xMax), Number(nSamples));
         setSamplePoints(result);
         copyArrayToClipboard(result);
-
-
-        console.log(arrToBins(result, 10));
     }
 
     const handleTooltipClose = () => {
@@ -146,23 +183,14 @@ const Sampler = () => {
                 </div>
 
                 </div>
-                {samplePoints.length > 0 &&
-                    <FixedSizeList 
-                        itemData={samplePoints}
-                        itemCount={samplePoints.length}
-                        itemSize={20}
-                        height={400}
-                        width='100%'
-                        overscanCount={25}          
-                    >
-                        {({data, index, style }) => {
-                        return (
-                            <ListItem style={style} key={index} component="div" disablePadding>
-                                <ListItemText primary={data[index]} />
-                            </ListItem>
-                        );
-                        }}
-                    </FixedSizeList>
+                {(samplePoints.length > 0 && xCoordinates.length > 0) &&
+                    <Chart
+                    chartType="ColumnChart"
+                    width="100%"
+                    height="400px"
+                    data={arrToBins(samplePoints)}
+                    options={options}
+                    />
                 }
             </div> 
             )
@@ -173,7 +201,7 @@ Sampler.defaultProps = {
     xCoordinates: [], 
     xMin: 0, 
     xMax: 100, 
-    nSamples: 100
+    nSamples: 1000
 };
 
 export default Sampler;

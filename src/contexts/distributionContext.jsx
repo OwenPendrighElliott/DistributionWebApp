@@ -30,7 +30,7 @@ const DistributionContextProvider = ({ children }) => {
     const [xCoordinates, storeXCoordinates] = useState([]);
     const [yCoordinates, storeYCoordinates] = useState([]);
 
-    const [nSamples, setNSamples] = useState(100);
+    const [nSamples, setNSamples] = useState(1000);
     return (
         <DistributionContext.Provider value={{
             xMin, xMax, distributionStats, xCoordinates, yCoordinates, nSamples,

@@ -1,8 +1,8 @@
 import './App.css';
-import Header from './components/Header.js';
-import DistributionCanvas from './components/distributionCanvas.js';
-import StatsTable from './components/statsTable.js';
-import Sampler from './components/sampler.js';
+import Header from './components/Header';
+import DistributionCanvas from './components/distributionCanvas';
+import StatsTable from './components/statsTable';
+import Sampler from './components/sampler';
 
 import { ThemeProvider, createTheme, responsiveFontSizes} from '@mui/material/styles';
 import React, { useEffect } from "react";

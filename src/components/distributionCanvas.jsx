@@ -19,6 +19,7 @@ const DistributionCanvas = ({ width, height }) => {
     const { xCoordinates, storeXCoordinates, 
             yCoordinates, storeYCoordinates,
             setDistributionStats,
+            setSamplePoints,
             xMin, xMax} = useContext(DistributionContext)
 
     function resetCanvas() {  
@@ -33,6 +34,9 @@ const DistributionCanvas = ({ width, height }) => {
         // reset reference images
         setIsImage(false);
         setRefImage(null);
+
+
+        setSamplePoints([]);
     }
 
     useEffect(() => {

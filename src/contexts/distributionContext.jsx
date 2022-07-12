@@ -19,6 +19,9 @@ const DistributionContext = React.createContext({
 
     nSamples: 100,
     setNSamples: () => {},
+
+    samplePoints: [],
+    setSamplePoints: () => {},
 })
 
 const DistributionContextProvider = ({ children }) => {
@@ -31,10 +34,13 @@ const DistributionContextProvider = ({ children }) => {
     const [yCoordinates, storeYCoordinates] = useState([]);
 
     const [nSamples, setNSamples] = useState(1000);
+
+    const [samplePoints, setSamplePoints] = useState([])
+
     return (
         <DistributionContext.Provider value={{
-            xMin, xMax, distributionStats, xCoordinates, yCoordinates, nSamples,
-            setXMin, setXMax, setDistributionStats, storeXCoordinates, storeYCoordinates, setNSamples
+            xMin, xMax, distributionStats, xCoordinates, yCoordinates, nSamples, samplePoints,
+            setXMin, setXMax, setDistributionStats, storeXCoordinates, storeYCoordinates, setNSamples, setSamplePoints
         }}>
             {children}
         </DistributionContext.Provider>

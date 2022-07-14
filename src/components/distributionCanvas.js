@@ -21,30 +21,6 @@ const DistributionCanvas = ({ width, height }) => {
             setDistributionStats,
             xMin, xMax} = useContext(DistributionContext)
 
-    
-    // const cnv = canvasRef.current;
-    // cnv.addEventListener("touchstart", function (e) {
-    //     mousePos = getTouchPos(cnv, e);
-    //     var touch = e.touches[0];
-    //     var mouseEvent = new MouseEvent("mousedown", {
-    //     clientX: touch.clientX,
-    //     clientY: touch.clientY
-    //     });
-    //     cnv.dispatchEvent(mouseEvent);
-    // }, false);
-    // cnv.addEventListener("touchend", function (e) {
-    //     var mouseEvent = new MouseEvent("mouseup", {});
-    //     canvas.dispatchEvent(mouseEvent);
-    // }, false);
-    // cnv.addEventListener("touchmove", function (e) {
-    //     var touch = e.touches[0];
-    //     var mouseEvent = new MouseEvent("mousemove", {
-    //     clientX: touch.clientX,
-    //     clientY: touch.clientY
-    //     });
-    //     cnv.dispatchEvent(mouseEvent);
-    // }, false);
-
     function resetCanvas() {  
         const canvas = canvasRef.current;
         const context = canvas.getContext('2d');
@@ -279,7 +255,7 @@ const DistributionCanvas = ({ width, height }) => {
             </div>
 
             {/* TODO: Add a second canvas that sits behind this one and has the image (background of canvas with line shall be transparent) */}
-            <canvas ref={canvasRef} height={height} width={width}/>
+            <canvas id="dist-canvas" ref={canvasRef} height={height} width={width}/>
         </div>
     );
 };

@@ -21,6 +21,30 @@ const DistributionCanvas = ({ width, height }) => {
             setDistributionStats,
             xMin, xMax} = useContext(DistributionContext)
 
+    
+    // const cnv = canvasRef.current;
+    // cnv.addEventListener("touchstart", function (e) {
+    //     mousePos = getTouchPos(cnv, e);
+    //     var touch = e.touches[0];
+    //     var mouseEvent = new MouseEvent("mousedown", {
+    //     clientX: touch.clientX,
+    //     clientY: touch.clientY
+    //     });
+    //     cnv.dispatchEvent(mouseEvent);
+    // }, false);
+    // cnv.addEventListener("touchend", function (e) {
+    //     var mouseEvent = new MouseEvent("mouseup", {});
+    //     canvas.dispatchEvent(mouseEvent);
+    // }, false);
+    // cnv.addEventListener("touchmove", function (e) {
+    //     var touch = e.touches[0];
+    //     var mouseEvent = new MouseEvent("mousemove", {
+    //     clientX: touch.clientX,
+    //     clientY: touch.clientY
+    //     });
+    //     cnv.dispatchEvent(mouseEvent);
+    // }, false);
+
     function resetCanvas() {  
         const canvas = canvasRef.current;
         const context = canvas.getContext('2d');
@@ -34,6 +58,8 @@ const DistributionCanvas = ({ width, height }) => {
         setIsImage(false);
         setRefImage(null);
     }
+
+
 
     useEffect(() => {
         if (isPainting) {
@@ -68,7 +94,7 @@ const DistributionCanvas = ({ width, height }) => {
         }
         const canvas = canvasRef.current;
         canvas.addEventListener('mousedown', startPaint);
-        canvas.addEventListener('touchdown', startPaint);
+        canvas.addEventListener('touchstart', startPaint);
         return () => {
             canvas.removeEventListener('mousestart', startPaint);
             canvas.removeEventListener('touchstart', startPaint);

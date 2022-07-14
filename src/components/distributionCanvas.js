@@ -68,8 +68,10 @@ const DistributionCanvas = ({ width, height }) => {
         }
         const canvas = canvasRef.current;
         canvas.addEventListener('mousedown', startPaint);
+        canvas.addEventListener('touchdown', startPaint);
         return () => {
-            canvas.removeEventListener('mousedown', startPaint);
+            canvas.removeEventListener('mousestart', startPaint);
+            canvas.removeEventListener('touchstart', startPaint);
         };
     }, [startPaint]);
 
@@ -102,9 +104,11 @@ const DistributionCanvas = ({ width, height }) => {
             return;
         }
         const canvas = canvasRef.current;
-        canvas.addEventListener('mousemove', paint);
+        canvas.addEventListener('mousemove', paint)
+        canvas.addEventListener('touchmove', paint);
         return () => {
             canvas.removeEventListener('mousemove', paint);
+            canvas.removeEventListener('touchmove', paint);
         };
     }, [paint]);
 
@@ -130,9 +134,11 @@ const DistributionCanvas = ({ width, height }) => {
         const canvas = canvasRef.current;
         canvas.addEventListener('mouseup', exitPaint);
         canvas.addEventListener('mouseleave', exitPaint);
+        canvas.addEventListener('touchend', exitPaint);
         return () => {
             canvas.removeEventListener('mouseup', exitPaint);
             canvas.removeEventListener('mouseleave', exitPaint);
+            canvas.removeEventListener('touchend', exitPaint);
         };
     }, [exitPaint]);
 

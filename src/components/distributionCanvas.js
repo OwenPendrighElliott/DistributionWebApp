@@ -35,8 +35,6 @@ const DistributionCanvas = ({ width, height }) => {
         setRefImage(null);
     }
 
-
-
     useEffect(() => {
         if (isPainting) {
             const canvas = canvasRef.current;
@@ -62,6 +60,7 @@ const DistributionCanvas = ({ width, height }) => {
             storeYCoordinates([]);
             storeXCoordinates([]);
         }
+        event.preventDefault();
     }, []);
 
     useEffect(() => {
@@ -97,6 +96,7 @@ const DistributionCanvas = ({ width, height }) => {
                     mousePosition = newMousePosition
                 }
             }
+            event.preventDefault();
         },
         [isPainting, mousePosition]
     );
@@ -149,7 +149,7 @@ const DistributionCanvas = ({ width, height }) => {
             return;
         }
         const canvas = canvasRef.current;
-
+        event.preventDefault();
         // get coordinates
         return { x: event.pageX - canvas.offsetLeft, y: event.pageY - canvas.offsetTop };
     };

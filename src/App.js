@@ -54,7 +54,7 @@ function App() {
       }, []);
     
 
-    var canvas = document.getElementById("no-scroll-zone");
+    var canvas = document.getElementById("dist-canvas");
     // Prevent scrolling when touching the canvas
     document.body.addEventListener("touchstart", function (e) {
         if (e.target == canvas) {
@@ -81,17 +81,14 @@ function App() {
                 <Header>drawdist.app</Header>
 
                 <DistributionContextProvider>
-                    <div id="no-scroll-zone">
-                        <DistributionCanvas width={windowDimensions.width} 
-                                            height={windowDimensions.height}>
-                        </DistributionCanvas>
-                        <div align="left">
-                            <RangeSelector width={windowDimensions.width}></RangeSelector>
-
-                            <StatsTable></StatsTable>
-                        </div>
-                    </div>
+                    <DistributionCanvas width={windowDimensions.width} 
+                                        height={windowDimensions.height}>
+                    </DistributionCanvas>
                     <div align="left">
+                        <RangeSelector width={windowDimensions.width}></RangeSelector>
+
+                        <StatsTable></StatsTable>
+
                         <Sampler></Sampler>
                     </div>
                 </DistributionContextProvider>

@@ -33,7 +33,7 @@ const DistributionContextProvider = ({ children }) => {
     const [xCoordinates, storeXCoordinates] = useState([]);
     const [yCoordinates, storeYCoordinates] = useState([]);
 
-    const [nSamples, setNSamples] = useState(1000);
+    const [nSamples, setNSamples] = useState(200);
 
     const [samplePoints, setSamplePoints] = useState([])
 

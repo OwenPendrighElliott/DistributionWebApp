@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import { FixedSizeList } from 'react-window';
@@ -20,7 +20,7 @@ import Alert from '@mui/material/Alert';
 import Fade from '@mui/material/Fade';
 
 
-import { getSamples } from "../calcs/empirical";
+import { getSamples,getStats } from "../calcs/empirical";
 
 import SampleDashboard from "./sampleDashboard";
 
@@ -37,11 +37,25 @@ const Sampler = () => {
 
     const { xCoordinates, yCoordinates, xMin, xMax, nSamples, setNSamples, samplePoints, setSamplePoints} = useContext(DistributionContext)
 
+    const [distStats, setDistributionStats] = useState({mean:0,median:0,std:0});
+
     function callSampleAPI() {
         let result = getSamples(xCoordinates, yCoordinates, Number(xMin), Number(xMax), Number(nSamples));
         setSamplePoints(result);
         copyArrayToClipboard(result);
     }
+
+
+    useEffect(() => {
+        try {
+            let result = getStats(xCoordinates, yCoordinates, Number(xMin), Number(xMax));
+            setDistributionStats(result);
+        }
+        catch (err) {
+            console.log(err);
+            setDistributionStats({mean: 0, median: 0, std: 0});
+        }
+    }, [samplePoints]);
 
     const handleTooltipClose = () => {
         setOpen(false);
@@ -58,20 +72,17 @@ const Sampler = () => {
         setOpen(false);
     };
 
-    useEffect(() => {
-        if (samplePoints.length > 0) {
-            callSampleAPI(); 
-        }
-    }, [xMin, xMax]);
-
-
-
+    // useEffect(() => {
+    //     if (samplePoints.length > 0) {
+    //         callSampleAPI(); 
+    //     }
+    // }, [xMin, xMax]);
 
     return (<div> 
                 <div>
                     <Typography variant='h4'>Sampler</Typography>
                 </div>
-                <div class="SamplerInput">
+                <div className="SamplerInput">
                     <Grid container columnSpacing={1} justifyContent="center">
                         <Grid item>
                             <TextField id="outlined-basic" 
@@ -107,7 +118,7 @@ const Sampler = () => {
                     </Grid>
                 
                 <div className='SamplerErrorMsg'>
-                    <Fade in={isSampled && samplePoints.length == 0} out={samplePoints.length > 0}>
+                    <Fade in={isSampled && samplePoints.length == 0}>
                         <Alert severity="error" sx={{ width: '100%' }}>
                             Please draw a distribution first!
                         </Alert>
@@ -115,9 +126,11 @@ const Sampler = () => {
                 </div>
 
                 </div>
-                {(samplePoints.length > 0) &&
-                    <SampleDashboard samples={samplePoints} xMin={xMin} xMax={xMax}></SampleDashboard>
-                }
+                    <SampleDashboard samples={samplePoints} 
+                                     xMin={xMin} 
+                                     xMax={xMax} 
+                                     distributionStats={distStats}>
+                    </SampleDashboard>
             </div> 
             )
 }
@@ -127,7 +140,7 @@ Sampler.defaultProps = {
     xCoordinates: [], 
     xMin: 0, 
     xMax: 100, 
-    nSamples: 1000
+    nSamples: 200
 };
 
-export default Sampler;
+export default React.memo(Sampler);

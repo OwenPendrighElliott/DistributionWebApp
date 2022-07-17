@@ -66,4 +66,4 @@ function getSamples(xCoords, yCoords, xMin, xMax, nSamples) {
     return samples;
 }
 
-export { getStats, getSamples }
+export { getStats, getSamples, getCDF, prepInputVectors}

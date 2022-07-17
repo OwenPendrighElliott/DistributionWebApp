@@ -30,6 +30,13 @@
     padding-top: 3vh;
     padding-bottom: 2vh;
 }
+
+* h5 {
+    display: flex;
+    justify-content: center;
+    padding-top: 1vh;
+    /* padding-bottom: 2vh; */
+}
 .App-link {
   color: #61dafb;
 } 

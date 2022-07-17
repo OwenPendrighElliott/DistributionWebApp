@@ -30,30 +30,30 @@ function copyArrayToClipboard(array) {
 
 const Sampler = () => {
 
-    const [isSampled, setIsSampled] = useState(false)
-
-    // const [samplePoints, setSamplePoints] = useState([])
     const [open, setOpen] = React.useState(false);
 
-    const { xCoordinates, yCoordinates, xMin, xMax, nSamples, setNSamples, samplePoints, setSamplePoints} = useContext(DistributionContext)
+    const { xCoordinates, yCoordinates, xMin, xMax, nSamples, setNSamples, samplePoints, setSamplePoints, isSampled, setIsSampled } = useContext(DistributionContext)
 
     const [distStats, setDistributionStats] = useState({mean:0,median:0,std:0});
+
+    const [points, setPoints] = useState({x: [], y: []});
 
     function callSampleAPI() {
         let result = getSamples(xCoordinates, yCoordinates, Number(xMin), Number(xMax), Number(nSamples));
         setSamplePoints(result);
         copyArrayToClipboard(result);
-    }
-
+    };
 
     useEffect(() => {
         try {
             let result = getStats(xCoordinates, yCoordinates, Number(xMin), Number(xMax));
             setDistributionStats(result);
+            setPoints({x: xCoordinates, y: yCoordinates});
         }
         catch (err) {
             console.log(err);
             setDistributionStats({mean: 0, median: 0, std: 0});
+            setPoints({x: [], y: []});
         }
     }, [samplePoints]);
 
@@ -72,11 +72,11 @@ const Sampler = () => {
         setOpen(false);
     };
 
-    // useEffect(() => {
-    //     if (samplePoints.length > 0) {
-    //         callSampleAPI(); 
-    //     }
-    // }, [xMin, xMax]);
+    useEffect(() => {
+        if (samplePoints.length > 0) {
+            callSampleAPI(); 
+        }
+    }, [xMin, xMax]);
 
     return (<div> 
                 <div>
@@ -115,8 +115,8 @@ const Sampler = () => {
                                 </Button>
                             </Tooltip>
                         </Grid>
-                    </Grid>
-                
+                    </Grid>    
+                </div>
                 <div className='SamplerErrorMsg'>
                     <Fade in={isSampled && samplePoints.length == 0}>
                         <Alert severity="error" sx={{ width: '100%' }}>
@@ -124,13 +124,15 @@ const Sampler = () => {
                         </Alert>
                     </Fade>
                 </div>
-
-                </div>
+                
+                {samplePoints.length > 0 &&
                     <SampleDashboard samples={samplePoints} 
                                      xMin={xMin} 
                                      xMax={xMax} 
-                                     distributionStats={distStats}>
+                                     distributionStats={distStats}
+                                     points={points}>
                     </SampleDashboard>
+                }
             </div> 
             )
 }
@@ -140,7 +142,7 @@ Sampler.defaultProps = {
     xCoordinates: [], 
     xMin: 0, 
     xMax: 100, 
-    nSamples: 200
+    nSamples: 1000
 };
 
 export default React.memo(Sampler);

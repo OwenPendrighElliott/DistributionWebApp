@@ -20,6 +20,7 @@ const DistributionCanvas = ({ width, height }) => {
             yCoordinates, storeYCoordinates,
             setDistributionStats,
             setSamplePoints,
+            setIsSampled,
             xMin, xMax} = useContext(DistributionContext)
 
     function resetCanvas() {  
@@ -35,6 +36,7 @@ const DistributionCanvas = ({ width, height }) => {
         setIsImage(false);
         setRefImage(null);
 
+        setDistributionStats({mean:0,median:0,std:0});
 
         setSamplePoints([]);
     }
@@ -250,7 +252,7 @@ const DistributionCanvas = ({ width, height }) => {
                         <Button variant="outlined" 
                                 color="primary"
                                 component="label"
-                                onClick={() => {resetCanvas();}}
+                                onClick={() => {resetCanvas(); setIsSampled(false);}}
                                 >
                                 Reset
                         </Button>

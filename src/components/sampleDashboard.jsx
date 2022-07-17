@@ -2,103 +2,21 @@ import React, { useEffect, useState } from 'react';
 import { Chart } from "react-google-charts";
 import Grid from '@mui/material/Grid'
 import * as jstat from "jStat";
+import { getCDF,prepInputVectors } from "../calcs/empirical";
+import { Typography } from '@mui/material';
 
-const MAX_POINTS = 500;
+const MAX_POINTS = 200;
 
-function generateNormalSamples(nSamples, mean, std) {
-    let samples = [];
-    for (let i = 0; i < nSamples; i++) {
-        samples.push(jstat.normal.sample(mean, std));
-    }
-    return samples;
-}
+const SampleDashboard = ({samples, xMin, xMax, distributionStats, points}) => {
 
-function generateUniformSamples(nSamples, xMin, xMax) {
-    let samples = [];
-    for (let i = 0; i < nSamples; i++) {
-        samples.push(jstat.uniform.sample(xMin, xMax));
-    }
-    return samples;
-}
+    const mainColour = "84c8f9";
 
-function generateLognormalSamples(nSamples, mean, std, xMin, xMax) {
-    let samples = [];
-
-    let range = xMax-xMin;
-
-    let scaledMean = mean/range;
-    let scaledStd = std/range;
-
-    console.log(scaledMean, scaledStd);
-    for (let i = 0; i < nSamples; i++) {
-        samples.push(jstat.lognormal.sample(scaledMean, scaledStd)*range);
-    }
-    return samples;
-}
-
-function generateTriangularSamples(nSamples, xMin, xMax, yMax) {
-    let samples = [];
-    for (let i = 0; i < nSamples; i++) {
-        samples.push(jstat.triangular.sample(xMin, xMax, yMax));
-    }
-    return samples;
-}
-
-function generateArcsineSamples(nSamples, xMin, xMax) {
-    let samples = [];
-    let range = xMax-xMin;
-    for (let i = 0; i < nSamples; i++) {
-        samples.push(jstat.arcsine.sample(0, 1)*range);
-    }
-    return samples;
-}
-
-function makeQQData(samples, theoreticalSamples) {
-    // if (!samples) {
-    //     return [["Samples", "Theoretical Samples"], [0,0]];
-    // }
-    // if (!theoreticalSamples) {
-    //     return [["Samples", "Theoretical Samples"], [0,0]];
-    // }
-
-    if (samples.length==0) {
-        return [["Samples", "Theoretical Samples"], [0,0]];
-    }
-    if (theoreticalSamples.length==0) {
-        return [["Samples", "Theoretical Samples"], [0,0]];
-    }
-
-    if (samples.length > MAX_POINTS) {
-        samples = samples.slice(0, MAX_POINTS);
-    }
-    if (theoreticalSamples.length > MAX_POINTS) {
-        theoreticalSamples = theoreticalSamples.slice(0, MAX_POINTS);
-    }
-
-    samples.sort(function(a, b){return a-b});
-    theoreticalSamples.sort(function(a, b){return a-b});
-
-    console.log(samples);
-    console.log(theoreticalSamples);
-
-    let data = [["Samples", "Theoretical Samples"]]
-
-    for (let i = 0; i < samples.length; i++){
-        data.push([samples[i], theoreticalSamples[i]]);
-    }
-
-    console.log(data)
-    return data
-}
-
-
-const SampleDashboard = ({samples, xMin, xMax, distributionStats}) => {
     const histOptions = {
-        chart: { title: "Sample Histogram" },
+        titlePosition: 'none',
         legend: { position: 'none' },
         backgroundColor: { fill:'transparent' },
         animation: {
-            duration: 500,
+            duration: 200,
             easing: "out",
             startup: true,
         },
@@ -126,16 +44,17 @@ const SampleDashboard = ({samples, xMin, xMax, distributionStats}) => {
     };
 
     const scatterOptions = {
+        titlePosition: 'none',
         legend: { position: 'none' },
         backgroundColor: { fill:'transparent' },
         animation: {
-            duration: 500,
+            duration: 200,
             easing: "out",
             startup: true,
         },
         
         hAxis: {
-            title: "Theoretical Quantiles",
+            title: "x",
             titleTextStyle: {
                 italic: false, 
                 bold: true, 
@@ -147,7 +66,7 @@ const SampleDashboard = ({samples, xMin, xMax, distributionStats}) => {
             minorGridlines: { color: '40444b' }
         },
         vAxis: {
-            title: "Sampled Quantiles",
+            title: "Φ",
             titleTextStyle: {
                 italic: false, 
                 bold: true, 
@@ -159,23 +78,9 @@ const SampleDashboard = ({samples, xMin, xMax, distributionStats}) => {
         },
     };
 
-
-    const titleStyle = {italic: false, bold: true, color: "white"};
-    const normScatterOptions = structuredClone(scatterOptions);
-    normScatterOptions.title = "Normal Distribution Q-Q Plot";
-    normScatterOptions.titleTextStyle = titleStyle;
-    const uniformScatterOptions = structuredClone(scatterOptions);
-    uniformScatterOptions.title = "Uniform Distribution Q-Q Plot";
-    uniformScatterOptions.titleTextStyle = titleStyle;
-    const lognormScatterOptions = structuredClone(scatterOptions);
-    lognormScatterOptions.title = "Lognormal Distribution Q-Q Plot";
-    lognormScatterOptions.titleTextStyle = titleStyle;
-    const arcsineScatterOptions = structuredClone(scatterOptions);
-    arcsineScatterOptions.title = "Arcsine Distribution Q-Q Plot";
-    arcsineScatterOptions.titleTextStyle = titleStyle;
-    const mean = distributionStats.mean;
-    const std = distributionStats.std;
-    const median = distributionStats.median;
+    // const mean = distributionStats.mean;
+    // const std = distributionStats.std;
+    // const median = distributionStats.median;
 
     function arrToBins(array) {
         let nBins = 10;
@@ -184,12 +89,9 @@ const SampleDashboard = ({samples, xMin, xMax, distributionStats}) => {
         } else {
             nBins = 10;
         };
-        // let min = Math.min(...array);
-        // let max = Math.max(...array);
-        let max = xMax;
 
         let inc = (xMax-xMin) / nBins;
-        let plotData = [["Range", "nSamples"]];
+        let plotData = [["Range", "nSamples", {role: 'style',type: 'string'}]];
         let prev = xMin;
         for (let i = 0; i < nBins; i++) {
             let count = 0;
@@ -198,8 +100,14 @@ const SampleDashboard = ({samples, xMin, xMax, distributionStats}) => {
                     count = count + 1;
                 }
             }
-            let minBound = Math.round(prev);
-            let maxBound = Math.round(prev+inc);
+            // let minBound = Math.round(prev);
+            // let maxBound = Math.round(prev+inc);
+            let minBound = prev;
+            let maxBound = prev+inc;
+           
+            minBound = +minBound.toFixed(1);
+            maxBound = +maxBound.toFixed(1);
+
             if (i==0) {
                 minBound = xMin;
             }
@@ -207,14 +115,59 @@ const SampleDashboard = ({samples, xMin, xMax, distributionStats}) => {
                 maxBound = xMax;
             }
             let bucket = minBound + " - " + maxBound;
-            plotData.push([bucket, count]);
+            plotData.push([bucket, count, mainColour]);
             prev = prev + inc;
         }
         return plotData;
     };
 
+    function makeCDFData(xCoordinates, yCoordinates) {
+
+        let median = distributionStats.median/(xMax-xMin);
+        let mean = distributionStats.mean/(xMax-xMin);
+        let std = distributionStats.std/(xMax-xMin);
+    
+        if (xCoordinates.length <=1 ) {
+            return [];
+        }
+        let yVector = prepInputVectors(xCoordinates, yCoordinates, xMin, xMax).y;
+        let cdf = getCDF(yVector);
+    
+        let interval = Math.ceil(cdf.length/MAX_POINTS);
+        console.log(interval);
+        let data = [["", "", {role: 'style',type: 'string'}]];
+        for (let i = 0; i < cdf.length; i++) {
+            if (i%interval==0){
+                let color = mainColour;
+                
+                // colour code within one std dev
+                if (i/cdf.length > mean-std && i/cdf.length < mean+std) {
+                    color = "green";
+                }
+    
+                data.push([i/cdf.length, cdf[i], color]);
+            }
+        }
+    
+        // median point
+        data.push([median, 0.5, 'red']);
+    
+        // mean point
+        let meanY = 1;
+        let min = 1;
+        for (let i = 0; i < cdf.length; i++) {
+            if (Math.abs(i/cdf.length-mean) < min) {
+                meanY = cdf[i];
+                min = Math.abs(i/cdf.length-mean);
+            }
+        }
+        data.push([mean, meanY, 'purple']);
+        return data
+    }
+
     return (
         <div>
+            <Typography variant='h5'>Sample Histogram</Typography>
             <Chart
                 chartType="ColumnChart"
                 width="100%"
@@ -222,48 +175,15 @@ const SampleDashboard = ({samples, xMin, xMax, distributionStats}) => {
                 data={arrToBins(samples)}
                 options={histOptions}
             />
-            <Grid container sx={{ maxWidth: "100%" }}>
-                <Grid item xs={true} style={{ height: "400px", display: "flex", justifyContent: "left" }}>
-                    <Chart
-                        chartType="ScatterChart"
-                        width="100%"
-                        height="100%"
-                        data={makeQQData(samples, generateNormalSamples(samples.length, mean, std))}
-                        options={normScatterOptions}
-                    />
-                </Grid>
-                <Grid item xs={true} style={{ height: "400px", display: "flex", justifyContent: "right"}}>
-                    <Chart
-                        chartType="ScatterChart"
-                        width="100%"
-                        height="100%"
-                        data={makeQQData(samples, generateUniformSamples(samples.length, xMin, xMax))}
-                        options={uniformScatterOptions}
-                    />
-                </Grid>
-            </Grid>
+            <Typography variant='h5'>Cumulative Distribution Function</Typography>
+            <Chart
+                chartType="ScatterChart"
+                width="100%"
+                height="400px"
+                data={makeCDFData(points.x, points.y)}
+                options={scatterOptions}
+            />
 
-            <Grid container sx={{ maxWidth: "100%" }}>
-                <Grid item xs={true} style={{ height: "400px", display: "flex", justifyContent: "left" }}>
-                    <Chart
-                        chartType="ScatterChart"
-                        width="100%"
-                        height="100%"
-                        data={makeQQData(samples, generateLognormalSamples(samples.length, mean, std, xMin, xMax))}
-                        options={lognormScatterOptions}
-                    />
-                </Grid>
-                <Grid item xs={true} style={{ height: "400px", display: "flex", justifyContent: "right"}}>
-                    <Chart
-                        chartType="ScatterChart"
-                        width="100%"
-                        height="100%"
-                        data={makeQQData(samples, generateArcsineSamples(samples.length, xMin, xMax))}
-                        options={arcsineScatterOptions}
-                    />
-                </Grid>
-            </Grid>
-            
         </div>
     );
 }

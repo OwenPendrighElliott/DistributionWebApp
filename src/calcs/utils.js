@@ -71,18 +71,15 @@ function prepInputVectors(xCoords, yCoords, xMin, xMax) {
            };
 }
 
-function roundValueFixed(value, maxForcedDecimals) {
-    let valueDigitsSplit = value.toString().split(".");
+function roundValueFixed(value, xMax, maxForcedDecimals) {
+    let valueDigitsSplit = xMax.toString().split(".");
     if (valueDigitsSplit.length == 2) {
         let valueDigitsAfterDP = valueDigitsSplit[1].length;
-        return value.toFixed(valueDigitsAfterDP);
+        return value.toFixed(valueDigitsAfterDP + 3);
     }
     let valueDigitsBeforeDP = valueDigitsSplit[0].length;
     let digitsToDisplay = maxForcedDecimals - valueDigitsBeforeDP;
-    if (digitsToDisplay < 0) {
-        digitsToDisplay = 0;
-    }
-    return value.toFixed(digitsToDisplay);
+    return value.toFixed(Math.max(0, digitsToDisplay));
 }
 
 export { prepInputVectors, roundValueFixed };

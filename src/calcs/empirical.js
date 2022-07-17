@@ -47,9 +47,9 @@ function getStats(xCoords, yCoords, xMin, xMax) {
     let std    = getStdDev(xVector, yVector);
 
     return {
-            mean   : roundValueFixed(mean, xMax, 5),
-            median : roundValueFixed(median, xMax, 5),
-            std    : roundValueFixed(std, xMax, 5)
+            mean   : roundValueFixed(mean, xMin, xMax, 5),
+            median : roundValueFixed(median, xMin, xMax, 5),
+            std    : roundValueFixed(std, xMin, xMax, 5)
            };
 }
 
@@ -64,7 +64,7 @@ function getSamples(xCoords, yCoords, xMin, xMax, nSamples) {
 
     let samples = linterp(unifSamples, cdf, xVector);
     for (let i = 0; i < samples.length; i++) {
-        samples[i] = roundValueFixed(samples[i], xMax, 5);
+        samples[i] = roundValueFixed(samples[i], xMin, xMax, 5);
     }
     return samples;
 }

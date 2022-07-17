@@ -71,8 +71,9 @@ function prepInputVectors(xCoords, yCoords, xMin, xMax) {
            };
 }
 
+// TODO: Fix the xMin part of this.
 function roundValueFixed(value, xMin, xMax, maxForcedDecimals) {
-    let valueDigitsSplit = (xMin - xMax).toString().split(".");
+    let valueDigitsSplit = xMax.toString().split(".");
     if (valueDigitsSplit.length == 2) {
         let valueDigitsAfterDP = valueDigitsSplit[1].length;
         return value.toFixed(valueDigitsAfterDP + 3);

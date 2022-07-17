@@ -71,8 +71,8 @@ function prepInputVectors(xCoords, yCoords, xMin, xMax) {
            };
 }
 
-function roundValueFixed(value, xMax, maxForcedDecimals) {
-    let valueDigitsSplit = xMax.toString().split(".");
+function roundValueFixed(value, xMin, xMax, maxForcedDecimals) {
+    let valueDigitsSplit = (xMin - xMax).toString().split(".");
     if (valueDigitsSplit.length == 2) {
         let valueDigitsAfterDP = valueDigitsSplit[1].length;
         return value.toFixed(valueDigitsAfterDP + 3);

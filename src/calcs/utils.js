@@ -71,4 +71,18 @@ function prepInputVectors(xCoords, yCoords, xMin, xMax) {
            };
 }
 
-export { prepInputVectors }
+function roundValueFixed(value, maxForcedDecimals) {
+    let valueDigitsSplit = value.toString().split(".");
+    if (valueDigitsSplit.length == 2) {
+        let valueDigitsAfterDP = valueDigitsSplit[1].length;
+        return value.toFixed(valueDigitsAfterDP);
+    }
+    let valueDigitsBeforeDP = valueDigitsSplit[0].length;
+    let digitsToDisplay = maxForcedDecimals - valueDigitsBeforeDP;
+    if (digitsToDisplay < 0) {
+        digitsToDisplay = 0;
+    }
+    return value.toFixed(digitsToDisplay);
+}
+
+export { prepInputVectors, roundValueFixed };

@@ -71,4 +71,16 @@ function prepInputVectors(xCoords, yCoords, xMin, xMax) {
            };
 }
 
-export { prepInputVectors }
+// TODO: Put this on the boundary change event
+function roundValueFixed(value, xMin, xMax, maxForcedDecimals) {
+    let valueDigitsSplit = xMax.toString().split(".");
+    if (valueDigitsSplit.length == 2) {
+        let valueDigitsAfterDP = valueDigitsSplit[1].length;
+        return value.toFixed(valueDigitsAfterDP + 3);
+    }
+    let valueDigitsBeforeDP = valueDigitsSplit[0].length;
+    let digitsToDisplay = maxForcedDecimals - valueDigitsBeforeDP;
+    return value.toFixed(Math.max(0, digitsToDisplay));
+}
+
+export { prepInputVectors, roundValueFixed };

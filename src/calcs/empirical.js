@@ -1,4 +1,4 @@
-import { prepInputVectors } from "./utils"
+import { prepInputVectors, roundValueFixed } from "./utils"
 
 var nj = require("jsnumpy")
 var linterp = require("everpolate").linear
@@ -47,9 +47,9 @@ function getStats(xCoords, yCoords, xMin, xMax) {
     let std    = getStdDev(xVector, yVector);
 
     return {
-            mean   : mean,
-            median : median,
-            std    : std
+            mean   : roundValueFixed(mean, xMin, xMax, 5),
+            median : roundValueFixed(median, xMin, xMax, 5),
+            std    : roundValueFixed(std, xMin, xMax, 5)
            };
 }
 
@@ -63,6 +63,9 @@ function getSamples(xCoords, yCoords, xMin, xMax, nSamples) {
     let unifSamples = Array.from({length: nSamples}, () => Math.random());
 
     let samples = linterp(unifSamples, cdf, xVector);
+    for (let i = 0; i < samples.length; i++) {
+        samples[i] = roundValueFixed(samples[i], xMin, xMax, 5);
+    }
     return samples;
 }
 

@@ -145,12 +145,12 @@ const SampleDashboard = ({samples, xMin, xMax, distributionStats, points}) => {
                     color = "green";
                 }
     
-                data.push([i/cdf.length, cdf[i], color]);
+                data.push([i/cdf.length*(xMax-xMin), cdf[i], color]);
             }
         }
     
         // median point
-        data.push([median, 0.5, 'red']);
+        data.push([median*(xMax-xMin), 0.5, 'red']);
     
         // mean point
         let meanY = 1;
@@ -161,7 +161,7 @@ const SampleDashboard = ({samples, xMin, xMax, distributionStats, points}) => {
                 min = Math.abs(i/cdf.length-mean);
             }
         }
-        data.push([mean, meanY, 'purple']);
+        data.push([mean*(xMax-xMin), meanY, 'purple']);
         return data
     }
 

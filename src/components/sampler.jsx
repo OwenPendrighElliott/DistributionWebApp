@@ -24,8 +24,39 @@ import { getSamples,getStats } from "../calcs/empirical";
 
 import SampleDashboard from "./sampleDashboard";
 
+import SampleScroller from './sampleScroller';
+
 function copyArrayToClipboard(array) {
     navigator.clipboard.writeText(array.join('\n'));
+}
+
+const DownloadSamples = (samples) => {
+    const sampleStr = "Samples,\n" + samples['samples'].join(',\n');
+    const fileType = "csv";
+
+    function download() {
+        // make the samples available for download as a csv file
+        var blob = new Blob([sampleStr], { type: fileType });
+        var a = document.createElement('a');
+        a.download = "samples.csv";
+        a.href = URL.createObjectURL(blob);
+        a.dataset.downloadurl = [fileType, a.download, a.href].join(':');
+        a.style.display = "none";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(function() { URL.revokeObjectURL(a.href); }, 1500);
+    }
+
+    return (
+        <div className='sampledownloader'>
+            <Button variant="outlined" 
+                    color="primary"
+                    onClick={() => {download();}}>
+                Download Samples
+            </Button>
+        </div>
+    )
 }
 
 const Sampler = () => {
@@ -117,6 +148,22 @@ const Sampler = () => {
                         </Grid>
                     </Grid>    
                 </div>
+                
+                
+                {samplePoints.length > 0 &&
+                    <div>
+                        <DownloadSamples samples={samplePoints}></DownloadSamples>
+
+                        <SampleScroller samples={samplePoints}></SampleScroller>
+                        <SampleDashboard samples={samplePoints} 
+                                        xMin={xMin} 
+                                        xMax={xMax} 
+                                        distributionStats={distStats}
+                                        points={points}>
+                        </SampleDashboard>
+                    </div>
+                }
+
                 <div className='SamplerErrorMsg'>
                     <Fade in={isSampled && samplePoints.length == 0}>
                         <Alert severity="error" sx={{ width: '100%' }}>
@@ -124,25 +171,11 @@ const Sampler = () => {
                         </Alert>
                     </Fade>
                 </div>
-                
-                {samplePoints.length > 0 &&
-                    <SampleDashboard samples={samplePoints} 
-                                     xMin={xMin} 
-                                     xMax={xMax} 
-                                     distributionStats={distStats}
-                                     points={points}>
-                    </SampleDashboard>
-                }
             </div> 
             )
 }
 
 Sampler.defaultProps = {
-    yCoordinates: [], 
-    xCoordinates: [], 
-    xMin: 0, 
-    xMax: 100, 
-    nSamples: 1000
-};
+}
 
-export default React.memo(Sampler);
+export default Sampler;

@@ -63,9 +63,9 @@ function getSamples(xCoords, yCoords, xMin, xMax, nSamples) {
     let unifSamples = Array.from({length: nSamples}, () => Math.random());
 
     let samples = linterp(unifSamples, cdf, xVector);
-    for (let i = 0; i < samples.length; i++) {
-        samples[i] = roundValueFixed(samples[i], xMin, xMax, 5);
-    }
+    // for (let i = 0; i < samples.length; i++) {
+    //     samples[i] = roundValueFixed(samples[i], xMin, xMax, 5);
+    // }
     return samples;
 }
 

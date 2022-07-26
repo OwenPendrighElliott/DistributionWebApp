@@ -79,7 +79,7 @@ const SampleScroller = (data) => {
     return (
     <div className="samplescroller">
         <Wrapper key={index}>
-            {samples[index].toString().split("").slice(0,13).map((item, index) => (
+            {Number(samples[index]).toString().split("").slice(0,13).map((item, index) => (
                 <span key={index}>{item}</span>
             ))}
         </Wrapper>

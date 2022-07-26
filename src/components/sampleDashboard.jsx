@@ -100,11 +100,6 @@ const SampleDashboard = ({samples, xMin, xMax, distributionStats, points}) => {
         let plotData = [["Range", "nSamples", {role: 'style',type: 'string'}]];
         let prev = Number(xMin);
 
-
-        console.log(inc, prev, xMax, xMin);
-
-        console.log(array);
-
         for (let i = 0; i < nBins; i++) {
             let count = 0;
             for (let j = 0; j < array.length; j++){
@@ -154,7 +149,6 @@ const SampleDashboard = ({samples, xMin, xMax, distributionStats, points}) => {
         let cdf = getCDF(yVector);
     
         let interval = Math.ceil(cdf.length/MAX_POINTS);
-        // console.log(interval);
         let data = [["", "", {role: 'style',type: 'string'}]];
         for (let i = 0; i < cdf.length; i++) {
             if (i%interval==0){

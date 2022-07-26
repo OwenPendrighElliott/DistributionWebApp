@@ -28,7 +28,6 @@ const DistributionCanvas = ({ width, height }) => {
         const context = canvas.getContext('2d');
         context.clearRect(0, 0, width, height);
         context.beginPath();
-        console.log(xCoordinates);
         // reset x and y coordinates 
         storeYCoordinates([]);
         storeXCoordinates([]);
@@ -209,8 +208,6 @@ const DistributionCanvas = ({ width, height }) => {
         background.onload = function() {
             context.drawImage(background, 0, 0, width, height);   
         }
-
-        console.log("Rendering image");
     };
     
     useEffect(() => {

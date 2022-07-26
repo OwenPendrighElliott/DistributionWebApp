@@ -164,7 +164,7 @@ const Sampler = () => {
                     </div>
                 }
 
-                <div className='SamplerErrorMsg'>
+                <div className='samplererrormsg'>
                     <Fade in={isSampled && samplePoints.length == 0}>
                         <Alert severity="error" sx={{ width: '100%' }}>
                             Please draw a distribution first!

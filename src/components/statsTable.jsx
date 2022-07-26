@@ -25,24 +25,24 @@ const StatsTable = ({width}) => {
             </div>
             <div className="tablediv">
                 {/* <TableContainer sx={{maxWidth: width}} component={Paper}> */}
-                <TableContainer sx={{minWidth: 300, maxWidth: width/2, alignItems: "left"}} component={Paper}>
-                    <Table aria-label="results table">
-                        <TableHead>
-                            <TableRow>
-                                <TableCell align="center">Mean</TableCell>
-                                <TableCell align="center">Median</TableCell>
-                                <TableCell align="center">Std.</TableCell> 
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            <TableRow>
-                                <TableCell align="center">{mean}</TableCell>
-                                <TableCell align="center">{median}</TableCell>
-                                <TableCell align="center">{std}</TableCell>
-                            </TableRow>
-                        </TableBody>
-                    </Table>
-                </TableContainer>
+                <table>
+                    <tr>
+                        {/* <th align="center">Mean</th>
+                        <th align="center">Median</th>
+                        <th align="center">Std.</th>  */}
+                        <th align="center"><Typography>Mean</Typography></th>
+                        <th align="center"><Typography>Median</Typography></th>
+                        <th align="center"><Typography>Std.</Typography></th> 
+                    </tr>
+                    <tr>
+                        {/* <td align="center">{mean}</td>
+                        <td align="center">{median}</td>
+                        <td align="center">{std}</td> */}
+                        <td align="center"><Typography>{mean}</Typography></td>
+                        <td align="center"><Typography>{median}</Typography></td>
+                        <td align="center"><Typography>{std}</Typography></td>
+                    </tr>
+                </table>
             </div>
         </div>
     );

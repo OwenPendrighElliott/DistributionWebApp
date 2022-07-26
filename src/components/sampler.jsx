@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import { FixedSizeList } from 'react-window';
 
 import { useContext } from "react";
 import DistributionContext from "../contexts/distributionContext";
-
 
 import Typography from '@mui/material/Typography';
 
@@ -20,68 +19,74 @@ import Alert from '@mui/material/Alert';
 
 import Fade from '@mui/material/Fade';
 
-import { getSamples } from "../calcs/empirical"
+
+import { getSamples,getStats } from "../calcs/empirical";
+
+import SampleDashboard from "./sampleDashboard";
+
+import SampleScroller from './sampleScroller';
 
 function copyArrayToClipboard(array) {
     navigator.clipboard.writeText(array.join('\n'));
 }
 
+const DownloadSamples = (samples) => {
+    const sampleStr = "Samples,\n" + samples['samples'].join(',\n');
+    const fileType = "csv";
+
+    function download() {
+        // make the samples available for download as a csv file
+        var blob = new Blob([sampleStr], { type: fileType });
+        var a = document.createElement('a');
+        a.download = "samples.csv";
+        a.href = URL.createObjectURL(blob);
+        a.dataset.downloadurl = [fileType, a.download, a.href].join(':');
+        a.style.display = "none";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(function() { URL.revokeObjectURL(a.href); }, 1500);
+    }
+
+    return (
+        <div className='sampledownloader'>
+            <Button variant="outlined" 
+                    color="primary"
+                    onClick={() => {download();}}>
+                Download Samples
+            </Button>
+        </div>
+    )
+}
+
 const Sampler = () => {
 
-    const [isSampled, setIsSampled] = useState(false)
-
-    const [samplePoints, setSamplePoints] = useState([])
     const [open, setOpen] = React.useState(false);
 
-    const options = {
-        chart: {
-            title: "Sample Histogram",
-        },
-    };
+    const { xCoordinates, yCoordinates, xMin, xMax, nSamples, setNSamples, samplePoints, setSamplePoints, isSampled, setIsSampled } = useContext(DistributionContext)
 
-    const { xCoordinates, yCoordinates, xMin, xMax, nSamples, setNSamples } = useContext(DistributionContext)
+    const [distStats, setDistributionStats] = useState({mean:0,median:0,std:0});
 
-    function arrToBins(array, nBins) {
-    
-        let min = Math.min(...array);
-        let max = Math.max(...array);
-        let inc = (max-min) / nBins;
-    
-        let plotData = [["Range", "nSamples"]];
-    
-        let prev = min;
-    
-        for (let i = 0; i < nBins; i++) {
-            let count = 0;
-            for (let j = 0; j < array.length; j++){
-                if (array[j] > prev && array[j] < prev+inc) {
-                    count = count + 1;
-                }
-            }
-            let minBound = Math.round(prev);
-            let maxBound = Math.round(prev+inc);
-            if (i==0) {
-                minBound = xMin;
-            }
-            if (i==nBins-1){
-                maxBound = xMax;
-            }
-            let bucket = minBound + " - " + maxBound;
-            plotData.push([bucket, count]);
-            prev = prev + inc;
-        }
-    
-        return plotData;
-    }
+    const [points, setPoints] = useState({x: [], y: []});
 
     function callSampleAPI() {
         let result = getSamples(xCoordinates, yCoordinates, Number(xMin), Number(xMax), Number(nSamples));
         setSamplePoints(result);
         copyArrayToClipboard(result);
+    };
 
-
-        console.log(arrToBins(result, 10));
-    }
+    useEffect(() => {
+        try {
+            let result = getStats(xCoordinates, yCoordinates, Number(xMin), Number(xMax));
+            setDistributionStats(result);
+            setPoints({x: xCoordinates, y: yCoordinates});
+        }
+        catch (err) {
+            console.log(err);
+            setDistributionStats({mean: 0, median: 0, std: 0});
+            setPoints({x: [], y: []});
+        }
+    }, [samplePoints]);
 
     const handleTooltipClose = () => {
         setOpen(false);
@@ -96,13 +101,19 @@ const Sampler = () => {
           return;
         }
         setOpen(false);
-      };
+    };
+
+    useEffect(() => {
+        if (samplePoints.length > 0) {
+            callSampleAPI(); 
+        }
+    }, [xMin, xMax]);
 
     return (<div> 
                 <div>
                     <Typography variant='h4'>Sampler</Typography>
                 </div>
-                <div class="SamplerInput">
+                <div className="SamplerInput">
                     <Grid container columnSpacing={1} justifyContent="center">
                         <Grid item>
                             <TextField id="outlined-basic" 
@@ -135,45 +146,36 @@ const Sampler = () => {
                                 </Button>
                             </Tooltip>
                         </Grid>
-                    </Grid>
+                    </Grid>    
+                </div>
                 
-                <div className='SamplerErrorMsg'>
-                <Fade in={isSampled && samplePoints.length == 0} out={samplePoints.length > 0}>
-                    <Alert severity="error" sx={{ width: '100%' }}>
-                        Please draw a distribution first!
-                    </Alert>
-                </Fade>
-                </div>
-
-                </div>
+                
                 {samplePoints.length > 0 &&
-                    <FixedSizeList 
-                        itemData={samplePoints}
-                        itemCount={samplePoints.length}
-                        itemSize={20}
-                        height={400}
-                        width='100%'
-                        overscanCount={25}          
-                    >
-                        {({data, index, style }) => {
-                        return (
-                            <ListItem style={style} key={index} component="div" disablePadding>
-                                <ListItemText primary={data[index]} />
-                            </ListItem>
-                        );
-                        }}
-                    </FixedSizeList>
+                    <div>
+                        <DownloadSamples samples={samplePoints}></DownloadSamples>
+
+                        <SampleScroller samples={samplePoints}></SampleScroller>
+                        <SampleDashboard samples={samplePoints} 
+                                        xMin={xMin} 
+                                        xMax={xMax} 
+                                        distributionStats={distStats}
+                                        points={points}>
+                        </SampleDashboard>
+                    </div>
                 }
+
+                <div className='SamplerErrorMsg'>
+                    <Fade in={isSampled && samplePoints.length == 0}>
+                        <Alert severity="error" sx={{ width: '100%' }}>
+                            Please draw a distribution first!
+                        </Alert>
+                    </Fade>
+                </div>
             </div> 
             )
 }
 
 Sampler.defaultProps = {
-    yCoordinates: [], 
-    xCoordinates: [], 
-    xMin: 0, 
-    xMax: 100, 
-    nSamples: 100
-};
+}
 
 export default Sampler;

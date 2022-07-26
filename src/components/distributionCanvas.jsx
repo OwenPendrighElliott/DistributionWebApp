@@ -19,6 +19,8 @@ const DistributionCanvas = ({ width, height }) => {
     const { xCoordinates, storeXCoordinates, 
             yCoordinates, storeYCoordinates,
             setDistributionStats,
+            setSamplePoints,
+            setIsSampled,
             xMin, xMax} = useContext(DistributionContext)
 
     function resetCanvas() {  
@@ -26,13 +28,16 @@ const DistributionCanvas = ({ width, height }) => {
         const context = canvas.getContext('2d');
         context.clearRect(0, 0, width, height);
         context.beginPath();
-        console.log(xCoordinates);
         // reset x and y coordinates 
         storeYCoordinates([]);
         storeXCoordinates([]);
         // reset reference images
         setIsImage(false);
         setRefImage(null);
+
+        setDistributionStats({mean:0,median:0,std:0});
+
+        setSamplePoints([]);
     }
 
     useEffect(() => {
@@ -203,8 +208,6 @@ const DistributionCanvas = ({ width, height }) => {
         background.onload = function() {
             context.drawImage(background, 0, 0, width, height);   
         }
-
-        console.log("Rendering image");
     };
     
     useEffect(() => {
@@ -246,7 +249,7 @@ const DistributionCanvas = ({ width, height }) => {
                         <Button variant="outlined" 
                                 color="primary"
                                 component="label"
-                                onClick={() => {resetCanvas();}}
+                                onClick={() => {resetCanvas(); setIsSampled(false);}}
                                 >
                                 Reset
                         </Button>

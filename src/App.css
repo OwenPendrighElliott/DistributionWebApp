@@ -30,6 +30,13 @@
     padding-top: 3vh;
     padding-bottom: 2vh;
 }
+
+* h5 {
+    display: flex;
+    justify-content: center;
+    padding-top: 1vh;
+    /* padding-bottom: 2vh; */
+}
 .App-link {
   color: #61dafb;
 } 
@@ -56,6 +63,21 @@
     display: flex;
     justify-content: center;   
 }
+
+.sampledownloader {
+    padding-top: 1vh;
+    display: flex;
+    justify-content: center;   
+}
+
+.samplescroller {
+    padding-top: 2vh;
+    padding-bottom: 2vh;
+    display: flex;
+    justify-content: center;   
+    text-align: center;
+}
+
 
 ::selection {
     background: #afafaf; /* WebKit/Blink Browsers */

@@ -86,33 +86,53 @@ const SampleDashboard = ({samples, xMin, xMax, distributionStats, points}) => {
         let nBins = 10;
         if (array.length > 100) {
             nBins = 20;
-        } else {
+        } else if (array.length > 10) {
             nBins = 10;
+        } else {
+            nBins = array.length;
         };
 
-        let inc = (xMax-xMin) / nBins;
+        if (xMax < xMin) {
+            // reverse them and the array
+        }
+
+        let inc = (Number(xMax)-Number(xMin)) / nBins;
         let plotData = [["Range", "nSamples", {role: 'style',type: 'string'}]];
-        let prev = xMin;
+        let prev = Number(xMin);
+
+
+        console.log(inc, prev, xMax, xMin);
+
+        console.log(array);
+
         for (let i = 0; i < nBins; i++) {
             let count = 0;
             for (let j = 0; j < array.length; j++){
-                if (array[j] > prev && array[j] < prev+inc) {
-                    count = count + 1;
+                // do these comparisons the right way depending on bounds
+                if (Number(xMax)>Number(xMin)){
+                    if (array[j] > prev && array[j] < prev+inc) {
+                        count = count + 1;
+                    }
+                } else {
+                    if (array[j] < prev && array[j] > prev+inc) {
+                        count = count + 1;
+                    }
                 }
             }
-            // let minBound = Math.round(prev);
-            // let maxBound = Math.round(prev+inc);
-            let minBound = prev;
-            let maxBound = prev+inc;
-           
+            
+            // update bounds
+            let minBound = Number(prev);
+            let maxBound = Number(prev)+Number(inc);
+
+            // convert to one dp
             minBound = +minBound.toFixed(1);
             maxBound = +maxBound.toFixed(1);
 
             if (i==0) {
-                minBound = xMin;
+                minBound = Math.min(Number(xMin), Number(xMax));
             }
             if (i==nBins-1){
-                maxBound = xMax;
+                maxBound = Math.max(Number(xMin), Number(xMax));
             }
             let bucket = minBound + " - " + maxBound;
             plotData.push([bucket, count, mainColour]);
@@ -134,7 +154,7 @@ const SampleDashboard = ({samples, xMin, xMax, distributionStats, points}) => {
         let cdf = getCDF(yVector);
     
         let interval = Math.ceil(cdf.length/MAX_POINTS);
-        console.log(interval);
+        // console.log(interval);
         let data = [["", "", {role: 'style',type: 'string'}]];
         for (let i = 0; i < cdf.length; i++) {
             if (i%interval==0){

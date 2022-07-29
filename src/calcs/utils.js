@@ -72,14 +72,17 @@ function prepInputVectors(xCoords, yCoords, xMin, xMax) {
 }
 
 function roundValueFixed(value, xMin, xMax, maxForcedDecimals) {
-    let valueDigitsSplit = (xMax - xMin).toString().split(".");
-    if (valueDigitsSplit.length == 2) {
-        let valueDigitsAfterDP = valueDigitsSplit[1].length;
-        return value.toFixed(valueDigitsAfterDP + 3);
-    }
-    let valueDigitsBeforeDP = valueDigitsSplit[0].length;
-    let digitsToDisplay = maxForcedDecimals - valueDigitsBeforeDP;
-    return value.toFixed(Math.max(0, digitsToDisplay));
+    let maxValueDigitsSplit = xMax.toString().split(".");
+    let minValueDigitsSplit = xMin.toString().split(".");
+    let maxValueDigits = maxValueDigitsSplit[1] == undefined ? maxForcedDecimals - maxValueDigitsSplit[0].length : maxValueDigitsSplit[1].length + 3;
+    let minValueDigits = minValueDigitsSplit[1] == undefined ? maxForcedDecimals - minValueDigitsSplit[0].length : minValueDigitsSplit[1].length + 3;
+    console.log(maxValueDigits)
+    console.log(minValueDigits)
+    let digitsToDisplay = Math.max(maxValueDigits, minValueDigits)
+    return value.toFixed(Math.max(0, digitsToDisplay))
 }
 
+//roundValueFixed(1.2341, 0, 100, 5);
+
 export { prepInputVectors, roundValueFixed };
+

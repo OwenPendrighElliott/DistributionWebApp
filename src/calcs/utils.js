@@ -71,7 +71,7 @@ function prepInputVectors(xCoords, yCoords, xMin, xMax) {
            };
 }
 
-function roundValueFixed(value, xMin, xMax, maxForcedDecimals) {
+function roundValueFixed(value, xMin, xMax) {
     let digitsToDisplay = Math.round(-Math.log10(Math.abs(xMax - xMin)) + 4);
     return value.toFixed(Math.max(0, digitsToDisplay))
 }

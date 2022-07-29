@@ -71,9 +71,8 @@ function prepInputVectors(xCoords, yCoords, xMin, xMax) {
            };
 }
 
-// TODO: Put this on the boundary change event
 function roundValueFixed(value, xMin, xMax, maxForcedDecimals) {
-    let valueDigitsSplit = xMax.toString().split(".");
+    let valueDigitsSplit = (xMax - xMin).toString().split(".");
     if (valueDigitsSplit.length == 2) {
         let valueDigitsAfterDP = valueDigitsSplit[1].length;
         return value.toFixed(valueDigitsAfterDP + 3);

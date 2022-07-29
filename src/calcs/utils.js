@@ -76,7 +76,5 @@ function roundValueFixed(value, xMin, xMax, maxForcedDecimals) {
     return value.toFixed(Math.max(0, digitsToDisplay))
 }
 
-//roundValueFixed(1.2341, 0, 100, 5);
-
 export { prepInputVectors, roundValueFixed };
 

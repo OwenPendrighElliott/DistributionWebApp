@@ -56,15 +56,17 @@ function prepInputVectors(xCoords, yCoords, xMin, xMax) {
     xVector = dedupResult.x;
     yVector = dedupResult.y;
 
+    // interpolate
     if (xCoords.length>1) {
-        // interpolate
         let interpResult = interpXYVectors(xVector, yVector);
         xVector = interpResult.x;
         yVector = interpResult.y;
     }
+
     // normalise
     yVector = normaliseInputYVector(yVector);
     xVector = normaliseShiftXVector(xVector, xMin, xMax);
+    
     return {
             x : xVector,
             y : yVector

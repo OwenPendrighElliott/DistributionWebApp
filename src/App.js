@@ -28,7 +28,7 @@ const darkTheme = createTheme({
     },
     typography: {
         fontFamily: [
-            'Source Code Pro',
+            'Source Code Pro'
         ].join(','),
         },
     });

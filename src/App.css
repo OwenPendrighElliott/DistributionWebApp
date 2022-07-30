@@ -1,3 +1,6 @@
+/* import Comfortaa typeface */
+@import url('https://fonts.googleapis.com/css?family=Comfortaa:regular,bold,italic&subset=latin,latin-ext');
+
 .App {
   text-align: left;
 
@@ -77,6 +80,13 @@
     justify-content: center;   
     text-align: center;
 }
+
+img {
+    width: 3%;
+    height: 3%;
+    padding-right: 1vh;
+    vertical-align:center;
+    }
 
 
 ::selection {

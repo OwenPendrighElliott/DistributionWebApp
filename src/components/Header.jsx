@@ -36,9 +36,10 @@ const ResponsiveAppBar = () => {
     <AppBar position="static">
         <Container maxWidth="xl">
             <Toolbar>
-                <div>d r a w d i s t . a p p</div>
+                <img src="/logo.png" />
+                <div>drawdist.app</div>
                 <Box sx={{ flexGrow: 0, marginLeft: "auto"}}>                
-                    <Tooltip title="Other Interesting Things">
+                    <Tooltip title="Menu">
                         <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                             <MoreIcon/>
                         </IconButton>

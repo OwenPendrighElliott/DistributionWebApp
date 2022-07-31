@@ -4,14 +4,14 @@ import Grid from '@mui/material/Grid'
 import * as jstat from "jStat";
 import { getCDF,prepInputVectors } from "../calcs/empirical";
 import { Typography } from '@mui/material';
-
-const MAX_POINTS = 200;
+import { fontFamily } from '@mui/system';
 
 const SampleDashboard = ({samples, xMin, xMax, distributionStats, points}) => {
 
-    const mainColour = "84c8f9";
+    const mainColour = "f7c101";
 
     const histOptions = {
+        fontName: 'Source Sans Pro',
         titlePosition: 'none',
         legend: { position: 'none' },
         backgroundColor: { fill:'transparent' },
@@ -21,7 +21,7 @@ const SampleDashboard = ({samples, xMin, xMax, distributionStats, points}) => {
             startup: true,
         },
         hAxis: {
-            title: "Bin",
+            title: "",
             titleTextStyle: {
                 italic: false, 
                 bold: true, 
@@ -31,7 +31,7 @@ const SampleDashboard = ({samples, xMin, xMax, distributionStats, points}) => {
             slantedText: true,
         },
         vAxis: {
-            title: "Count",
+            title: "Count of Samples",
             titleTextStyle: {
                 italic: false, 
                 bold: true, 
@@ -39,34 +39,34 @@ const SampleDashboard = ({samples, xMin, xMax, distributionStats, points}) => {
             },
             textStyle: { color: "white" },
             gridlines: { color: '40444b' },
-            minorGridlines: { color: '40444b' }
+            minorGridlines: { color: '40444b' },
+            format: "#",
         },
     };
 
-    const scatterOptions = {
+    const areaOptions = {
+        fontName: "Source Sans Pro",
         titlePosition: 'none',
-        legend: { position: 'none' },
         backgroundColor: { fill:'transparent' },
         animation: {
             duration: 200,
             easing: "out",
             startup: true,
         },
-        
         hAxis: {
-            title: "x",
+            title: "",
             titleTextStyle: {
                 italic: false, 
                 bold: true, 
                 color: "white"
             },
             textStyle: { color: "white" },
-            slantedText: true,
+            slantedText: false,
             gridlines: { color: '40444b' },
             minorGridlines: { color: '40444b' }
         },
         vAxis: {
-            title: "Φ",
+            title: "Area Under Curve",
             titleTextStyle: {
                 italic: false, 
                 bold: true, 
@@ -76,20 +76,21 @@ const SampleDashboard = ({samples, xMin, xMax, distributionStats, points}) => {
             gridlines: { color: '40444b' },
             minorGridlines: { color: '40444b' }
         },
+        legend: { 
+            position: "bottom", 
+            textStyle: { color: "white", fontFamily: "Comfortaa" },
+        },
+        focusTarget: "category",
     };
 
     // const mean = distributionStats.mean;
     // const std = distributionStats.std;
     // const median = distributionStats.median;
-
+    
     function arrToBins(array) {
         let nBins = 10;
         if (array.length > 100) {
             nBins = 20;
-        } else if (array.length > 10) {
-            nBins = 10;
-        } else {
-            nBins = array.length;
         };
 
         if (xMax < xMin) {
@@ -102,7 +103,7 @@ const SampleDashboard = ({samples, xMin, xMax, distributionStats, points}) => {
 
         for (let i = 0; i < nBins; i++) {
             let count = 0;
-            for (let j = 0; j < array.length; j++){
+            for (let j = 0; j < Math.min(array.length, 10000); j++){
                 // do these comparisons the right way depending on bounds
                 if (Number(xMax)>Number(xMin)){
                     if (array[j] > prev && array[j] < prev+inc) {
@@ -117,7 +118,7 @@ const SampleDashboard = ({samples, xMin, xMax, distributionStats, points}) => {
             
             // update bounds
             let minBound = Number(prev);
-            let maxBound = Number(prev)+Number(inc);
+            let maxBound = Number(prev) + Number(inc);
 
             // convert to one dp
             minBound = +minBound.toFixed(1);
@@ -138,50 +139,42 @@ const SampleDashboard = ({samples, xMin, xMax, distributionStats, points}) => {
 
     function makeCDFData(xCoordinates, yCoordinates) {
 
-        let median = distributionStats.median/(xMax-xMin);
         let mean = distributionStats.mean/(xMax-xMin);
         let std = distributionStats.std/(xMax-xMin);
     
-        if (xCoordinates.length <=1 ) {
+        if (xCoordinates.length <= 1) {
             return [];
         }
         let yVector = prepInputVectors(xCoordinates, yCoordinates, xMin, xMax).y;
         let cdf = getCDF(yVector);
     
-        let interval = Math.ceil(cdf.length/MAX_POINTS);
-        let data = [["", "", {role: 'style',type: 'string'}]];
-        for (let i = 0; i < cdf.length; i++) {
-            if (i%interval==0){
-                let color = mainColour;
-                
-                // colour code within one std dev
-                if (i/cdf.length > mean-std && i/cdf.length < mean+std) {
-                    color = "green";
-                }
-    
-                data.push([i/cdf.length*(xMax-xMin), cdf[i], color]);
+        let data = [["Y", "Within 1 std", "±1 std-dev", "±2 std-dev", {role: 'style'}]];
+        for (let i = 0; i < Math.min(cdf.length, 10000); i++) {
+            let color = "white";
+            if (i / cdf.length <= mean - 2 * std) {
+                //let color = "ff2d29";
+                data.push([i / cdf.length * (xMax - xMin), null, null, cdf[i], color]);
+            } else if (i / cdf.length <= mean - std) {
+                //let color = "fc7600";
+                data.push([i / cdf.length * (xMax - xMin), null, cdf[i], null, color]);
+            } else if (i / cdf.length <= mean + std) {
+                //let color = "f7c101";
+                data.push([i / cdf.length * (xMax - xMin), cdf[i], null, null, color]);
+            } else if (i / cdf.length <= mean + 2 * std) {
+                //let color = "fc7600";
+                data.push([i / cdf.length * (xMax - xMin), null, cdf[i], null, color]);
+            } else if (i / cdf.length <= 1) {
+                //let color = "ff2d29";
+                data.push([i / cdf.length * (xMax - xMin), null, null, cdf[i], color]);
             }
         }
-    
-        // median point
-        data.push([median*(xMax-xMin), 0.5, 'red']);
-    
-        // mean point
-        let meanY = 1;
-        let min = 1;
-        for (let i = 0; i < cdf.length; i++) {
-            if (Math.abs(i/cdf.length-mean) < min) {
-                meanY = cdf[i];
-                min = Math.abs(i/cdf.length-mean);
-            }
-        }
-        data.push([mean*(xMax-xMin), meanY, 'purple']);
-        return data
+
+        return data;
     }
 
     return (
         <div>
-            <Typography variant='h5'>Sample Histogram</Typography>
+            <Typography variant='h5' style={{fontFamily: "Comfortaa"}}></Typography>
             <Chart
                 chartType="ColumnChart"
                 width="100%"
@@ -189,13 +182,13 @@ const SampleDashboard = ({samples, xMin, xMax, distributionStats, points}) => {
                 data={arrToBins(samples)}
                 options={histOptions}
             />
-            <Typography variant='h5'>Cumulative Distribution Function</Typography>
+            <Typography variant='h5' style={{fontFamily: "Comfortaa"}}></Typography>
             <Chart
-                chartType="ScatterChart"
+                chartType="AreaChart"
                 width="100%"
                 height="400px"
                 data={makeCDFData(points.x, points.y)}
-                options={scatterOptions}
+                options={areaOptions}
             />
 
         </div>

@@ -11,7 +11,7 @@ const SampleDashboard = ({samples, xMin, xMax, distributionStats, points}) => {
     const mainColour = "f7c101";
 
     const histOptions = {
-        fontName: 'Source Sans Pro',
+        fontName: 'Source Code Pro',
         titlePosition: 'none',
         legend: { position: 'none' },
         backgroundColor: { fill:'transparent' },
@@ -45,7 +45,7 @@ const SampleDashboard = ({samples, xMin, xMax, distributionStats, points}) => {
     };
 
     const areaOptions = {
-        fontName: "Source Sans Pro",
+        fontName: "Source Code Pro",
         titlePosition: 'none',
         backgroundColor: { fill:'transparent' },
         animation: {
@@ -103,7 +103,7 @@ const SampleDashboard = ({samples, xMin, xMax, distributionStats, points}) => {
 
         for (let i = 0; i < nBins; i++) {
             let count = 0;
-            for (let j = 0; j < Math.min(array.length, 10000); j++){
+            for (let j = 0; j < array.length; j++){
                 // do these comparisons the right way depending on bounds
                 if (Number(xMax)>Number(xMin)){
                     if (array[j] > prev && array[j] < prev+inc) {
@@ -149,7 +149,7 @@ const SampleDashboard = ({samples, xMin, xMax, distributionStats, points}) => {
         let cdf = getCDF(yVector);
     
         let data = [["Y", "Within 1 std", "±1 std-dev", "±2 std-dev", {role: 'style'}]];
-        for (let i = 0; i < Math.min(cdf.length, 10000); i++) {
+        for (let i = 0; i < cdf.length; i++) {
             let color = "white";
             if (i / cdf.length <= mean - 2 * std) {
                 //let color = "ff2d29";

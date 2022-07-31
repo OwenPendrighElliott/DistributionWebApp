@@ -46,15 +46,22 @@ function getStats(xCoords, yCoords, xMin, xMax) {
     let median = getMedian(xVector, cdf);
     let std    = getStdDev(xVector, yVector);
 
+    // If the yVector has only one unique element, set stats to those of a continuous uniform distribution
+    if ([...new Set(yVector)].length == 1) {
+        mean = (xMax + xMin) / 2;
+        median = mean;
+        std = (xMax - xMin) / (12 ** 0.5);
+    }
+
     return {
-            mean   : roundValueFixed(mean, xMin, xMax, 5),
-            median : roundValueFixed(median, xMin, xMax, 5),
-            std    : roundValueFixed(std, xMin, xMax, 5)
+            mean   : roundValueFixed(mean, xMin, xMax),
+            median : roundValueFixed(median, xMin, xMax),
+            std    : roundValueFixed(std, xMin, xMax)
            };
 }
 
 function getSamples(xCoords, yCoords, xMin, xMax, nSamples) {
-    if (xCoords.length <=1 ) {
+    if (xCoords.length <= 1) {
         return [];
     }
     let xVector = prepInputVectors(xCoords, yCoords, xMin, xMax).x;
@@ -63,9 +70,6 @@ function getSamples(xCoords, yCoords, xMin, xMax, nSamples) {
     let unifSamples = Array.from({length: nSamples}, () => Math.random());
 
     let samples = linterp(unifSamples, cdf, xVector);
-    // for (let i = 0; i < samples.length; i++) {
-    //     samples[i] = roundValueFixed(samples[i], xMin, xMax, 5);
-    // }
     return samples;
 }
 

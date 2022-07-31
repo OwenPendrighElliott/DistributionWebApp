@@ -54,9 +54,9 @@ function getStats(xCoords, yCoords, xMin, xMax) {
     }
 
     return {
-            mean   : roundValueFixed(mean, xMin, xMax),
-            median : roundValueFixed(median, xMin, xMax),
-            std    : roundValueFixed(std, xMin, xMax)
+            mean   : roundValueFixed(mean, xMin, xMax, 4),
+            median : roundValueFixed(median, xMin, xMax, 4),
+            std    : roundValueFixed(std, xMin, xMax, 4)
            };
 }
 

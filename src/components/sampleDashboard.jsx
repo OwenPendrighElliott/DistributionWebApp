@@ -5,6 +5,10 @@ import * as jstat from "jStat";
 import { getCDF,prepInputVectors } from "../calcs/empirical";
 import { Typography } from '@mui/material';
 import { fontFamily } from '@mui/system';
+import { roundValueFixed } from '../calcs/utils';
+var nj = require("jsnumpy")
+
+const factors = number => [...Array(number + 1).keys()].filter(i=>number % i === 0);
 
 const SampleDashboard = ({samples, xMin, xMax, distributionStats, points}) => {
 
@@ -39,15 +43,27 @@ const SampleDashboard = ({samples, xMin, xMax, distributionStats, points}) => {
             },
             textStyle: { color: "white" },
             gridlines: { color: '40444b' },
-            minorGridlines: { color: '40444b' },
-            format: "#",
-        },
+            minorGridlines: { color: '40444b', multiple: 1},
+            format: "#"
+        }
     };
 
     const areaOptions = {
         fontName: "Source Code Pro",
         titlePosition: 'none',
-        backgroundColor: { fill:'transparent' },
+        lineWidth: 3,
+        series: {
+            0: {
+                color: "f7c101"
+            },
+            1: {
+                color: "fc7600"
+            },
+            2: {
+                color: "ff2d29"
+            }
+        },
+        backgroundColor: { fill: 'transparent' },
         animation: {
             duration: 200,
             easing: "out",
@@ -63,7 +79,9 @@ const SampleDashboard = ({samples, xMin, xMax, distributionStats, points}) => {
             textStyle: { color: "white" },
             slantedText: false,
             gridlines: { color: '40444b' },
-            minorGridlines: { color: '40444b' }
+            minorGridlines: { color: '40444b' },
+            minValue: xMin,
+            maxValue: xMax
         },
         vAxis: {
             title: "Area Under Curve",
@@ -82,23 +100,19 @@ const SampleDashboard = ({samples, xMin, xMax, distributionStats, points}) => {
         },
         focusTarget: "category",
     };
-
-    // const mean = distributionStats.mean;
-    // const std = distributionStats.std;
-    // const median = distributionStats.median;
     
-    function arrToBins(array) {
-        let nBins = 10;
-        if (array.length > 100) {
-            nBins = 20;
-        };
-
-        if (xMax < xMin) {
-            // reverse them and the array
-        }
+    function arrToBins(array, xMin, xMax) {
+        // Set number of bins based on boundaries
+        let dpSplit = Math.abs(xMax - xMin).toString().split(".");
+        let tenPower = (dpSplit[1] != null) ? dpSplit[1].length : 2;
+        tenPower = (tenPower > 4) ? 4 : tenPower;
+        let nBinsCandidates = factors(Math.round(Math.abs(xMax - xMin) * (10 ** tenPower)));
+        let limit = (array.length < 20) ? 10: 20;
+        let nBins = parseInt(nj.highestElement(nBinsCandidates.filter(n=>n <= limit)));
+        nBins = (nBins < 7) ? 10 : nBins;
 
         let inc = (Number(xMax)-Number(xMin)) / nBins;
-        let plotData = [["Range", "nSamples", {role: 'style',type: 'string'}]];
+        let plotData = [["Range", "nSamples", {role: 'style', type: 'string'}]];
         let prev = Number(xMin);
 
         for (let i = 0; i < nBins; i++) {
@@ -120,9 +134,9 @@ const SampleDashboard = ({samples, xMin, xMax, distributionStats, points}) => {
             let minBound = Number(prev);
             let maxBound = Number(prev) + Number(inc);
 
-            // convert to one dp
-            minBound = +minBound.toFixed(1);
-            maxBound = +maxBound.toFixed(1);
+            // round to fixed dp
+            minBound = roundValueFixed(+minBound, xMin, xMax, 2);
+            maxBound = roundValueFixed(+maxBound, xMin, xMax, 2);
 
             if (i==0) {
                 minBound = Math.min(Number(xMin), Number(xMax));
@@ -134,39 +148,38 @@ const SampleDashboard = ({samples, xMin, xMax, distributionStats, points}) => {
             plotData.push([bucket, count, mainColour]);
             prev = prev + inc;
         }
+
         return plotData;
     };
 
     function makeCDFData(xCoordinates, yCoordinates) {
 
-        let mean = distributionStats.mean/(xMax-xMin);
-        let std = distributionStats.std/(xMax-xMin);
-    
+        // For some reason, these sometimes come in as text...
+        let mean = Number(distributionStats.mean);
+        let std = Number(distributionStats.std);
+
         if (xCoordinates.length <= 1) {
             return [];
         }
+
+        let xVector = prepInputVectors(xCoordinates, yCoordinates, xMin, xMax).x.map(Number);
+        xVector = nj.add([xVector], +xMin)[0];
+        xVector[0] = Number(xMin);
+        xVector[xVector.length-1] = Number(xMax);
         let yVector = prepInputVectors(xCoordinates, yCoordinates, xMin, xMax).y;
         let cdf = getCDF(yVector);
-    
-        let data = [["Y", "Within 1 std", "±1 std-dev", "±2 std-dev", {role: 'style'}]];
+
+        let data = [["X", "Within 1 std-dev", "±1 std-dev", "±2 std-dev"]];
+        let x = 0;
         for (let i = 0; i < cdf.length; i++) {
-            let color = "white";
-            if (i / cdf.length <= mean - 2 * std) {
-                //let color = "ff2d29";
-                data.push([i / cdf.length * (xMax - xMin), null, null, cdf[i], color]);
-            } else if (i / cdf.length <= mean - std) {
-                //let color = "fc7600";
-                data.push([i / cdf.length * (xMax - xMin), null, cdf[i], null, color]);
-            } else if (i / cdf.length <= mean + std) {
-                //let color = "f7c101";
-                data.push([i / cdf.length * (xMax - xMin), cdf[i], null, null, color]);
-            } else if (i / cdf.length <= mean + 2 * std) {
-                //let color = "fc7600";
-                data.push([i / cdf.length * (xMax - xMin), null, cdf[i], null, color]);
-            } else if (i / cdf.length <= 1) {
-                //let color = "ff2d29";
-                data.push([i / cdf.length * (xMax - xMin), null, null, cdf[i], color]);
-            }
+            x = Number(xVector[i]);
+            if (x <= mean - 2 * std || x >= mean + 2 * std) {
+                data.push([x, null, null, +cdf[i]]);
+            } else if (x <= mean - std || x >= mean + std) {
+                data.push([x, null, +cdf[i], null]);
+            } else {
+                data.push([x, +cdf[i], null, null]);
+            };
         }
 
         return data;
@@ -174,15 +187,13 @@ const SampleDashboard = ({samples, xMin, xMax, distributionStats, points}) => {
 
     return (
         <div>
-            <Typography variant='h5' style={{fontFamily: "Comfortaa"}}></Typography>
             <Chart
                 chartType="ColumnChart"
                 width="100%"
                 height="400px"
-                data={arrToBins(samples)}
+                data={arrToBins(samples, xMin, xMax)}
                 options={histOptions}
             />
-            <Typography variant='h5' style={{fontFamily: "Comfortaa"}}></Typography>
             <Chart
                 chartType="AreaChart"
                 width="100%"
@@ -190,7 +201,6 @@ const SampleDashboard = ({samples, xMin, xMax, distributionStats, points}) => {
                 data={makeCDFData(points.x, points.y)}
                 options={areaOptions}
             />
-
         </div>
     );
 }

@@ -190,13 +190,21 @@ const SampleDashboard = ({samples, xMin, xMax, distributionStats, points}) => {
                 options={histOptions}
             />
             <Typography variant='h5'>Cumulative Distribution Function</Typography>
-            <Chart
-                chartType="ScatterChart"
-                width="100%"
-                height="400px"
-                data={makeCDFData(points.x, points.y)}
-                options={scatterOptions}
-            />
+            
+            <Grid container columnSpacing={1}>
+                        <Grid item>
+                        <Chart
+                            chartType="ScatterChart"
+                            width="100%"
+                            height="400px"
+                            data={makeCDFData(points.x, points.y)}
+                            options={scatterOptions}
+                        />
+                        </Grid>
+                        <Grid item>
+                            <div>test</div>
+                        </Grid>
+                    </Grid>    
 
         </div>
     );

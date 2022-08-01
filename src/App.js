@@ -25,6 +25,12 @@ function getCanvasSize(scale) {
 const darkTheme = createTheme({
     palette: {
         mode: 'dark',
+        primary: {
+            main: "#89cff0",
+        },
+        background: {
+            default: "#394764"
+        }
     },
     typography: {
         fontFamily: [

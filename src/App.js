@@ -28,9 +28,9 @@ const darkTheme = createTheme({
         primary: {
             main: "#89cff0",
         },
-        background: {
-            default: "#394764"
-        }
+        // background: {
+        //     default: "#394764"
+        // }
     },
     typography: {
         fontFamily: [

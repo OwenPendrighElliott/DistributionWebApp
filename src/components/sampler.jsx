@@ -26,6 +26,49 @@ import SampleDashboard from "./sampleDashboard";
 
 import SampleScroller from './sampleScroller';
 
+// const MaxValidationTextField = ( {label, defaultValue, maxInt} ) => {
+//     // const [value, setValue] = useState(defaultValue);
+
+//     const { xMin, setXMin } = useContext(DistributionContext);
+//     const [errorMessage, setErrorMessage] = useState("");
+
+//     useEffect(() => {
+//         setXMin(defaultValue);
+//     }, []);
+
+//     useEffect(() => {
+//         // Set errorMessage only if the number is greater than the allowable max number
+//         if (Number(xMin) >= Number(maxInt)) {
+//             setErrorMessage(
+//                 "Must be less than " + (maxInt-1)
+//             );
+//         }
+//     }, [xMin]);
+
+//     useEffect(() => {
+//         // Set empty erroMessage only if number is less than max number
+//         // and errorMessage is not empty.
+//         // avoids setting empty errorMessage if the errorMessage is already empty
+//         if (Number(xMin) < Number(maxInt) && errorMessage) {
+//             setErrorMessage("");
+//         }
+//     }, [xMin, errorMessage]);
+
+//     return (
+//         <TextField
+//         error={Number(xMin) >= Number(maxInt)}
+//         id="outlined-error"
+//         label={label}
+//         type={'number'}
+//         helperText={errorMessage}
+//         onChange={(event) =>
+//             setNSamples(parseInt(event.target.value))
+//         }
+//         value={xMin}
+//         />
+//     );
+// }
+
 function copyArrayToClipboard(array) {
     navigator.clipboard.writeText(array.join('\n'));
 }
@@ -69,7 +112,14 @@ const Sampler = () => {
 
     const [points, setPoints] = useState({x: [], y: []});
 
+    const maxSamples = 10000;
+
     function callSampleAPI() {
+
+        if (Number(nSamples) > maxSamples) {
+            return;
+        }
+
         let result = getSamples(xCoordinates, yCoordinates, Number(xMin), Number(xMax), Number(nSamples));
         setSamplePoints(result);
         copyArrayToClipboard(result);
@@ -117,14 +167,24 @@ const Sampler = () => {
                     <Grid container columnSpacing={1} justifyContent="center">
                         <Grid item>
                             <TextField id="outlined-basic" 
-                            label="Samples" 
-                            variant="outlined" 
-                            type={'number'}
-                            defaultValue={nSamples}
-                            onChange={(event) =>
-                                setNSamples(parseInt(event.target.value))
-                            }
-                        />
+                                error={Number(nSamples) > maxSamples}
+                                label="Samples" 
+                                variant="outlined" 
+                                type={'number'}
+                                defaultValue={nSamples}
+                                onChange={(event) =>
+                                    setNSamples(parseInt(event.target.value))
+                                } 
+                            />
+                            <Snackbar 
+                                open={Number(nSamples) > maxSamples} 
+                                autoHideDuration={6000} 
+                                anchorOrigin={{vertical: 'bottom', horizontal : 'middle' }}
+                            >
+                                <Alert severity="error" sx={{ width: '100%' }}>
+                                    Samples must be less than or equal to 10,000!
+                                </Alert>
+                            </Snackbar>
                         </Grid>
                         <Grid item alignItems="stretch" style={{ display: "flex" }}>
                             <Tooltip
@@ -150,7 +210,7 @@ const Sampler = () => {
                 </div>
                 
                 
-                {samplePoints.length > 0 &&
+                {(samplePoints.length > 0 && Number(nSamples) <= maxSamples) &&
                     <div>
                         <DownloadSamples samples={samplePoints}></DownloadSamples>
 
@@ -164,7 +224,7 @@ const Sampler = () => {
                     </div>
                 }
 
-                <div className='SamplerErrorMsg'>
+                <div className='samplererrormsg'>
                     <Fade in={isSampled && samplePoints.length == 0}>
                         <Alert severity="error" sx={{ width: '100%' }}>
                             Please draw a distribution first!

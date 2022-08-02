@@ -56,31 +56,27 @@ function prepInputVectors(xCoords, yCoords, xMin, xMax) {
     xVector = dedupResult.x;
     yVector = dedupResult.y;
 
+    // interpolate
     if (xCoords.length>1) {
-        // interpolate
         let interpResult = interpXYVectors(xVector, yVector);
         xVector = interpResult.x;
         yVector = interpResult.y;
     }
+
     // normalise
     yVector = normaliseInputYVector(yVector);
     xVector = normaliseShiftXVector(xVector, xMin, xMax);
+    
     return {
             x : xVector,
             y : yVector
            };
 }
 
-// TODO: Put this on the boundary change event
-function roundValueFixed(value, xMin, xMax, maxForcedDecimals) {
-    let valueDigitsSplit = xMax.toString().split(".");
-    if (valueDigitsSplit.length == 2) {
-        let valueDigitsAfterDP = valueDigitsSplit[1].length;
-        return value.toFixed(valueDigitsAfterDP + 3);
-    }
-    let valueDigitsBeforeDP = valueDigitsSplit[0].length;
-    let digitsToDisplay = maxForcedDecimals - valueDigitsBeforeDP;
+function roundValueFixed(value, xMin, xMax, manual) {
+    let digitsToDisplay = Math.round(-Math.log10(Math.abs(xMax - xMin)) + manual);
     return value.toFixed(Math.max(0, digitsToDisplay));
 }
 
 export { prepInputVectors, roundValueFixed };
+

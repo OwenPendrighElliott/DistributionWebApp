@@ -230,7 +230,7 @@ const DistributionCanvas = ({ width, height }) => {
 
     return (
         <div>
-            <div className='CanvasButtons'>
+            <div className='canvasbuttons'>
                 <Grid container sx={{ maxWidth: width }}>
                     <Grid item xs={true} style={{ display: "flex", justifyContent: "left" }}>
                         <Button variant="outlined" 

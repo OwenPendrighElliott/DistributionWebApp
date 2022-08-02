@@ -26,7 +26,7 @@ const darkTheme = createTheme({
     palette: {
         mode: 'dark',
         primary: {
-            main: "#89cff0",
+            main: "#f7c101",
         },
         // background: {
         //     default: "#394764"
@@ -40,7 +40,7 @@ const darkTheme = createTheme({
     });
 
 function App() {
-
+    
     const paddingProp = 0.1;
     // add padding to the window for the canvas
     // const windowDimensions = getCanvasSize(0.2);

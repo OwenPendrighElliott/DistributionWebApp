@@ -4,8 +4,7 @@
 
 .App {
   text-align: left;
-
-  
+  overflow-x: hidden; 
 }
 
 .CanvasArea {

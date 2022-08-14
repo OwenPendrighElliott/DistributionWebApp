@@ -196,7 +196,8 @@ const DistributionCanvas = ({ width, height }) => {
         if (!refImage) {
             return;
         }
-
+        
+        // update so that the width always stays the same but the height adjusts to preserve aspect ratio
         const canvas = canvasRef.current;
         const context = canvas.getContext('2d');
 

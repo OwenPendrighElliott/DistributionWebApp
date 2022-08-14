@@ -82,28 +82,33 @@ const DistributionCanvas = ({ width, height }) => {
     }, [startPaint]);
 
     const paint = useCallback(
-        (event) => {
-            if (isPainting) {
-                let newMousePosition = getCoordinates(event);
-                
-                // going backwards is illegal 
-                if (newMousePosition.x < mousePosition.x) {
-                    newMousePosition.x = mousePosition.x;
-                }
-                
-                // invert height
-                yCoordinates.push(height - newMousePosition.y)
-                xCoordinates.push(newMousePosition.x)
-                
-                callStatsAPI();
-                if (mousePosition && newMousePosition) {
-                    drawLine(mousePosition, newMousePosition);
-                    mousePosition = newMousePosition
-                }
-            }
+      (event) => {
+        if (isPainting) {
+          // android bad
+          if ( navigator.userAgent.match(/Android/i) ) { 
             event.preventDefault();
-        },
-        [isPainting, mousePosition]
+          }
+
+          let newMousePosition = getCoordinates(event);
+          
+          // going backwards is illegal 
+          if (newMousePosition.x < mousePosition.x) {
+            newMousePosition.x = mousePosition.x;
+          }
+          
+          // invert height
+          yCoordinates.push(height - newMousePosition.y)
+          xCoordinates.push(newMousePosition.x)
+          
+          callStatsAPI();
+          if (mousePosition && newMousePosition) {
+            drawLine(mousePosition, newMousePosition);
+            mousePosition = newMousePosition
+          }
+        }
+        event.preventDefault();
+      },
+      [isPainting, mousePosition]
     );
 
     useEffect(() => {
@@ -196,7 +201,7 @@ const DistributionCanvas = ({ width, height }) => {
         if (!refImage) {
             return;
         }
-        
+
         // update so that the width always stays the same but the height adjusts to preserve aspect ratio
         const canvas = canvasRef.current;
         const context = canvas.getContext('2d');

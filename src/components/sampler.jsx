@@ -161,7 +161,7 @@ const Sampler = () => {
 
     return (<div> 
                 <div>
-                    <Typography variant='h4'>Sampler</Typography>
+                    <Typography variant='h4' style={{'fontFamily': 'Comfortaa'}}>Sampler</Typography>
                 </div>
                 <div className="SamplerInput">
                     <Grid container columnSpacing={1} justifyContent="center">

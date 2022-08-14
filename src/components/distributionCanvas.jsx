@@ -166,7 +166,7 @@ const DistributionCanvas = ({ width, height }) => {
         const canvas = canvasRef.current;
         const context = canvas.getContext('2d');
         if (context) {
-            context.strokeStyle = '#89cff0';
+            context.strokeStyle = '#f7c101';
             context.lineJoin = 'round';
             context.lineWidth = 5;
 

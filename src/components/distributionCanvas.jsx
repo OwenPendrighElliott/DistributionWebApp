@@ -223,19 +223,22 @@ const DistributionCanvas = ({ width, height }) => {
             const imHeight = background.height;
 
             var newWidth = context.canvas.width;
+            var newHeight = context.canvas.height;
             var startx = 0;
             var starty = 0
-               
-            var ratio = (imHeight/imWidth);
+      
+            var originalRatio = imWidth/imHeight;
+            var canvasRatio = width/height;
 
-            if (ratio > 1) {
-              ratio--;
+            if (originalRatio > canvasRatio) {
+              newHeight = newWidth / originalRatio;
+            } else {
+              newWidth = newHeight * originalRatio;
             }
 
-            newWidth = Math.round(width * ratio);
             startx = Math.round((width-newWidth)*0.5);
-
-            context.drawImage(background, startx, starty, newWidth, height);   
+            console.log(originalRatio, imWidth, imHeight, newWidth, newHeight, width, height)
+            context.drawImage(background, startx, starty, newWidth, newHeight);   
         }
         
     };

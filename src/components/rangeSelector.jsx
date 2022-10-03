@@ -10,6 +10,20 @@ import { MinValidationTextField, MaxValidationTextField } from './validIntTextFi
 const RangeSelector = (width) => {
     const {xMin, xMax, setXMax, setXMin} = useContext(DistributionContext)
 
+
+    function forcedXMax(e) {
+      if (!e.target.value) {
+        setXMax(null);
+        return;
+      }
+      var numXMin = Number(xMin);
+      var numXMax = Number(e.target.value);
+      if (numXMin == numXMax) {
+        numXMax = numXMin + 1;
+      }
+      setXMax(numXMax);
+    }
+
     return (
         <Grid container sx={{ maxWidth: width }}>
             <Grid item xs={true} style={{ display: "flex", justifyContent: "left" }}>
@@ -26,7 +40,7 @@ const RangeSelector = (width) => {
                 <TextField
                     label='Right Bound'
                     type={'number'}
-                    onChange={(e) => setXMax(e.target.value)}
+                    onChange={(e) => forcedXMax(e)}
                     value={xMax}
                 />
             </Grid>

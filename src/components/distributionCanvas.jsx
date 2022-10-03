@@ -237,7 +237,6 @@ const DistributionCanvas = ({ width, height }) => {
             }
 
             startx = Math.round((width-newWidth)*0.5);
-            console.log(originalRatio, imWidth, imHeight, newWidth, newHeight, width, height)
             context.drawImage(background, startx, starty, newWidth, newHeight);   
         }
         

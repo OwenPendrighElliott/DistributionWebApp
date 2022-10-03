@@ -14,7 +14,7 @@ function getCanvasSize(scale) {
     const { innerWidth: width, innerHeight: height } = window;
     const scaledWidth = width-(scale*width);
 
-    const aspectRatio = 9/24;
+    const aspectRatio = 9/26;
     return {
         width: Math.round(scaledWidth),
         height: Math.round(scaledWidth*aspectRatio)

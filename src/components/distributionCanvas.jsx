@@ -26,6 +26,7 @@ const DistributionCanvas = ({ width, height }) => {
     function resetCanvas() {  
         const canvas = canvasRef.current;
         const context = canvas.getContext('2d');
+        context.canvas.height = height;
         context.clearRect(0, 0, width, height);
         context.beginPath();
         // reset x and y coordinates 
@@ -197,6 +198,7 @@ const DistributionCanvas = ({ width, height }) => {
     };
 
     const setBackground = () => {
+
         // set the background image
         if (!refImage) {
             return;
@@ -206,14 +208,36 @@ const DistributionCanvas = ({ width, height }) => {
         const canvas = canvasRef.current;
         const context = canvas.getContext('2d');
 
-        var background = new Image();
+        context.canvas.width = width;
+        context.canvas.height = height;
 
+        var background = new Image();
+        
         background.src = refImage;
 
         // Make sure the image is loaded first otherwise nothing will draw.
         background.onload = function() {
-            context.drawImage(background, 0, 0, width, height);   
+
+            // calculate the sizing for the image to fit within canvas
+            const imWidth = background.width;
+            const imHeight = background.height;
+
+            var newWidth = context.canvas.width;
+            var startx = 0;
+            var starty = 0
+               
+            var ratio = (imHeight/imWidth);
+
+            if (ratio > 1) {
+              ratio--;
+            }
+
+            newWidth = Math.round(width * ratio);
+            startx = Math.round((width-newWidth)*0.5);
+
+            context.drawImage(background, startx, starty, newWidth, height);   
         }
+        
     };
     
     useEffect(() => {

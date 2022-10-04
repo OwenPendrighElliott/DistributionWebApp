@@ -26,6 +26,7 @@ const DistributionCanvas = ({ width, height }) => {
     function resetCanvas() {  
         const canvas = canvasRef.current;
         const context = canvas.getContext('2d');
+        context.canvas.height = height;
         context.clearRect(0, 0, width, height);
         context.beginPath();
         // reset x and y coordinates 
@@ -82,28 +83,33 @@ const DistributionCanvas = ({ width, height }) => {
     }, [startPaint]);
 
     const paint = useCallback(
-        (event) => {
-            if (isPainting) {
-                let newMousePosition = getCoordinates(event);
-                
-                // going backwards is illegal 
-                if (newMousePosition.x < mousePosition.x) {
-                    newMousePosition.x = mousePosition.x;
-                }
-                
-                // invert height
-                yCoordinates.push(height - newMousePosition.y)
-                xCoordinates.push(newMousePosition.x)
-                
-                callStatsAPI();
-                if (mousePosition && newMousePosition) {
-                    drawLine(mousePosition, newMousePosition);
-                    mousePosition = newMousePosition
-                }
-            }
+      (event) => {
+        if (isPainting) {
+          // android bad
+          if ( navigator.userAgent.match(/Android/i) ) { 
             event.preventDefault();
-        },
-        [isPainting, mousePosition]
+          }
+
+          let newMousePosition = getCoordinates(event);
+          
+          // going backwards is illegal 
+          if (newMousePosition.x < mousePosition.x) {
+            newMousePosition.x = mousePosition.x;
+          }
+          
+          // invert height
+          yCoordinates.push(height - newMousePosition.y)
+          xCoordinates.push(newMousePosition.x)
+          
+          callStatsAPI();
+          if (mousePosition && newMousePosition) {
+            drawLine(mousePosition, newMousePosition);
+            mousePosition = newMousePosition
+          }
+        }
+        event.preventDefault();
+      },
+      [isPainting, mousePosition]
     );
 
     useEffect(() => {
@@ -166,7 +172,7 @@ const DistributionCanvas = ({ width, height }) => {
         const canvas = canvasRef.current;
         const context = canvas.getContext('2d');
         if (context) {
-            context.strokeStyle = '#89cff0';
+            context.strokeStyle = '#f7c101';
             context.lineJoin = 'round';
             context.lineWidth = 5;
 
@@ -192,22 +198,48 @@ const DistributionCanvas = ({ width, height }) => {
     };
 
     const setBackground = () => {
+
         // set the background image
         if (!refImage) {
             return;
         }
 
+        // update so that the width always stays the same but the height adjusts to preserve aspect ratio
         const canvas = canvasRef.current;
         const context = canvas.getContext('2d');
 
-        var background = new Image();
+        context.canvas.width = width;
+        context.canvas.height = height;
 
+        var background = new Image();
+        
         background.src = refImage;
 
         // Make sure the image is loaded first otherwise nothing will draw.
         background.onload = function() {
-            context.drawImage(background, 0, 0, width, height);   
+
+            // calculate the sizing for the image to fit within canvas
+            const imWidth = background.width;
+            const imHeight = background.height;
+
+            var newWidth = context.canvas.width;
+            var newHeight = context.canvas.height;
+            var startx = 0;
+            var starty = 0
+      
+            var originalRatio = imWidth/imHeight;
+            var canvasRatio = width/height;
+
+            if (originalRatio > canvasRatio) {
+              newHeight = newWidth / originalRatio;
+            } else {
+              newWidth = newHeight * originalRatio;
+            }
+
+            startx = Math.round((width-newWidth)*0.5);
+            context.drawImage(background, startx, starty, newWidth, newHeight);   
         }
+        
     };
     
     useEffect(() => {

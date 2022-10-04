@@ -14,7 +14,7 @@ function getCanvasSize(scale) {
     const { innerWidth: width, innerHeight: height } = window;
     const scaledWidth = width-(scale*width);
 
-    const aspectRatio = 9/24;
+    const aspectRatio = 9/26;
     return {
         width: Math.round(scaledWidth),
         height: Math.round(scaledWidth*aspectRatio)
@@ -26,7 +26,7 @@ const darkTheme = createTheme({
     palette: {
         mode: 'dark',
         primary: {
-            main: "#89cff0",
+            main: "#f7c101",
         },
         // background: {
         //     default: "#394764"
@@ -36,11 +36,11 @@ const darkTheme = createTheme({
         fontFamily: [
             'Source Code Pro'
         ].join(','),
-        },
+      },
     });
 
 function App() {
-
+    
     const paddingProp = 0.1;
     // add padding to the window for the canvas
     // const windowDimensions = getCanvasSize(0.2);
@@ -77,7 +77,6 @@ function App() {
             e.preventDefault();
         }
     }, {passive: false});
-
 
     return (
         <div className="App">

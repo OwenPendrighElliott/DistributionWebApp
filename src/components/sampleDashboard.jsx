@@ -177,7 +177,6 @@ const SampleDashboard = ({samples, xMin, xMax, distributionStats, points}) => {
                 data.push([x, +cdf[i], null, null]);
             };
         }
-
         return data;
     }
 

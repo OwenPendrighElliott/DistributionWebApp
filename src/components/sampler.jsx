@@ -176,7 +176,7 @@ const Sampler = () => {
                             <Snackbar 
                                 open={Number(nSamples) > maxSamples} 
                                 autoHideDuration={6000} 
-                                anchorOrigin={{vertical: 'bottom', horizontal : 'middle' }}
+                                anchorOrigin={{vertical: 'bottom', horizontal : 'center' }}
                             >
                                 <Alert severity="error" sx={{ width: '100%' }}>
                                     Samples must be less than or equal to 10,000!

@@ -17,18 +17,19 @@ const StatsTable = ({width}) => {
                 <Typography variant='h4' style={{'fontFamily': 'Comfortaa'}}>Distribution Statistics</Typography>
             </div>
             <div className="tablediv">
-                {/* <TableContainer sx={{maxWidth: width}} component={Paper}> */}
                 <table>
-                    <tr>
-                        <th align="center"><Typography>Mean</Typography></th>
-                        <th align="center"><Typography>Median</Typography></th>
-                        <th align="center"><Typography>Std.</Typography></th> 
-                    </tr>
-                    <tr>
-                        <td align="center"><Typography>{mean}</Typography></td>
-                        <td align="center"><Typography>{median}</Typography></td>
-                        <td align="center"><Typography>{std}</Typography></td>
-                    </tr>
+                    <tbody>
+                        <tr>
+                            <th align="center"><Typography>Mean</Typography></th>
+                            <th align="center"><Typography>Median</Typography></th>
+                            <th align="center"><Typography>Std.</Typography></th> 
+                        </tr>
+                        <tr>
+                            <td align="center"><Typography>{mean}</Typography></td>
+                            <td align="center"><Typography>{median}</Typography></td>
+                            <td align="center"><Typography>{std}</Typography></td>
+                        </tr>
+                    </tbody>
                 </table>
             </div>
         </div>

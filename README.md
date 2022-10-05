@@ -1,12 +1,14 @@
-# drawdist.app
+# drawdist.app 
 
 ## Overview
 
-drawdist.app is a web application that lets your draw an arbitrary probability distribution function and then draw samples from the distribution. Samples are automatically copied to clipboard however they can also be downloaded.
+[drawdist.app](https://drawdist.app) is a web application that lets your draw an arbitrary probability distribution function and then draw samples from the distribution. Samples are automatically copied to clipboard however they can also be downloaded.
 
-Users may also upload a photo as a reference image to trace for the distribution (for example a bar chart or unknown function).
+Users may also upload a photo as a reference image to trace for the distribution (for example a bar chart 📊 or a visual representation of an unknown function 📈).
 
 drawdist.app is build entirely in ReactJS and all the code runs locally in the users browser. The app is compatible with multiple platforms and works with both a mouse and touch events.
+
+**If you enjoy [drawdist.app](https://drawdist.app) you can [support us on Ko-fi!](https://ko-fi.com/jamesandowen)**
 
 # Getting Started
 

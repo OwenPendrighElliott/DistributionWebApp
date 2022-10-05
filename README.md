@@ -37,6 +37,7 @@ src holds the website source code.
 Calcs holds all the JavaScript code required to perform the calculations that covert the provided PDF into a CDF which can be used to draw samples from
 
 ### components
+Front end components that build the web application such as the canvas, appbar, parameter fields, sampler and visualisations.
 
 ### contexts
 The contexts folder holds the global state of the application, state is managed exclusively with the React context API.

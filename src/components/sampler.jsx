@@ -1,7 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
-import ListItem from '@mui/material/ListItem';
-import ListItemText from '@mui/material/ListItemText';
-import { FixedSizeList } from 'react-window';
+import React, { useEffect, useState } from 'react';
 
 import { useContext } from "react";
 import DistributionContext from "../contexts/distributionContext";

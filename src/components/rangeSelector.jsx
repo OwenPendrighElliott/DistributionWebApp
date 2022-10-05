@@ -1,11 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useContext } from "react";
 import DistributionContext from "../contexts/distributionContext";
 
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
-
-import { MinValidationTextField, MaxValidationTextField } from './validIntTextFields';
 
 const RangeSelector = (width) => {
     const {xMin, xMax, setXMax, setXMin} = useContext(DistributionContext)

@@ -274,6 +274,8 @@ const DistributionCanvas = ({ width, height }) => {
                                     type="file"
                                     hidden
                                     onChange={(event) => getFname(event)}
+                                    // set event value to null onClick to allow repeat uploads of same file
+                                    onClick={(event) => event.target.value = null}
                                 />
                         </Button>
                     </Grid>

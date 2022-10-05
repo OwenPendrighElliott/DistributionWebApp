@@ -1,32 +1,40 @@
+# drawdist.app
+
+## Overview
+
+drawdist.app is a web application that lets your draw an arbitrary probability distribution function and then draw samples from the distribution. Samples are automatically copied to clipboard however they can also be downloaded.
+
+Users may also upload a photo as a reference image to trace for the distribution (for example a bar chart or unknown function).
+
+drawdist.app is build entirely in ReactJS and all the code runs locally in the users browser. The app is compatible with multiple platforms and works with both a mouse and touch events.
+
 # Getting Started
 
 ## First time setup
-
-### Frontend
 ```
 npm ci
 ```
 
-### Backend
-```
-cd api
-python -m venv venv
-pip install python-dotenv
-pip install -r requirements.txt
-```
-
 ## Running the project for development
-
-### Start Frontend
-
 ```
 npm start
 ```
 
-### Start Backend
+## Building for Production
+```
+npm run build
+```
 
-```
-cd api
-venv\Scripts\activate
-python -m flask run
-```
+
+# Codebase Structure
+
+## src 
+src holds the website source code.
+
+### calcs 
+Calcs holds all the JavaScript code required to perform the calculations that covert the provided PDF into a CDF which can be used to draw samples from
+
+### components
+
+### contexts
+The contexts folder holds the global state of the application, state is managed exclusively with the React context API.

@@ -1,10 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Chart } from "react-google-charts";
-import Grid from '@mui/material/Grid'
-import * as jstat from "jStat";
 import { getCDF,prepInputVectors } from "../calcs/empirical";
-import { Typography } from '@mui/material';
-import { fontFamily } from '@mui/system';
 import { roundValueFixed } from '../calcs/utils';
 var nj = require("jsnumpy")
 
@@ -138,10 +134,10 @@ const SampleDashboard = ({samples, xMin, xMax, distributionStats, points}) => {
             minBound = roundValueFixed(+minBound, xMin, xMax, 2);
             maxBound = roundValueFixed(+maxBound, xMin, xMax, 2);
 
-            if (i==0) {
+            if (i===0) {
                 minBound = Math.min(Number(xMin), Number(xMax));
             }
-            if (i==nBins-1){
+            if (i===nBins-1){
                 maxBound = Math.max(Number(xMin), Number(xMax));
             }
             let bucket = minBound + " - " + maxBound;

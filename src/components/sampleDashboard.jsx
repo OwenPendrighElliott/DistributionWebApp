@@ -150,10 +150,11 @@ const SampleDashboard = ({samples, xMin, xMax, distributionStats, points}) => {
 
     function makeCDFData(xCoordinates, yCoordinates) {
 
-        // For some reason, these sometimes come in as text...
         let mean = Number(distributionStats.mean);
         let std = Number(distributionStats.std);
 
+        console.log(mean)
+        console.log(std)
         if (xCoordinates.length <= 1) {
             return [];
         }

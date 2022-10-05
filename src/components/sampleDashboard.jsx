@@ -152,9 +152,7 @@ const SampleDashboard = ({samples, xMin, xMax, distributionStats, points}) => {
 
         let mean = Number(distributionStats.mean);
         let std = Number(distributionStats.std);
-
-        console.log(mean)
-        console.log(std)
+        
         if (xCoordinates.length <= 1) {
             return [];
         }

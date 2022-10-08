@@ -116,6 +116,8 @@ const Sampler = () => {
         if (Number(nSamples) > maxSamples) {
             return;
         }
+        console.log("Min: ", Number(xMin))
+        console.log("Max: ", Number(xMax))
 
         let result = getSamples(xCoordinates, yCoordinates, Number(xMin), Number(xMax), Number(nSamples));
         setSamplePoints(result);

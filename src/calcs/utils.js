@@ -43,23 +43,10 @@ function normaliseInputYVector(yVector) {
     return scaledYVector;
 }
 
-function addConstant(vector, constant) {
-    for (let i = 0; i < vector.length; i++) {
-        vector[i] = Number(vector[i]) + Number(constant);
-    }
-    return vector;
-}
-
 function normaliseShiftXVector(xVector, xMin, xMax) {
     let xVectorMin = nj.lowestElement(xVector);
     let xVectorMax = nj.highestElement(xVector);
-    // console.log("ADD", nj.add(nj.multiply(nj.divide(nj.subtract([xVector], xVectorMin), (xVectorMax - xVectorMin)), xMax - xMin), xMin))
-    // return nj.add(nj.multiply(nj.divide(nj.subtract([xVector], xVectorMin), (xVectorMax - xVectorMin)), xMax - xMin), xMin)[0][0];
-    // console.log("ADD", addConstant(nj.multiply(nj.divide(nj.subtract([xVector], xVectorMin), (xVectorMax - xVectorMin)), xMax - xMin)[0][0], xMin))
-
-    // fixed: james to review - I think we had an error adding the min back on here in the original code?
-    return nj.multiply(nj.divide(nj.subtract([xVector], xVectorMin), (xVectorMax - xVectorMin)), xMax - xMin)[0][0];
-
+    return nj.add(nj.multiply(nj.divide(nj.subtract([xVector], xVectorMin), (xVectorMax - xVectorMin)), xMax - xMin), xMin)[0][0];
 }
 
 function prepInputVectors(xCoords, yCoords, xMin, xMax) {
